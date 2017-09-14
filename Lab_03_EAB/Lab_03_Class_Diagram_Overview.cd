@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Lab_03_EAB.Contract">
+    <Position X="1.5" Y="0.75" Width="1.5" />
+    <InheritanceLine Type="Lab_03_EAB.Employee" FixedToPoint="true">
+      <Path>
+        <Point X="3.5" Y="1.443" />
+        <Point X="3" Y="1.443" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAACAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Contract.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab_03_EAB.Employee">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACEAAAAAAAAAEAAAAAAQABCAAAAAAAAAAAAAIAAg=</HashCode>
+      <FileName>Employee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab_03_EAB.Hourly">
+    <Position X="5.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAECAAAAAAAAABBAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Hourly.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab_03_EAB.Salary">
+    <Position X="3.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Salary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab_03_EAB.Sales">
+    <Position X="1.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAFAAAAAAAACAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Sales.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Lab_03_EAB.MainWindow">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BKQgEAABASEAIAAAQAgEAAcEoAAAAoAIAQAQIAAACAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="Lab_03_EAB.ETYPE">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAEAAAAAAAAAAAAAAAIACAAAAAAAAA=</HashCode>
+      <FileName>Employee.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
