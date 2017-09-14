@@ -5,6 +5,7 @@ namespace Lab_03_EAB
 {
     sealed class Contract : Employee
     {
+        int test = 0;
         private const string WAGE_LBL = "Contract Wage: ";
         public Decimal ContractWage { get; set; }
         /// <summary>

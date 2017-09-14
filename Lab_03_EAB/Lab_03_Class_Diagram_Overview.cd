@@ -4,12 +4,12 @@
     <Position X="1.5" Y="0.75" Width="1.5" />
     <InheritanceLine Type="Lab_03_EAB.Employee" FixedToPoint="true">
       <Path>
-        <Point X="3.5" Y="1.443" />
-        <Point X="3" Y="1.443" />
+        <Point X="3.5" Y="1.5" />
+        <Point X="3" Y="1.5" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAACAAAAAAAAAAAABAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAACAAAAIAAAAAAABAAA=</HashCode>
       <FileName>Contract.cs</FileName>
     </TypeIdentifier>
   </Class>
