@@ -33,7 +33,7 @@ namespace Lab_03_EAB
     public partial class MainWindow : Window
     {
         //Constants used by the program
-        private const uint NUM_TEST_EMPS = 20;
+        private const uint NUM_TEST_EMPS = 10;
         private const string HOURLYRATE = "Hourly Rate:",
             SALARY = "Monthly Salary:",
             COMMISSION = "Commission:",
@@ -53,6 +53,10 @@ namespace Lab_03_EAB
             ALL_EMP_LINE = "\n------All Employees-----";
         private readonly string[] FIRST_NAMES = { "Stewart", "Sunny", "Grant", "Greg", "Micheal", "Seth", "Anthony", "Matthew", "Jonathon", "Jenny", "Sam" };
         private readonly string[] LAST_NAMES = { "Linder", "Brown", "DePoirot", "Johnson", "Williams", "Xavier", "Green", "Goldberg", "Greenburg", "Flotsam", "Jenkins", "Jensen", "Null" };
+        //End Constants
+        //Business Rules, used as storage.
+        private BusinessRules createdEmployees = new BusinessRules();
+
         /// <summary>
         /// Creates a set of test employees with dummy data and stores it in a list
         /// </summary>
@@ -70,26 +74,26 @@ namespace Lab_03_EAB
                 switch((ETYPE)(i%numETypes))
                 {
                     case ETYPE.CONTRACT:
-                        createdEmployees.Add(new Contract((uint)i, 
+                        createdEmployees[i] = (new Contract((uint)i, 
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble()*random.Next())));
                         break;
                     case ETYPE.HOURLY:
-                        createdEmployees.Add(new Hourly((uint)i,
+                        createdEmployees[i] = (new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
                     case ETYPE.SALARY:
-                        createdEmployees.Add(new Salary((uint)i,
+                        createdEmployees[i] = (new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
                     case ETYPE.SALES:
-                        createdEmployees.Add(new Sales((uint)i,
+                        createdEmployees[i] = (new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.Next() * random.NextDouble()),
@@ -104,7 +108,6 @@ namespace Lab_03_EAB
             }//End for loop
         }
         
-        private List<Employee> createdEmployees = new List<Employee>();
         /// <summary>
         /// Initializes the components of the WPF form and also populates the combobox with values from an enum
         /// </summary>
@@ -136,11 +139,11 @@ namespace Lab_03_EAB
             switch ((ETYPE)CBxEmpType.SelectedIndex)
             {
                 case ETYPE.CONTRACT:
-                    createdEmployees.Add(new Contract(id, first, last, sup1));
+                    createdEmployees[createdEmployees.Count()] = (new Contract(id, first, last, sup1));
                     break;
                 case ETYPE.HOURLY:
                     if (double.TryParse(TxtSup2.Text, out double worked))
-                        createdEmployees.Add(new Hourly(id, first, last, sup1, worked));
+                        createdEmployees[createdEmployees.Count()] = (new Hourly(id, first, last, sup1, worked));
                     else
                     {
                         OutputError();
@@ -148,11 +151,11 @@ namespace Lab_03_EAB
                     }
                     break;
                 case ETYPE.SALARY:
-                    createdEmployees.Add(new Salary(id, first, last, sup1));
+                    createdEmployees[createdEmployees.Count()] = (new Salary(id, first, last, sup1));
                     break;
                 case ETYPE.SALES:
                     if (decimal.TryParse(TxtSup2.Text, out decimal commiss) && decimal.TryParse(TxtSup3.Text, out decimal sales))
-                        createdEmployees.Add(new Sales(id, first, last, sup1, commiss, sales));
+                        createdEmployees[createdEmployees.Count()] = (new Sales(id, first, last, sup1, commiss, sales));
                     else
                     {
                         OutputError();

@@ -1,12 +1,9 @@
 ﻿namespace Lab_03_EAB
 {
-    enum ETYPE { SALARY, SALES, HOURLY, CONTRACT};
-    abstract class Employee
+    public enum ETYPE { SALARY, SALES, HOURLY, CONTRACT};
+    public abstract class Employee
     {
-        private const string EMPID_LBL = "EmpID: ",
-            EMPTYPE_LBL = "\nEmpType: ",
-            FIRST_LBL = "\nFirst Name: ",
-            LAST_LBL = "\nLast Name: ";
+        private const string FORMAT_STRING = "EmpID: {0}\nEmpType: {1}\nFirst Name: {2}\nLast Name: {3}\n";
         public uint EmpID { get; set; }
         public ETYPE EmpType { get; set; }
         public string FirstName { get; set; }
@@ -30,7 +27,7 @@
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return EMPID_LBL + EmpID + EMPTYPE_LBL + EmpType + FIRST_LBL + FirstName + LAST_LBL + LastName + '\n';
+            return string.Format(FORMAT_STRING, EmpID, EmpType, FirstName, LastName);
         }
     }
 }

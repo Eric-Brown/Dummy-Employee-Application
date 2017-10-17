@@ -9,14 +9,14 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAACAAAAIAAAAAAABAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAACAAAAAAAAAAAABAAA=</HashCode>
       <FileName>Contract.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Employee">
     <Position X="3.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAACEAAAAAAAAAEAAAAAAQABCAAAAAAAAAAAAAIAAg=</HashCode>
+      <HashCode>AAAACEAAAAAAAAAEAAAAAIAAAAAAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Employee.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -48,6 +48,13 @@
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Lab_03_EAB.BusinessRules">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAACAAIAEQAAAAAAAAAAAACAABAAAA=</HashCode>
+      <FileName>BusinessRules.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Enum Name="Lab_03_EAB.ETYPE">
     <Position X="5.25" Y="0.5" Width="1.5" />
