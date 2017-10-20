@@ -3,8 +3,29 @@
     public enum ETYPE { SALARY, SALES, HOURLY, CONTRACT};
     public abstract class Employee
     {
+        public event System.EventHandler<PropertyChangeEventArgs<uint>> EmpIDChanged;
         private const string FORMAT_STRING = "EmpID: {0}\nEmpType: {1}\nFirst Name: {2}\nLast Name: {3}\n";
-        public uint EmpID { get; set; }
+        private uint empID;
+        public uint EmpID
+        {
+            get => empID;
+            set
+            {
+                if (value == empID)
+                    return;
+                uint oldValue = empID;
+                empID = value;
+                OnEmpIDChanged(new PropertyChangeEventArgs<uint>(oldValue, empID));
+            }
+        }
+        /// <summary>
+        /// Broadcasts to any listeners that the employee ID has changed.
+        /// </summary>
+        /// <param name="e">EventArgs subtype that contains old and new value of changed property</param>
+        protected virtual void OnEmpIDChanged(PropertyChangeEventArgs<uint> e)
+        {
+            EmpIDChanged?.Invoke(this, e);
+        }
         public ETYPE EmpType { get; set; }
         /// <summary>
         /// FirstName property and backing field. Rejects null or empty names.

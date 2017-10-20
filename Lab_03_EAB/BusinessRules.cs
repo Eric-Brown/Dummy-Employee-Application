@@ -22,7 +22,7 @@ namespace Lab_03_EAB
         {
             get
             {
-                if (i >= employee.Count)
+                if (i >= employee.Count || i < 0)
                     return null;
                 else
                     //KeyValue is immutable, so we use the key retrieved to get a mutable element.
@@ -37,11 +37,27 @@ namespace Lab_03_EAB
                         employee[value.EmpID] = value;
                     }
                     else
+                    {
                         employee.Add(value.EmpID, value);
+                    }
                 }
                 else
+                {
                     employee[employee.ElementAt(i).Key] = value;
+                }
+                if (value != null) value.EmpIDChanged += EmpIDChangeHandler;
             }
+        }
+        /// <summary>
+        /// Event Handler for when an employees id has changed
+        /// </summary>
+        /// <param name="sender">The employee whos ID has changed</param>
+        /// <param name="args">EventArgs subtype that contains the old and new values of the ID</param>
+        private void EmpIDChangeHandler(object sender, PropertyChangeEventArgs<uint> args)
+        {
+            //Remove the old entry and update to a new entry
+            employee[args.newValue] = (Employee)sender;
+            employee.Remove(args.oldValue);
         }
         /// <summary>
         /// Allows indexing into the internal datastructure through looking up the employee's ID
@@ -74,7 +90,7 @@ namespace Lab_03_EAB
         /// Exposes the datastructures last element added.
         /// </summary>
         /// <returns></returns>
-        public Employee Last() => employee.Last().Value;
+        public Employee Last() => (employee.Count == 0) ? null : employee.Last().Value;
 
         /// <summary>
         /// Exposes the datastructures count method.
@@ -88,7 +104,7 @@ namespace Lab_03_EAB
         /// <returns>An enumerator which returns Employee objects.</returns>
         public IEnumerator<Employee> GetEnumerator()
         {
-            foreach (KeyValuePair<uint,Employee> pair in employee)
+            foreach (KeyValuePair<uint,Employee> pair in employee.ToList())
             {
                 yield return pair.Value;
             }
