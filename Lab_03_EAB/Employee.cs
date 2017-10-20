@@ -6,8 +6,32 @@
         private const string FORMAT_STRING = "EmpID: {0}\nEmpType: {1}\nFirst Name: {2}\nLast Name: {3}\n";
         public uint EmpID { get; set; }
         public ETYPE EmpType { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        /// <summary>
+        /// FirstName property and backing field. Rejects null or empty names.
+        /// </summary>
+        private string firstName;
+        public string FirstName
+        {
+            get => firstName;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    firstName = value;
+            }
+        }
+        /// <summary>
+        /// LastName property and backing field. Rejects null or empty names.
+        /// </summary>
+        private string lastName;
+        public string LastName
+        {
+            get => lastName;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    lastName = value;
+            }
+        }
         /// <summary>
         /// Constructor. Initializes fields.
         /// </summary>

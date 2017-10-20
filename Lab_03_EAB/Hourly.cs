@@ -6,12 +6,37 @@ using System.Threading.Tasks;
 
 namespace Lab_03_EAB
 {
-    sealed class Hourly : Employee
+    public sealed class Hourly : Employee
     {
         private const string RATE_LBL = "Hourly Rate: ",
-            HOURS_LBL = "\nHours Worked: ";
-        public Decimal HourlyRate { get; set; }
-        public Double HoursWorked { get; set; }
+            HOURS_LBL = "\nHours Worked: ",
+            BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Hourly employee.";
+        /// <summary>
+        /// HourlyRate property and backing field. Negative values are rejected.
+        /// </summary>
+        private decimal hourlyRate;
+        public Decimal HourlyRate
+        {
+            get => hourlyRate;
+            set
+            {
+                if (value >= 0)
+                    hourlyRate = value;
+            }
+        }
+        /// <summary>
+        /// HoursWorked property and backing field. Negative values are rejected.
+        /// </summary>
+        private double hoursWorked;
+        public Double HoursWorked
+        {
+            get => hoursWorked;
+            set
+            {
+                if (value >= 0)
+                    hoursWorked = value;
+            }
+        }
         /// <summary>
         /// Constructor. Hands parameters to "Employee"'s constructor.
         /// </summary>
@@ -23,6 +48,10 @@ namespace Lab_03_EAB
         public Hourly(uint id, string first, string last, Decimal rate, double hours)
             :base(id,ETYPE.HOURLY, first,last)
         {
+            if (rate < 0)
+                throw new ArgumentException(BAD_VAL_ERR_MSG, rate.GetType().Name);
+            if (hours < 0)
+                throw new ArgumentException(BAD_VAL_ERR_MSG, hours.GetType().Name);
             HourlyRate = rate;
             HoursWorked = hours;
         }

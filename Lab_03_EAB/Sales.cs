@@ -3,12 +3,37 @@
 
 namespace Lab_03_EAB
 {
-    sealed class Sales : Salary
+    public sealed class Sales : Salary
     {
         private const string COM_LBL = "Commission: ",
-                SALES_LBL = "\nGross Sales: ";
-        public Decimal Commission { get; set; }
-        public Decimal GrossSales { get; set; }
+                SALES_LBL = "\nGross Sales: ",
+            BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Sales employee.";
+        /// <summary>
+        /// Property Commission and backing field. Negative values are rejected.
+        /// </summary>
+        private decimal commission;
+        public Decimal Commission
+        {
+            get => commission;
+            set
+            {
+                if (value >= 0)
+                    commission = value;
+            }
+        }
+        /// <summary>
+        /// Property GrossSales and backing field. Negative values are rejected.
+        /// </summary>
+        private decimal grossSales;
+        public Decimal GrossSales
+        {
+            get => grossSales;
+            set
+            {
+                if (value >= 0)
+                    grossSales = value;
+            }
+        }
         /// <summary>
         /// Constructor. Hands parameters to "Salary"'s constructor.
         /// </summary>
@@ -21,6 +46,10 @@ namespace Lab_03_EAB
         public Sales(uint id, string first, string last, Decimal salary, Decimal commission, Decimal sales)
             : base(id, first, last, salary, ETYPE.SALES)
         {
+            if (commission < 0)
+                throw new ArgumentException(BAD_VAL_ERR_MSG, commission.GetType().Name);
+            if (sales < 0)
+                throw new ArgumentException(BAD_VAL_ERR_MSG, sales.GetType().Name);
             Commission = commission;
             GrossSales = sales;
         }

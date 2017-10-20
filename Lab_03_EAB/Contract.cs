@@ -3,10 +3,23 @@
 
 namespace Lab_03_EAB
 {
-    sealed class Contract : Employee
+    public sealed class Contract : Employee
     {
-        private const string WAGE_LBL = "Contract Wage: ";
-        public Decimal ContractWage { get; set; }
+        private const string WAGE_LBL = "Contract Wage: ",
+            BAD_WAGE_CONSTR = "Only non-negative values of wage may be used to construct a Contract employee.";
+        /// <summary>
+        /// ContractWage property and backing field. Negative values are rejected.
+        /// </summary>
+        private decimal contractWage;
+        public Decimal ContractWage
+        {
+            get => contractWage;
+            set
+            {
+                if (value >= 0)
+                    contractWage = value;
+            }
+        }
         /// <summary>
         /// Constructor. Hands parameters to "Employee"'s constructor.
         /// </summary>
@@ -17,6 +30,7 @@ namespace Lab_03_EAB
         public Contract(uint id, string first, string last, Decimal wage)
             :base(id, ETYPE.CONTRACT , first,last)
         {
+            if (wage < 0) throw new ArgumentException(BAD_WAGE_CONSTR);
             ContractWage = wage;
         }
         /// <summary>

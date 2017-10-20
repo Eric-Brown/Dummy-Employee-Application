@@ -4,40 +4,40 @@
     <Position X="1.5" Y="0.75" Width="1.5" />
     <InheritanceLine Type="Lab_03_EAB.Employee" FixedToPoint="true">
       <Path>
-        <Point X="3.5" Y="1.5" />
-        <Point X="3" Y="1.5" />
+        <Point X="3.5" Y="1.624" />
+        <Point X="3" Y="1.624" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAACAAAAAAAAAAAABAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAABAAAAAACAAAAAgAAAAAABAAA=</HashCode>
       <FileName>Contract.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Employee">
     <Position X="3.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAACEAAAAAAAAAEAAAAAIAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAACEAAAABAAAAEAAAAAIAAAAAAAAAAAAAACAAAAAg=</HashCode>
       <FileName>Employee.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Hourly">
     <Position X="5.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAACAAECAAAAAAAAABBAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAIAAAACAAECAAAAAEAAABBAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Hourly.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Salary">
     <Position X="3.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <HashCode>AQAAAgEAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Salary.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Sales">
     <Position X="1.5" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAIAAAAAAAFAAAAAAAACAAAAAABAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAIAAAACAAFAAAAAAAACAEAAAABAAAAAAAAAAA=</HashCode>
       <FileName>Sales.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -55,7 +55,22 @@
       <HashCode>AAAAAAAAAAAAABAACAAIAEQAAAAAAAAAAAACAABAAAA=</HashCode>
       <FileName>BusinessRules.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
+  <Interface Name="Lab_03_EAB.IIndexable&lt;T&gt;">
+    <Position X="9.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IIndexable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Lab_03_EAB.IEmpIDIndexable&lt;T&gt;">
+    <Position X="9.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IEmpIDIndexable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Enum Name="Lab_03_EAB.ETYPE">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>

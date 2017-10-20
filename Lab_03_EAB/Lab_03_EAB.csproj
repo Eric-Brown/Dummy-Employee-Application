@@ -55,6 +55,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BusinessRules.cs" />
+    <Compile Include="IEmpIDIndexable.cs" />
+    <Compile Include="IIndexable.cs" />
     <Compile Include="Salary.cs" />
     <Compile Include="Sales.cs" />
     <Page Include="MainWindow.xaml">

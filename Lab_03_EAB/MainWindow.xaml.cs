@@ -1,9 +1,10 @@
 ﻿// Project Prolog
 // Name: Eric Brown
 // CS3260 Section 001
-// Project: Lab_03
-// Date: 9/13/17 9:00 PM
+// Project: Lab_05
+// Date: 9/16/17 9:00 PM
 // Purpose: To display a window allowing the client to add employees or create random employees
+// And to add in a BusinessRules class that will be extensible.
 // I declare that the following code was written by me or provided 
 // by the instructor for this project. I understand that copying source
 // code from any other source constitutes plagiarism, and that I will receive
@@ -43,19 +44,21 @@ namespace Lab_03_EAB
             INVALID_EMP_TYPE_ERROR = "Invalid Employee Type",
             PARSING_ERRMSG = "There was a problem parsing the entered values.\nPlease try again.",
             CONTAINS_NUM_PATTERN = ".*[0-9]+.*",
-            HELP_MSG = "Select the employee type that you would like to add and fill in the appropriate data. Once done, click \"Add Employee\".\nClicking \"Test Data\" creates random employees and displays the results.",
+            HELP_MSG = "Select the employee type that you would like to add and fill in the appropriate data. Once done, click \"Add Employee\".\nClicking \"Test Data\" creates random employees and displays the results.\nNo negative values are allowed for the numeric entries.",
             ABOUT = "About",
             ERROR = "Error",
             NEW_EMP_LINE = "-------New Employee-------\n",
             ENTER_VAL_MSG = "Please ensure that you have entered in a value for text box ",
             NO_NUM_MSG = "There is not allowed to be any numbers in text box",
             PLEASE_CHNG_MSG = ". Please change the input",
-            ALL_EMP_LINE = "\n------All Employees-----";
+            ALL_EMP_LINE = "\n------All Employees-----",
+            EMP_EXISTS_MSG = "An employee already exists which uses this Employee ID number.\nContinuing will update that employee with this new entry.\nIf you wish to make a new employee, please change the Employee Number.",
+            EMP_EXISTS_CPTN = "Employee ID Collision Detected";
         private readonly string[] FIRST_NAMES = { "Stewart", "Sunny", "Grant", "Greg", "Micheal", "Seth", "Anthony", "Matthew", "Jonathon", "Jenny", "Sam" };
         private readonly string[] LAST_NAMES = { "Linder", "Brown", "DePoirot", "Johnson", "Williams", "Xavier", "Green", "Goldberg", "Greenburg", "Flotsam", "Jenkins", "Jensen", "Null" };
         //End Constants
         //Business Rules, used as storage.
-        private BusinessRules createdEmployees = new BusinessRules();
+        private BusinessRules businessLogic = new BusinessRules();
 
         /// <summary>
         /// Creates a set of test employees with dummy data and stores it in a list
@@ -66,7 +69,7 @@ namespace Lab_03_EAB
         {
             Random random = new Random();
             RTBxOutput.Document.Blocks.Clear();
-            createdEmployees.Clear();
+            businessLogic.Clear();
             int numETypes = Enum.GetNames(typeof(ETYPE)).Length;
             //Iterate through the numbers and choose randomly from the first and last names. Other values are randomly generated using Random
             for (int i = 0; i < NUM_TEST_EMPS; i++)
@@ -74,26 +77,26 @@ namespace Lab_03_EAB
                 switch((ETYPE)(i%numETypes))
                 {
                     case ETYPE.CONTRACT:
-                        createdEmployees[i] = (new Contract((uint)i, 
+                        businessLogic[i] = (new Contract((uint)i, 
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble()*random.Next())));
                         break;
                     case ETYPE.HOURLY:
-                        createdEmployees[i] = (new Hourly((uint)i,
+                        businessLogic[i] = (new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
                     case ETYPE.SALARY:
-                        createdEmployees[i] = (new Salary((uint)i,
+                        businessLogic[i] = (new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
                     case ETYPE.SALES:
-                        createdEmployees[i] = (new Sales((uint)i,
+                        businessLogic[i] = (new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.Next() * random.NextDouble()),
@@ -104,7 +107,7 @@ namespace Lab_03_EAB
                         //Should never reach this
                         throw new Exception(INVALID_EMP_TYPE_ERROR);
                 }//End Switch
-                RTBxOutput.AppendText(createdEmployees.Last().ToString());
+                RTBxOutput.AppendText(businessLogic.Last()?.ToString());
             }//End for loop
         }
         
@@ -124,8 +127,6 @@ namespace Lab_03_EAB
         /// <param name="e">Any additional event handler arguments</param>
         private void BtnAddEmp_Click(object sender, RoutedEventArgs e)
         {
-            //clear the output box for new data
-            RTBxOutput.Document.Blocks.Clear();
             //If any of these operations fail, there is no point to continuing
             if (!(uint.TryParse(TxtEmpID.Text, out uint id) &&
                 ParseAlpha(TxtFirst, out string first) &&
@@ -135,43 +136,57 @@ namespace Lab_03_EAB
                 OutputError();
                 return;
             }
-            //find the selected type and then add the values and parse additional ones as needed
-            switch ((ETYPE)CBxEmpType.SelectedIndex)
+            if(businessLogic[id] != null)
             {
-                case ETYPE.CONTRACT:
-                    createdEmployees[createdEmployees.Count()] = (new Contract(id, first, last, sup1));
-                    break;
-                case ETYPE.HOURLY:
-                    if (double.TryParse(TxtSup2.Text, out double worked))
-                        createdEmployees[createdEmployees.Count()] = (new Hourly(id, first, last, sup1, worked));
-                    else
-                    {
-                        OutputError();
-                        return;
-                    }
-                    break;
-                case ETYPE.SALARY:
-                    createdEmployees[createdEmployees.Count()] = (new Salary(id, first, last, sup1));
-                    break;
-                case ETYPE.SALES:
-                    if (decimal.TryParse(TxtSup2.Text, out decimal commiss) && decimal.TryParse(TxtSup3.Text, out decimal sales))
-                        createdEmployees[createdEmployees.Count()] = (new Sales(id, first, last, sup1, commiss, sales));
-                    else
-                    {
-                        OutputError();
-                        return;
-                    }
-                    break;
-                default:
-                    //This should never reach here
-                    throw new Exception(INVALID_EMP_TYPE_ERROR);
+                if (MessageBox.Show(EMP_EXISTS_MSG, EMP_EXISTS_CPTN, MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
+                    return;
+            }
+            try
+            {
+                //clear the output box for new data
+                RTBxOutput.Document.Blocks.Clear();
+                //find the selected type and then add the values and parse additional ones as needed
+                switch ((ETYPE)CBxEmpType.SelectedIndex)
+                {
+                    case ETYPE.CONTRACT:
+                        businessLogic[businessLogic.Count()] = (new Contract(id, first, last, sup1));
+                        break;
+                    case ETYPE.HOURLY:
+                        if (double.TryParse(TxtSup2.Text, out double worked))
+                            businessLogic[businessLogic.Count()] = (new Hourly(id, first, last, sup1, worked));
+                        else
+                        {
+                            OutputError();
+                            return;
+                        }
+                        break;
+                    case ETYPE.SALARY:
+                        businessLogic[businessLogic.Count()] = (new Salary(id, first, last, sup1));
+                        break;
+                    case ETYPE.SALES:
+                        if (decimal.TryParse(TxtSup2.Text, out decimal commiss) && decimal.TryParse(TxtSup3.Text, out decimal sales))
+                            businessLogic[businessLogic.Count()] = (new Sales(id, first, last, sup1, commiss, sales));
+                        else
+                        {
+                            OutputError();
+                            return;
+                        }
+                        break;
+                    default:
+                        //This should never reach here
+                        throw new Exception(INVALID_EMP_TYPE_ERROR);
+                }
+            }//End Try
+            catch (ArgumentException exc)
+            {
+                MessageBox.Show(exc.Message, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             //print out the newest employee so that the client can confirm
-            RTBxOutput.AppendText(NEW_EMP_LINE + createdEmployees.Last().ToString() + ALL_EMP_LINE);
+            RTBxOutput.AppendText(NEW_EMP_LINE + businessLogic.Last()?.ToString() + ALL_EMP_LINE);
             //print out all the employees
-            foreach(Employee toPrint in createdEmployees)
+            foreach(Employee toPrint in businessLogic)
             {
-                RTBxOutput.AppendText(toPrint.ToString());
+                RTBxOutput.AppendText(toPrint?.ToString());
             }
         }
         /// <summary>

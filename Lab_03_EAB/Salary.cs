@@ -6,10 +6,23 @@ namespace Lab_03_EAB
     /// <summary>
     /// Represents a Salaried Employee
     /// </summary>
-    class Salary :Employee
+    public class Salary :Employee
     {
-        private const string SALARY_LBL = "Monthly Salary: ";
-        public Decimal MonthlySalary { get; set; }
+        private const string SALARY_LBL = "Monthly Salary: ",
+            BAD_VAL_ERR_MSG = "Only non-negative values of salary may be used to construct a Salary employee.";
+        /// <summary>
+        /// MonthlySalary property and backing field. Negative values are rejected.
+        /// </summary>
+        private decimal monthlySalary;
+        public Decimal MonthlySalary
+        {
+            get => monthlySalary;
+            set
+            {
+                if (value >= 0)
+                    monthlySalary = value;
+            }
+        }
         /// <summary>
         /// Constructor. Hands parameters to "Employee"'s constructor.
         /// </summary>
@@ -20,6 +33,7 @@ namespace Lab_03_EAB
         public Salary(uint id, string first, string last, Decimal salary)
             :base(id,ETYPE.SALARY, first,last)
         {
+            if (salary < 0) throw new ArgumentException(BAD_VAL_ERR_MSG);
             MonthlySalary = salary;
         }
 
