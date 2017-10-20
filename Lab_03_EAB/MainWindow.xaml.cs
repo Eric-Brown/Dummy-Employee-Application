@@ -2,7 +2,7 @@
 // Name: Eric Brown
 // CS3260 Section 001
 // Project: Lab_06
-// Date: 9/16/17 9:00 PM
+// Date: 10/19/17 10:00 PM
 // Purpose: To display a window allowing the client to add employees or create random employees
 // Changed BusinessRules class to work with a sorted dictionary and added some commonsense restrictions
 // for the properties of the employee objects.

@@ -1,4 +1,19 @@
-﻿using System;
+﻿// ****** Note: Project Prolog added here in case it was not meant to be in MainWindow.xaml.cs *****
+// Project Prolog
+// Name: Eric Brown
+// CS3260 Section 001
+// Project: Lab_06
+// Date: 10/19/17 10:00 PM
+// Purpose: To display a window allowing the client to add employees or create random employees
+// Changed BusinessRules class to work with a sorted dictionary and added some commonsense restrictions
+// for the properties of the employee objects.
+// I declare that the following code was written by me or provided 
+// by the instructor for this project. I understand that copying source
+// code from any other source constitutes plagiarism, and that I will receive
+// a zero on this project if I am found in violation of this policy.
+// ---------------------------------------------------------------------------
+
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lab_03_EAB;
 using System.Linq;
