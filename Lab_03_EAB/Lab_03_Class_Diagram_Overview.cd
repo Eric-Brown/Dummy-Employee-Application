@@ -28,7 +28,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Salary">
-    <Position X="3.5" Y="4.25" Width="1.5" />
+    <Position X="3.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAgEAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Salary.cs</FileName>
@@ -58,7 +58,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Lab_03_EAB.PropertyChangeEventArgs&lt;T&gt;">
-    <Position X="0.75" Y="3.25" Width="1.5" />
+    <Position X="5.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>PropertyChangeEventArgs.cs</FileName>
