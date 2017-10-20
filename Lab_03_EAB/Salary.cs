@@ -8,7 +8,7 @@ namespace Lab_03_EAB
     /// </summary>
     public class Salary :Employee
     {
-        private const string SALARY_LBL = "Monthly Salary: ",
+        private const string SALARY_FORMAT_STRING = "Monthly Salary: {0}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values of salary may be used to construct a Salary employee.";
         /// <summary>
         /// MonthlySalary property and backing field. Negative values are rejected.
@@ -48,7 +48,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + SALARY_LBL + MonthlySalary + "\n";
+            return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary);
         }
     }
 

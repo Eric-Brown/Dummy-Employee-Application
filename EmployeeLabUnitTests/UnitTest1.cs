@@ -23,6 +23,8 @@ namespace EmployeeLabUnitTests
             CONTRACT_FORMAT_STRING = "Contract Wage: {4}\n",
             SALARY_FORMAT_STRING = "Monthly Salary: {4}\n",
             SALES_FORMAT_STRING = "Commission: {5}\nGross Sales: {6}\n";
+        private const string EXPECTED_NAME = "Greg";
+
         [TestMethod]
         public void TestHourlyToString()
         {
@@ -62,7 +64,7 @@ namespace EmployeeLabUnitTests
             Assert.AreNotEqual(unexpected, testSalaryEmp.FirstName);
             testSalaryEmp.LastName = unexpected;
             Assert.AreNotEqual(unexpected, testSalaryEmp.LastName);
-            string expected = "Greg";
+            string expected = EXPECTED_NAME;
             testSalaryEmp.FirstName = expected;
             Assert.AreEqual(expected, testSalaryEmp.FirstName);
             testSalaryEmp.LastName = expected;

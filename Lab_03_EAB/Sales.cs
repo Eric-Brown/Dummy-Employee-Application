@@ -5,8 +5,7 @@ namespace Lab_03_EAB
 {
     public sealed class Sales : Salary
     {
-        private const string COM_LBL = "Commission: ",
-                SALES_LBL = "\nGross Sales: ",
+        private const string FORMAT_STRING = "Commission: {0}\nGross Sales: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Sales employee.";
         /// <summary>
         /// Property Commission and backing field. Negative values are rejected.
@@ -59,7 +58,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + COM_LBL + Commission + SALES_LBL + GrossSales + "\n";
+            return base.ToString() + string.Format(FORMAT_STRING, commission, GrossSales);
         }
     }
 }

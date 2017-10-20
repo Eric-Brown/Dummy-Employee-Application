@@ -8,8 +8,7 @@ namespace Lab_03_EAB
 {
     public sealed class Hourly : Employee
     {
-        private const string RATE_LBL = "Hourly Rate: ",
-            HOURS_LBL = "\nHours Worked: ",
+        private const string HOURLY_FORMAT_STRING = "Hourly Rate: {0}\nHours Worked: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Hourly employee.";
         /// <summary>
         /// HourlyRate property and backing field. Negative values are rejected.
@@ -61,7 +60,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + RATE_LBL + HourlyRate + HOURS_LBL + HoursWorked + "\n";
+            return base.ToString() + string.Format(HOURLY_FORMAT_STRING, HourlyRate, HoursWorked);
         }
     }
 }

@@ -9,7 +9,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAEAAABAAAAAACAAAAAgAAAAAABAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAABAAAAAACAAAAAgAEAAAAAAAA=</HashCode>
       <FileName>Contract.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -30,14 +30,14 @@
   <Class Name="Lab_03_EAB.Salary">
     <Position X="3.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAgEAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <HashCode>AQAAAgEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
       <FileName>Salary.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Sales">
     <Position X="1.5" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAIAAAACAAFAAAAAAAACAEAAAABAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAIAAAACAAEAAAAAIAAAAEAAAABAAAAAAAAAAA=</HashCode>
       <FileName>Sales.cs</FileName>
     </TypeIdentifier>
   </Class>

@@ -5,7 +5,7 @@ namespace Lab_03_EAB
 {
     public sealed class Contract : Employee
     {
-        private const string WAGE_LBL = "Contract Wage: ",
+        private const string CONTRACT_FORMAT_STRING = "Contract Wage: {0}\n",
             BAD_WAGE_CONSTR = "Only non-negative values of wage may be used to construct a Contract employee.";
         /// <summary>
         /// ContractWage property and backing field. Negative values are rejected.
@@ -39,7 +39,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + WAGE_LBL + ContractWage + "\n";
+            return base.ToString() + string.Format(CONTRACT_FORMAT_STRING, ContractWage);
         }
     }
 }
