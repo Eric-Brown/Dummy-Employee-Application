@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,15 @@ namespace Lab_03_EAB
     /// <summary>
     /// Class that contains the business rules for the application
     /// </summary>
-    public sealed class BusinessRules :IEmpIDIndexable<Employee>
+    public sealed class BusinessRules :IList<Employee>
     {
         const int NUM_EMPS_IN_LIST = 10;
         private SortedDictionary<uint, Employee> employee = new SortedDictionary<uint, Employee>();
+
+        int ICollection<Employee>.Count => throw new NotImplementedException();
+
+        public bool IsReadOnly => throw new NotImplementedException();
+
         /// <summary>
         /// Indexer which returns the value stored in the internal data structure at the index given.
         /// </summary>
@@ -105,6 +111,52 @@ namespace Lab_03_EAB
         public IEnumerator<Employee> GetEnumerator()
         {
             foreach (KeyValuePair<uint,Employee> pair in employee.ToList())
+            {
+                yield return pair.Value;
+            }
+        }
+
+        public int IndexOf(Employee item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Insert(int index, Employee item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveAt(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(Employee item)
+        {
+            if (employee.ContainsKey(item.EmpID))
+                employee[item.EmpID] = item;
+            else
+                employee.Add(item.EmpID, item);
+        }
+
+        public bool Contains(Employee item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(Employee[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(Employee item)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            foreach (KeyValuePair<uint, Employee> pair in employee.ToList())
             {
                 yield return pair.Value;
             }

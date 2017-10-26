@@ -54,12 +54,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Add_Emp_Window.xaml.cs">
+      <DependentUpon>Add_Emp_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BusinessRules.cs" />
-    <Compile Include="IEmpIDIndexable.cs" />
-    <Compile Include="IIndexable.cs" />
     <Compile Include="PropertyChangeEventArgs.cs" />
     <Compile Include="Salary.cs" />
     <Compile Include="Sales.cs" />
+    <Page Include="Add_Emp_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

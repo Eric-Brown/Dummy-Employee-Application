@@ -23,7 +23,7 @@
   <Class Name="Lab_03_EAB.Hourly">
     <Position X="5.5" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAIAAAACAAECAAAAAEAAABBAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAIAAACCAAEAAAAAAEAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Hourly.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -44,7 +44,7 @@
   <Class Name="Lab_03_EAB.MainWindow">
     <Position X="7.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BLQgAAABASEAIAAAQAgEAAcEoAAAAoAIAQAQYAAACCA=</HashCode>
+      <HashCode>BKAAAAABAQAAIAAAQAAAAAYEAAAAAIAAAAAAIAAACCA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -52,7 +52,7 @@
   <Class Name="Lab_03_EAB.BusinessRules">
     <Position X="9.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAAAAAABAACAAIAEQAAAAAAAAAAAACAABAAAA=</HashCode>
+      <HashCode>CEIAAEAAAAAAABAQCAAIBEQAAAAAAAAECAACAABQIAA=</HashCode>
       <FileName>BusinessRules.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -64,20 +64,6 @@
       <FileName>PropertyChangeEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="Lab_03_EAB.IIndexable&lt;T&gt;">
-    <Position X="9.75" Y="4.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAAAAQAAAAAAAAAAAACAABAAAA=</HashCode>
-      <FileName>IIndexable.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Lab_03_EAB.IEmpIDIndexable&lt;T&gt;">
-    <Position X="9.75" Y="6.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IEmpIDIndexable.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Enum Name="Lab_03_EAB.ETYPE">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
