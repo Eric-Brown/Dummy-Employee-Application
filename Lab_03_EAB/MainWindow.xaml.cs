@@ -100,8 +100,7 @@ namespace Lab_03_EAB
                 }//End Switch
                 //RTBxOutput.AppendText(businessLogic.Last()?.ToString());
             }//End for loop
-            DatGridTab1.ItemsSource = null;
-            DatGridTab1.ItemsSource = businessLogic;
+            DatGridTab1.UpdateLayout();
         }
         
         /// <summary>
@@ -111,7 +110,7 @@ namespace Lab_03_EAB
         {
             InitializeComponent();
             businessLogic.Add(new Salary(2, "sam", "iam", 12));
-            //businessLogic.Add(new Contract(3, "blah", "do", 2));
+            businessLogic.Add(new Contract(3, "blah", "do", 2));
             DatGridTab1.ItemsSource = businessLogic;
         }
         /// <summary>

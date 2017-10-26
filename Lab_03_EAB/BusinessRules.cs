@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections.Specialized;
 
 
 namespace Lab_03_EAB
@@ -10,14 +11,21 @@ namespace Lab_03_EAB
     /// <summary>
     /// Class that contains the business rules for the application
     /// </summary>
-    public sealed class BusinessRules :IList<Employee>
+    public sealed class BusinessRules :IList<Employee>, INotifyCollectionChanged
     {
         const int NUM_EMPS_IN_LIST = 10;
         private SortedDictionary<uint, Employee> employee = new SortedDictionary<uint, Employee>();
 
-        int ICollection<Employee>.Count => throw new NotImplementedException();
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            CollectionChanged?.Invoke(this, e);
+        }
+
+        int ICollection<Employee>.Count => employee.Count;
+
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Indexer which returns the value stored in the internal data structure at the index given.
@@ -52,6 +60,7 @@ namespace Lab_03_EAB
                     employee[employee.ElementAt(i).Key] = value;
                 }
                 if (value != null) value.EmpIDChanged += EmpIDChangeHandler;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
         /// <summary>
@@ -64,6 +73,7 @@ namespace Lab_03_EAB
             //Remove the old entry and update to a new entry
             employee[args.newValue] = (Employee)sender;
             employee.Remove(args.oldValue);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
         /// <summary>
         /// Allows indexing into the internal datastructure through looking up the employee's ID
@@ -85,12 +95,18 @@ namespace Lab_03_EAB
                     employee[empID] = value;
                 else
                     employee.Add(value.EmpID, value);
+                if (value != null) value.EmpIDChanged += EmpIDChangeHandler;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
         /// <summary>
         /// Exposes the datastructures clear method. Might remove later for enforcing encapsulation.
         /// </summary>
-        public void Clear() => employee.Clear();
+        public void Clear()
+        {
+            employee.Clear();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
 
         /// <summary>
         /// Exposes the datastructures last element added.
@@ -99,12 +115,7 @@ namespace Lab_03_EAB
         public Employee Last() => (employee.Count == 0) ? null : employee.Last().Value;
 
         /// <summary>
-        /// Exposes the datastructures count method.
-        /// </summary>
-        /// <returns>Returns the number of items in the datastructure</returns>
-        public int Count() => employee.Count();
-
-        /// <summary>
+        /// Implements the function from IList
         /// Returns a value from the enumerator of the datastructure
         /// </summary>
         /// <returns>An enumerator which returns Employee objects.</returns>
@@ -118,9 +129,22 @@ namespace Lab_03_EAB
 
         public int IndexOf(Employee item)
         {
-            throw new NotImplementedException();
+            if (employee.ContainsKey(item.EmpID))
+            {
+                int i = 0;
+                while (!Object.Equals(employee.ElementAt(i).Value, item))
+                    ++i;
+                return i;
+            }
+            else return -1;
         }
 
+        /// <summary>
+        /// Due to working with a sorted dictionary, this cannot be implemented. Do not call.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
+        /// <exception cref="NotImplementedException">This will always throw</exception>
         public void Insert(int index, Employee item)
         {
             throw new NotImplementedException();
@@ -128,7 +152,12 @@ namespace Lab_03_EAB
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            Employee[] temp = employee.Values.ToArray();
+            if (index < temp.Count())
+            {
+                employee.Remove(temp[index].EmpID);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
         }
 
         public void Add(Employee item)
@@ -137,21 +166,30 @@ namespace Lab_03_EAB
                 employee[item.EmpID] = item;
             else
                 employee.Add(item.EmpID, item);
+            if (item != null) item.EmpIDChanged += EmpIDChangeHandler;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public bool Contains(Employee item)
         {
-            throw new NotImplementedException();
+            return employee.ContainsValue(item);
         }
 
         public void CopyTo(Employee[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            employee.Values.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(Employee item)
         {
-            throw new NotImplementedException();
+            if (employee.ContainsValue(item))
+            {
+                employee.Remove(item.EmpID);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                return true;
+            }
+            else
+                return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

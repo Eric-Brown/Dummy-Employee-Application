@@ -54,7 +54,7 @@
                Grid.Row="1" Grid.Column="2"/>
         <Label Name="LblSup3" Content="Temp" 
                Visibility="Collapsed" 
-               Grid.Row="7" Grid.Column="0"/>
+               Grid.Row="2" Grid.Column="2"/>
         <ComboBox Name="CBxEmpType" Grid.Row="0" Grid.Column="1" SelectionChanged="CBxEmpType_SelectionChanged"/>
         <TextBox x:Name="TxtEmpID" Grid.Row="0" Grid.Column="3"/>
         <TextBox Name="TxtFirst" Grid.Row="1" Grid.Column="1"/>
