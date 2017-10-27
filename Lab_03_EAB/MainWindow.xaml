@@ -56,7 +56,7 @@
                               CanUserReorderColumns="True"
                               CanUserSortColumns="True"
                               CanUserResizeColumns="True"
-                             
+                             IsReadOnly="True"
                               SelectionMode="Single" SelectionUnit="FullRow"
                               MouseDoubleClick="DatGridTab1_MouseDoubleClick"
                               SelectionChanged="DatGridTab1_SelectionChanged">
@@ -80,7 +80,8 @@
                          IsReadOnly="True"
                          Grid.Column="1"
                          Margin="5,5,5,5"
-                         MaxHeight="500"/>
+                         MaxHeight="500" FontFamily="Consolas"
+                         Background="WhiteSmoke"/>
         </Grid>
     </StackPanel>
 </Window>

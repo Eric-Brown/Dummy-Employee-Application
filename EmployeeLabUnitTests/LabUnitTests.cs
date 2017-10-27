@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lab_03_EAB;
 using System.Linq;
 using System.IO;
+using System.Windows;
 
 namespace EmployeeLabUnitTests
 {
@@ -338,7 +339,38 @@ namespace EmployeeLabUnitTests
             FileIO fileIO = new FileIO(business);
             fileIO.OpenFileDB();
             fileIO.CloseFileDB();
-            Assert.IsTrue(fileIO.stream != null);
+            try
+            {
+                fileIO.stream.Seek(1, SeekOrigin.Begin);
+                Assert.Fail();
+            }
+            catch(ObjectDisposedException e)
+            {
+                Assert.AreEqual("Cannot access a closed file.", e.Message);
+            }
+            catch(Exception e)
+            {
+                Assert.Fail();
+            }
+        }
+        [TestMethod]
+        public void TestOpenDB()
+        {
+            BusinessRules business = new BusinessRules();
+            PopulateBusinessRules(business);
+            FileIO fileIO = new FileIO(business);
+            fileIO.OpenFileDB();
+            Assert.IsNotNull(fileIO.stream);
+        }
+        [TestMethod]
+        public void TestSaveFileDB()
+        {
+            BusinessRules business = new BusinessRules();
+            PopulateBusinessRules(business);
+            FileIO fileIO = new FileIO(business);
+            fileIO.SaveFileDB();
+            Assert.IsNotNull(fileIO.stream);
+            fileIO.CloseFileDB();
         }
 
         private void PopulateBusinessRules(BusinessRules toPopulate, int numToCreate = DEFAULT_EMPS_TO_CREATE)

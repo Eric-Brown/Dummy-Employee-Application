@@ -37,6 +37,7 @@ namespace Lab_03_EAB
         private const string EMP_NOT_ADDED_CAPTION = "Employee Not Added";
         private const string MOD_EMP_TITLE = "Modify Employee";
         private const string MOD_EMP_BTN_NAME = "Modify";
+        private const string EMP_EXISTS_ERR = "Employee with that ID is already present.\nIf you wish to modify the entry, use the modify button instead.";
 
         /// <summary>
         /// closes the window
@@ -114,6 +115,11 @@ namespace Lab_03_EAB
             ETYPE selected = (ETYPE)Enum.Parse(typeof(ETYPE), CBxEmpType.SelectedItem.ToString());
             if (businessRules.CanAddEntry(selected, entries.ToArray()))
             {
+                if(selectedItem == null && businessRules.EmployeeCollection.ContainsKey(uint.Parse(TxtEmpID.Text)))
+                {
+                    MessageBox.Show(EMP_EXISTS_ERR, EMP_NOT_ADDED_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
+
+                }
                 businessRules.AddFromArray(selected, entries.ToArray());
                 this.Close();
             }

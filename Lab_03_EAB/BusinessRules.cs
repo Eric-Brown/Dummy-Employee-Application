@@ -103,7 +103,7 @@ namespace Lab_03_EAB
             try
             {
                 uint idToAdd = uint.Parse(v[0]);
-                if (employeeCollection[idToAdd] != null) employeeCollection.Remove(idToAdd);
+                if ( employeeCollection.ContainsKey(idToAdd)) employeeCollection.Remove(idToAdd);
             switch (selected)
                 {
                     case ETYPE.CONTRACT:
