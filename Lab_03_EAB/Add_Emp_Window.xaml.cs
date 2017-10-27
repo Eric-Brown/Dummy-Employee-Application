@@ -33,113 +33,119 @@ namespace Lab_03_EAB
             PLEASE_CHNG_MSG = ". Please change the input",
             EMP_EXISTS_MSG = "An employee already exists which uses this Employee ID number.\nContinuing will update that employee with this new entry.\nIf you wish to make a new employee, please change the Employee Number.",
             EMP_EXISTS_CPTN = "Employee ID Collision Detected";
+        private const string ADD_EMP_ERR_MSG = "Could not add the employee. Please verify that all the entered information is in the proper format.";
+        private const string EMP_NOT_ADDED_CAPTION = "Employee Not Added";
+        private const string MOD_EMP_TITLE = "Modify Employee";
+        private const string MOD_EMP_BTN_NAME = "Modify";
 
-        private void BtnAddMod_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// closes the window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            //If any of these operations fail, there is no point to continuing
-            if (!(uint.TryParse(TxtEmpID.Text, out uint id) &&
-                ParseAlpha(TxtFirst, out string first) &&
-                ParseAlpha(TxtLast, out string last) &&
-                decimal.TryParse(TxtSup1.Text, out decimal sup1)))
+            this.Close();
+        }
+
+        private BusinessRules businessRules;
+        /// <summary>
+        /// Window loaded event handler.
+        /// Populates the window with information.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            CBxEmpType.ItemsSource = Enum.GetNames(typeof(ETYPE));
+            if (selectedItem != null)
             {
-                OutputError();
-                return;
-            }
-            if (businessLogic[id] != null)
-            {
-                if (MessageBox.Show(EMP_EXISTS_MSG, EMP_EXISTS_CPTN, MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
-                    return;
-            }
-            try
-            {
-                //clear the output box for new data
-                RTBxOutput.Document.Blocks.Clear();
-                //find the selected type and then add the values and parse additional ones as needed
-                switch ((ETYPE)CBxEmpType.SelectedIndex)
+                Employee temp = selectedItem as Employee;
+                CBxEmpType.SelectedItem = Enum.GetName(typeof(ETYPE),temp?.EmpType);
+                CBxEmpType.IsEnabled = false;
+                TxtFirst.Text = temp?.FirstName;
+                TxtLast.Text = temp?.LastName;
+                TxtEmpID.Text = temp?.EmpID.ToString();
+                TxtEmpID.IsEnabled = false;
+                switch(temp?.EmpType)
                 {
                     case ETYPE.CONTRACT:
-                        businessLogic[businessLogic.Count()] = (new Contract(id, first, last, sup1));
+                        TxtSup1.Text = (temp as Contract).ContractWage.ToString();
                         break;
                     case ETYPE.HOURLY:
-                        if (double.TryParse(TxtSup2.Text, out double worked))
-                            businessLogic[businessLogic.Count()] = (new Hourly(id, first, last, sup1, worked));
-                        else
-                        {
-                            OutputError();
-                            return;
-                        }
-                        break;
-                    case ETYPE.SALARY:
-                        businessLogic[businessLogic.Count()] = (new Salary(id, first, last, sup1));
+                        TxtSup1.Text = (temp as Hourly).HourlyRate.ToString();
+                        TxtSup2.Text = (temp as Hourly).HoursWorked.ToString();
                         break;
                     case ETYPE.SALES:
-                        if (decimal.TryParse(TxtSup2.Text, out decimal commiss) && decimal.TryParse(TxtSup3.Text, out decimal sales))
-                            businessLogic[businessLogic.Count()] = (new Sales(id, first, last, sup1, commiss, sales));
-                        else
-                        {
-                            OutputError();
-                            return;
-                        }
+                        TxtSup1.Text = (temp as Sales).MonthlySalary.ToString();
+                        TxtSup2.Text = (temp as Sales).Commission.ToString();
+                        TxtSup3.Text = (temp as Sales).GrossSales.ToString();
                         break;
-                    default:
-                        //This should never reach here
-                        throw new Exception(INVALID_EMP_TYPE_ERROR);
+                    case ETYPE.SALARY:
+                        TxtSup1.Text = (temp as Salary).MonthlySalary.ToString();
+                        break;
                 }
-            }//End Try
-            catch (ArgumentException exc)
-            {
-                MessageBox.Show(exc.Message, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            //print out the newest employee so that the client can confirm
-            RTBxOutput.AppendText(NEW_EMP_LINE + businessLogic.Last()?.ToString() + ALL_EMP_LINE);
-            //print out all the employees
-            foreach (Employee toPrint in businessLogic)
+            else
             {
-                RTBxOutput.AppendText(toPrint?.ToString());
+                CBxEmpType.SelectedIndex = 0;
+                CBxEmpType.IsEnabled = true;
+                TxtEmpID.IsEnabled = true;
             }
-            */
+        }
 
+        private object selectedItem;
+        /// <summary>
+        /// Event handler for the Add/Mod button click.
+        /// Attempts to add an employee, and displays a message box on failure.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnAddMod_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> entries = new List<string> {
+                TxtEmpID.Text,
+                TxtFirst.Text,
+                TxtLast.Text,
+                TxtSup1.Text,
+                TxtSup2.Text,
+                TxtSup3.Text
+            };
+            ETYPE selected = (ETYPE)Enum.Parse(typeof(ETYPE), CBxEmpType.SelectedItem.ToString());
+            if (businessRules.CanAddEntry(selected, entries.ToArray()))
+            {
+                businessRules.AddFromArray(selected, entries.ToArray());
+                this.Close();
+            }
+            else
+                MessageBox.Show(ADD_EMP_ERR_MSG, EMP_NOT_ADDED_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         /// <summary>
-        /// Prints an error message to the output textbox
+        /// Constructor that keeps a connection to businessrules
         /// </summary>
-        private void OutputError()
-        {
-           // RTBxOutput.AppendText(PARSING_ERRMSG);
-        }
-
-        /// <summary>
-        /// Attempts to place a string into "result" that has no numbers in it
-        /// </summary>
-        /// <param name="toRead">The textbox to parse</param>
-        /// <param name="result">The string result of the parse. Could be null.</param>
-        /// <returns>True if the parse succeeded. False otherwise.</returns>
-        private bool ParseAlpha(TextBox toRead, out string result)
-        {
-            /*
-            if (string.IsNullOrEmpty(toRead.Text) || Regex.IsMatch(toRead.Text, CONTAINS_NUM_PATTERN))
-            {
-                result = null;
-                if (string.IsNullOrEmpty(toRead.Text))
-                    MessageBox.Show(ENTER_VAL_MSG + toRead.Name, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
-                else
-                    MessageBox.Show(NO_NUM_MSG + toRead.Name + PLEASE_CHNG_MSG, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-            result = toRead.Text.Trim();
-            return true;
-            */
-            result = "";
-            return true;
-        }
-
-        public Add_Emp_Window()
+        /// <param name="rules"></param>
+        public Add_Emp_Window(BusinessRules rules)
         {
             InitializeComponent();
-            CBxEmpType.ItemsSource = Enum.GetNames(typeof(ETYPE));
-            CBxEmpType.SelectedIndex = 0;
+            businessRules = rules;
         }
+        /// <summary>
+        /// constructor when the modify event is triggered
+        /// </summary>
+        /// <param name="selectedItem"></param>
+        /// <param name="rules"></param>
+        public Add_Emp_Window(object selectedItem, BusinessRules rules)
+        {
+            InitializeComponent();
+            if (selectedItem != null)
+            {
+                this.selectedItem = selectedItem;
+                Title = MOD_EMP_TITLE;
+                BtnAddMod.Content = MOD_EMP_BTN_NAME;
+            }
+            businessRules = rules;
+        }
+
         /// <summary>
         /// Changes label and textbox content and visibility depending on what is selected in the combobox
         /// </summary>

@@ -14,17 +14,17 @@
     <StackPanel>
         <Menu Name="MnuMain">
             <MenuItem Name="MnuFile" Header="File">
-                <MenuItem Name="MnuNew" Header="New"/>
-                <MenuItem Name="MnuOpen" Header="Open"/>
-                <MenuItem Name="MnuSave" Header="Save"/>
-                <MenuItem Name="MnuSaveAll" Header="Save All"/>
+                <MenuItem Name="MnuNew" Header="New" Click="MnuNew_Click"/>
+                <MenuItem Name="MnuOpen" Header="Open" Click="MnuOpen_Click"/>
+                <MenuItem Name="MnuSave" Header="Save..." Click="MnuSave_Click"/>
+                <!--MenuItem Name="MnuSaveAll" Header="Save All"/-->
                 <MenuItem Name="MnuExit" Header="Exit" Click="MnuExit_Click"/>
             </MenuItem>
             <MenuItem Name="MnuEdit" Header="Edit">
-                <MenuItem Name="MnuAdd" Header="Add"/>
-                <MenuItem Name="MnuModify" Header="Modify"/>
-                <MenuItem Name="MnuDelete" Header="Delete"/>
-                <MenuItem Name="MnuMove" Header="Move"/>
+                <MenuItem Name="MnuAdd" Header="Add" Click="BtnAddEmp_Click"/>
+                <MenuItem Name="MnuModify" Header="Modify" Click="BtnMod_Click" />
+                <!--MenuItem Name="MnuDelete" Header="Delete"/>
+                <MenuItem Name="MnuMove" Header="Move"/-->
             </MenuItem>
             <MenuItem Name="MnuHelp" Header="Help">
                 <MenuItem Name="MnuAbout" Header="About" Click="MnuAbout_Click"/>
@@ -33,8 +33,8 @@
         <StackPanel Orientation="Horizontal">
             <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Click="BtnAddEmp_Click"/>
             <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Click="BtnTest_Click"/>
-            <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom"/>
-            <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom"/>
+            <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Click="BtnMod_Click"/>
+            <!--Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom"/-->
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -56,7 +56,10 @@
                               CanUserReorderColumns="True"
                               CanUserSortColumns="True"
                               CanUserResizeColumns="True"
-                              SelectionMode="Single" SelectionUnit="FullRow">
+                             
+                              SelectionMode="Single" SelectionUnit="FullRow"
+                              MouseDoubleClick="DatGridTab1_MouseDoubleClick"
+                              SelectionChanged="DatGridTab1_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
                             <DataGridTextColumn Binding="{Binding FirstName}"  Header="First Name"/>

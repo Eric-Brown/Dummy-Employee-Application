@@ -40,16 +40,55 @@ namespace Lab_03_EAB
             ABOUT = "About",
             ERROR = "Error",
             NEW_EMP_LINE = "-------New Employee-------\n",
-            HELP_MSG = "Select the employee type that you would like to add and fill in the appropriate data. Once done, click \"Add Employee\".\nClicking \"Test Data\" creates random employees and displays the results.\nNo negative values are allowed for the numeric entries.",
-                        INVALID_EMP_TYPE_ERROR = "Invalid Employee Type",
+            HELP_MSG = @"Use the file menu to navigate to an employee database that is already created.
+Or click the buttons to manually add employees, or to create test employees, or to modify an existing employee.
+Created by: Eric Brown",
+            INVALID_EMP_TYPE_ERROR = "Invalid Employee Type",
 
             ALL_EMP_LINE = "\n------All Employees-----";
 
-        private readonly string[] FIRST_NAMES = { "Stewart", "Sunny", "Grant", "Greg", "Micheal", "Seth", "Anthony", "Matthew", "Jonathon", "Jenny", "Sam" };
-        private readonly string[] LAST_NAMES = { "Linder", "Brown", "DePoirot", "Johnson", "Williams", "Xavier", "Green", "Goldberg", "Greenburg", "Flotsam", "Jenkins", "Jensen", "Null" };
         //End Constants
         //Business Rules, used as storage.
         private BusinessRules businessLogic = new BusinessRules();
+
+        private void MnuSave_Click(object sender, RoutedEventArgs e)
+        {
+            FileIO temp = new FileIO(businessLogic);
+            temp.SaveFileDB();
+            temp.WriteFileDB();
+            temp.CloseFileDB();
+        }
+
+        private void MnuOpen_Click(object sender, RoutedEventArgs e)
+        {
+            FileIO fileIO = new FileIO(businessLogic);
+            fileIO.OpenFileDB();
+            fileIO.ReadFileDB();
+            businessLogic.EmployeeCollection = fileIO.EmployeeDB;
+            fileIO.CloseFileDB();
+        }
+
+        private void MnuNew_Click(object sender, RoutedEventArgs e)
+        {
+            businessLogic.Clear();
+        }
+
+        private void BtnMod_Click(object sender, RoutedEventArgs e)
+        {
+            Add_Emp_Window window = new Add_Emp_Window(DatGridTab1.SelectedItem, businessLogic);
+            window.Show();
+        }
+
+        private void DatGridTab1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            BtnMod_Click(sender, e);
+        }
+
+        private void DatGridTab1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RTBxOutput.Document.Blocks.Clear();
+            RTBxOutput.AppendText(DatGridTab1.SelectedItem?.ToString());
+        }
 
         /// <summary>
         /// Creates a set of test employees with dummy data and stores it in a list
@@ -58,49 +97,7 @@ namespace Lab_03_EAB
         /// <param name="e">Any additional event handler arguments</param>
         private void BtnTest_Click(object sender, RoutedEventArgs e)
         {
-            Random random = new Random();
-            //RTBxOutput.Document.Blocks.Clear();
-            businessLogic.Clear();
-            int numETypes = Enum.GetNames(typeof(ETYPE)).Length;
-            //Iterate through the numbers and choose randomly from the first and last names. Other values are randomly generated using Random
-            for (int i = 0; i < NUM_TEST_EMPS; i++)
-            {
-                switch((ETYPE)(i%numETypes))
-                {
-                    case ETYPE.CONTRACT:
-                        businessLogic[i] = (new Contract((uint)i, 
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.NextDouble()*random.Next())));
-                        break;
-                    case ETYPE.HOURLY:
-                        businessLogic[i] = (new Hourly((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.NextDouble() * random.Next()),
-                            random.NextDouble() * random.Next()));
-                        break;
-                    case ETYPE.SALARY:
-                        businessLogic[i] = (new Salary((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.NextDouble() * random.Next())));
-                        break;
-                    case ETYPE.SALES:
-                        businessLogic[i] = (new Sales((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.Next() * random.NextDouble()),
-                            (decimal)(random.Next() * random.NextDouble()),
-                            (decimal)(random.Next() * random.NextDouble())));
-                        break;
-                    default:
-                        //Should never reach this
-                        throw new Exception(INVALID_EMP_TYPE_ERROR);
-                }//End Switch
-                //RTBxOutput.AppendText(businessLogic.Last()?.ToString());
-            }//End for loop
-            DatGridTab1.UpdateLayout();
+            businessLogic.AddTestEmps();
         }
         
         /// <summary>
@@ -109,8 +106,6 @@ namespace Lab_03_EAB
         public MainWindow()
         {
             InitializeComponent();
-            businessLogic.Add(new Salary(2, "sam", "iam", 12));
-            businessLogic.Add(new Contract(3, "blah", "do", 2));
             DatGridTab1.ItemsSource = businessLogic;
         }
         /// <summary>
@@ -120,7 +115,7 @@ namespace Lab_03_EAB
         /// <param name="e">Any additional event handler arguments</param>
         private void BtnAddEmp_Click(object sender, RoutedEventArgs e)
         {
-            Add_Emp_Window window = new Add_Emp_Window();
+            Add_Emp_Window window = new Add_Emp_Window(businessLogic);
             window.Show();
         }
         /// <summary>

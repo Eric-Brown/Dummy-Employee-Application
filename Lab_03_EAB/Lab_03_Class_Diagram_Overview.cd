@@ -44,7 +44,7 @@
   <Class Name="Lab_03_EAB.MainWindow">
     <Position X="7.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BKAAAAABAQAAIAAAQAAAAAYEAAAAAIAAAAAAIAAACCA=</HashCode>
+      <HashCode>JKAAAAABAQAAIAAAQAAAAAYEAAAAAIAAAAAAIAAACCA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -52,7 +52,7 @@
   <Class Name="Lab_03_EAB.BusinessRules">
     <Position X="9.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CEIAAEAAAAAAABAQCAAIBEQAAAAAAAAECAACAABQIAA=</HashCode>
+      <HashCode>CEIAAEAAAAAAABAQCAAIhEAAAAAAABAECAACAABQIAA=</HashCode>
       <FileName>BusinessRules.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -64,6 +64,21 @@
       <FileName>PropertyChangeEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Lab_03_EAB.FileIO">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAsAAAAAIAAAAAAAAAAAAAAAAAAACABAGAAAAAAQAAA=</HashCode>
+      <FileName>FileIO.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Lab_03_EAB.IFileAccess">
+    <Position X="0.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAsAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAQAAA=</HashCode>
+      <FileName>IFileAccess.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Enum Name="Lab_03_EAB.ETYPE">
     <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>

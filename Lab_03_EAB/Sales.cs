@@ -1,10 +1,12 @@
 ﻿using System;
-
+using System.Runtime.Serialization;
 
 namespace Lab_03_EAB
 {
+    [Serializable]
     public sealed class Sales : Salary
     {
+
         private const string FORMAT_STRING = "Commission: {0}\nGross Sales: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Sales employee.";
         /// <summary>

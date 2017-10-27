@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace Lab_03_EAB
 {
+    [Serializable]
     public sealed class Hourly : Employee
     {
+        
         private const string HOURLY_FORMAT_STRING = "Hourly Rate: {0}\nHours Worked: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Hourly employee.";
         /// <summary>
         /// HourlyRate property and backing field. Negative values are rejected.
         /// </summary>
+        
         private decimal hourlyRate;
         public Decimal HourlyRate
         {
@@ -26,6 +30,7 @@ namespace Lab_03_EAB
         /// <summary>
         /// HoursWorked property and backing field. Negative values are rejected.
         /// </summary>
+        
         private double hoursWorked;
         public Double HoursWorked
         {

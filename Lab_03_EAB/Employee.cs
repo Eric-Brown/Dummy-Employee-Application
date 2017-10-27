@@ -1,11 +1,18 @@
-﻿namespace Lab_03_EAB
+﻿using System.Runtime.Serialization;
+using System;
+namespace Lab_03_EAB
 {
+    [Serializable]
     public enum ETYPE { SALARY, SALES, HOURLY, CONTRACT};
+    [Serializable]
     public abstract class Employee
     {
         public event System.EventHandler<PropertyChangeEventArgs<uint>> EmpIDChanged;
+        
         private const string FORMAT_STRING = "EmpID: {0}\nEmpType: {1}\nFirst Name: {2}\nLast Name: {3}\n";
+        
         private uint empID;
+
         public uint EmpID
         {
             get => empID;
@@ -26,10 +33,12 @@
         {
             EmpIDChanged?.Invoke(this, e);
         }
-        public ETYPE EmpType { get; set; }
+        private ETYPE empType;
+        public ETYPE EmpType { get => empType; set => empType = value; }
         /// <summary>
         /// FirstName property and backing field. Rejects null or empty names.
         /// </summary>
+        
         private string firstName;
         public string FirstName
         {
@@ -43,6 +52,7 @@
         /// <summary>
         /// LastName property and backing field. Rejects null or empty names.
         /// </summary>
+        
         private string lastName;
         public string LastName
         {

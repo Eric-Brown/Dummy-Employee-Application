@@ -17,6 +17,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lab_03_EAB;
 using System.Linq;
+using System.IO;
 
 namespace EmployeeLabUnitTests
 {
@@ -292,5 +293,97 @@ namespace EmployeeLabUnitTests
             }//End for loop
 
         }
-    }
+    }//End Test BusinessRules
+
+    [TestClass]
+    public class TestFileIO
+    {
+        private readonly string[] FIRST_NAMES = { "Stewart", "Sunny", "Grant", "Greg", "Micheal", "Seth", "Anthony", "Matthew", "Jonathon", "Jenny", "Sam" };
+        private readonly string[] LAST_NAMES = { "Linder", "Brown", "DePoirot", "Johnson", "Williams", "Xavier", "Green", "Goldberg", "Greenburg", "Flotsam", "Jenkins", "Jensen", "Null" };
+        private const int DEFAULT_EMPS_TO_CREATE = 10;
+        private const string INVALID_EMP_TYPE = "Invalid employee type attempted to be created.";
+        private string testPath = Path.Combine(Directory.GetCurrentDirectory(), Path.GetTempFileName());
+        [TestMethod]
+        public void TestWriteFileDB()
+        {
+            BusinessRules businessRules = new BusinessRules();
+            PopulateBusinessRules(businessRules);
+            FileIO fileIO = new FileIO(businessRules);
+            fileIO.WriteFileDB(testPath);
+            fileIO.CloseFileDB();
+            File.Exists(testPath);
+            FileStream fileStream = File.Open(testPath, FileMode.Open);
+            Assert.IsNotNull(fileStream);
+            Assert.IsTrue(fileStream.Length > 0);
+        }
+        [TestMethod]
+        public void TestReadFileDB()
+        {
+            BusinessRules businessRules = new BusinessRules();
+            PopulateBusinessRules(businessRules);
+            FileIO fileIO = new FileIO(businessRules);
+            BusinessRules rules = new BusinessRules();
+            fileIO.WriteFileDB(testPath);
+            fileIO.CloseFileDB();
+            FileIO test = new FileIO(rules);
+            test.ReadFileDB(testPath);
+            rules.EmployeeCollection = test.EmployeeDB;
+            Assert.IsTrue(rules.EmployeeCollection.Count == businessRules.EmployeeCollection.Count);
+        }
+        [TestMethod]
+        public void TestCloseDB()
+        {
+            BusinessRules business = new BusinessRules();
+            PopulateBusinessRules(business);
+            FileIO fileIO = new FileIO(business);
+            fileIO.OpenFileDB();
+            fileIO.CloseFileDB();
+            Assert.IsTrue(fileIO.stream != null);
+        }
+
+        private void PopulateBusinessRules(BusinessRules toPopulate, int numToCreate = DEFAULT_EMPS_TO_CREATE)
+        {
+            Random random = new Random();
+            toPopulate.Clear();
+            int numETypes = Enum.GetNames(typeof(ETYPE)).Length;
+            for (int i = 0; i < numToCreate; i++)
+            {
+                switch ((ETYPE)(i % numETypes))
+                {
+                    case ETYPE.CONTRACT:
+                        toPopulate[i] = (new Contract((uint)i,
+                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
+                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
+                            (decimal)(random.NextDouble() * random.Next())));
+                        break;
+                    case ETYPE.HOURLY:
+                        toPopulate[i] = (new Hourly((uint)i,
+                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
+                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
+                            (decimal)(random.NextDouble() * random.Next()),
+                            random.NextDouble() * random.Next()));
+                        break;
+                    case ETYPE.SALARY:
+                        toPopulate[i] = (new Salary((uint)i,
+                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
+                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
+                            (decimal)(random.NextDouble() * random.Next())));
+                        break;
+                    case ETYPE.SALES:
+                        toPopulate[i] = (new Sales((uint)i,
+                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
+                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
+                            (decimal)(random.Next() * random.NextDouble()),
+                            (decimal)(random.Next() * random.NextDouble()),
+                            (decimal)(random.Next() * random.NextDouble())));
+                        break;
+                    default:
+                        //If code reaches here, something is seriously wrong.
+                        throw new Exception(INVALID_EMP_TYPE);
+                }//End Switch
+            }//End for loop
+
+        }
+
+    }//End TestFileIO Class
 }

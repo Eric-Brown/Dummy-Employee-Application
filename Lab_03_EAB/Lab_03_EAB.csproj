@@ -36,6 +36,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -45,6 +47,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -58,6 +61,8 @@
       <DependentUpon>Add_Emp_Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="BusinessRules.cs" />
+    <Compile Include="FileIO.cs" />
+    <Compile Include="IFileAccess.cs" />
     <Compile Include="PropertyChangeEventArgs.cs" />
     <Compile Include="Salary.cs" />
     <Compile Include="Sales.cs" />

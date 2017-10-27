@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab_03_EAB"
         mc:Ignorable="d"
-        Title="Add/Modify Employee" SizeToContent="WidthAndHeight">
+        Title="Add Employee" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="2,5,0,0"/>
@@ -62,9 +62,10 @@
         <TextBox Name="TxtSup1" Grid.Row="3" Grid.Column="1" Visibility="Visible"/>
         <TextBox Name="TxtSup2" Grid.Row="1" Grid.Column="3" Visibility="Collapsed"/>
         <TextBox Name="TxtSup3" Grid.Row="2" Grid.Column="3" Visibility="Collapsed"/>
-        <Button Name="BtnAddMod" Content="Add/Modify"
+        <Button Name="BtnAddMod" Content="Add"
                 Grid.Row="5" Grid.Column="1" Click="BtnAddMod_Click"/>
         <Button Name="BtnCancel" Content="Cancel"
-                Grid.Row="5" Grid.Column="2"/>
+                Grid.Row="5" Grid.Column="2"
+                Click="BtnCancel_Click"/>
     </Grid>
 </Window>
