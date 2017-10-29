@@ -90,6 +90,16 @@ Created by: Eric Brown",
             RTBxOutput.AppendText(DatGridTab1.SelectedItem?.ToString());
         }
 
+        private void BtnTestNum_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            businessLogic.Remove(DatGridTab1.SelectedItem as Employee);
+        }
+
         /// <summary>
         /// Creates a set of test employees with dummy data and stores it in a list
         /// </summary>

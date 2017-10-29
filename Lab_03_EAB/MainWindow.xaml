@@ -33,8 +33,9 @@
         <StackPanel Orientation="Horizontal">
             <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Click="BtnAddEmp_Click"/>
             <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Click="BtnTest_Click"/>
+            <!--Button Name="BtnTestNum" Content="Test..." VerticalAlignment="Bottom" Click="BtnTestNum_Click"/-->
             <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Click="BtnMod_Click"/>
-            <!--Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom"/-->
+            <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom" Click="BtnDelete_Click"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -45,11 +46,12 @@
             <TabControl x:Name="TabCntrlDisplay" 
                         MinHeight="230"
                         Grid.Column="0"
-                        Margin="3,0,0,2" Grid.ColumnSpan="1">
+                        Margin="3,0,0,2" Grid.ColumnSpan="1"
+                        Width="auto">
                 <TabItem Header="Default" Name="TabItm1" IsEnabled="False">
                     <DataGrid Name="DatGridTab1" 
                               VerticalAlignment="Stretch" 
-                              AlternatingRowBackground="Gray" 
+                              AlternatingRowBackground="AntiqueWhite" 
                               ScrollViewer.CanContentScroll="True"
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               AutoGenerateColumns="False"
