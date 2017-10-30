@@ -53,24 +53,40 @@ Created by: Eric Brown",
 
         private void MnuSave_Click(object sender, RoutedEventArgs e)
         {
-            FileIO temp = new FileIO(businessLogic);
-            temp.SaveFileDB();
-            temp.WriteFileDB();
-            temp.CloseFileDB();
+            try
+            {
+                businessLogic.SaveFile();
+            }
+            catch (Exception ex)
+            {
+                DisplayException(ex);
+            }
+        }
+
+        private void DisplayException(Exception ex)
+        {
+            throw new NotImplementedException();
         }
 
         private void MnuOpen_Click(object sender, RoutedEventArgs e)
         {
-            FileIO fileIO = new FileIO(businessLogic);
-            fileIO.OpenFileDB();
-            fileIO.ReadFileDB();
-            businessLogic.EmployeeCollection = fileIO.EmployeeDB;
-            fileIO.CloseFileDB();
+            try
+            {
+                businessLogic.OpenFile();
+            }
+            catch(Exception ex)
+            {
+                DisplayException(ex);
+            }
         }
 
         private void MnuNew_Click(object sender, RoutedEventArgs e)
         {
             businessLogic.Clear();
+            //What I want:
+            //businessLogic.NewFile();
+            //Maybe overloaded to accept path of new file?
+            businessLogic.Newfile();
         }
 
         private void BtnMod_Click(object sender, RoutedEventArgs e)
