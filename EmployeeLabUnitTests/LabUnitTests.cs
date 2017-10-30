@@ -163,19 +163,20 @@ namespace EmployeeLabUnitTests
         public void TestIndex()
         {
             BusinessRules toTest = new BusinessRules();
-            Assert.AreEqual(toTest[0], null);
-            Assert.AreEqual(toTest[int.MinValue], null);
+            Assert.AreEqual(null, toTest[0]);
+            Assert.AreEqual(null, toTest[int.MinValue]);
             PopulateBusinessRules(toTest);
-            Assert.AreNotEqual(toTest[0], null);
+            Assert.AreNotEqual(null, toTest[0]);
             Assert.AreNotEqual(toTest[0], toTest[DEFAULT_EMPS_TO_CREATE - 1]);
             BusinessRules orderTest = new BusinessRules();
             //Testing if order is preserved for the object.
-            for (int i = DEFAULT_EMPS_TO_CREATE - 1, j = 0; i >= 0; --i, ++j)
-                orderTest[j] = toTest[i];
+            for (int i = DEFAULT_EMPS_TO_CREATE - 1; i >= 0; --i)
+                orderTest.Add(toTest[i]);
             for (int i = 0; i < DEFAULT_EMPS_TO_CREATE; i++)
                 Assert.AreEqual(orderTest[i], toTest[i]);
+            Employee employee = toTest[0];
             toTest[0] = null;
-            Assert.AreEqual(toTest[0], null);
+            Assert.IsFalse(toTest.Contains(employee));
         }
         /// <summary>
         /// Tests the .Count() and .Clear() methods in BusinessRules
@@ -184,16 +185,16 @@ namespace EmployeeLabUnitTests
         public void TestCountAndClear()
         {
             BusinessRules toTest = new BusinessRules();
-            Assert.AreEqual(0,toTest.Count());
+            Assert.AreEqual(0, toTest.Count());
             PopulateBusinessRules(toTest);
             Assert.AreEqual(DEFAULT_EMPS_TO_CREATE, toTest.Count());
-            PopulateBusinessRules(toTest,DEFAULT_EMPS_TO_CREATE * 2);
+            PopulateBusinessRules(toTest, DEFAULT_EMPS_TO_CREATE * 2);
             Assert.AreEqual(DEFAULT_EMPS_TO_CREATE * 2, toTest.Count());
             toTest.Clear();
-            Assert.AreEqual(toTest.Count(), 0);
-            Assert.AreEqual(toTest[0], null);
+            Assert.AreEqual(0, toTest.Count());
+            Assert.AreEqual(null, toTest[0]);
             toTest.Clear();
-            Assert.AreEqual(toTest.Count(), 0);
+            Assert.AreEqual(0, toTest.Count());
         }
         /// <summary>
         /// Tests the .Last() method of BusinessRules
@@ -217,7 +218,7 @@ namespace EmployeeLabUnitTests
             uint index = 0;
             Assert.AreEqual(null, toTest[index]);
             Salary toAdd = new Salary(index + DEFAULT_EMPS_TO_CREATE, FIRST_NAMES[0], LAST_NAMES[0], 0);
-            toTest[0] = toAdd;
+            toTest.Add(toAdd);
             Assert.AreEqual(toAdd, toTest[(uint)(index + DEFAULT_EMPS_TO_CREATE)]);
             PopulateBusinessRules(toTest, 100);
             Random random = new Random();
@@ -240,11 +241,87 @@ namespace EmployeeLabUnitTests
                 foo.LastName = TEST_LAST_NAME;
             }
             Assert.AreEqual(TEST_LAST_NAME, toTest[0].LastName);
-            foreach(Employee foo in toTest)
+            foreach (Employee foo in toTest)
             {
                 foo.EmpID = 0;
             }
             Assert.AreEqual(1, toTest.Count());
+        }
+        [TestMethod]
+        public void TestCanAddFromArrray()
+        {
+            BusinessRules toTest = new BusinessRules();
+            uint testID = 0;
+            Random random = new Random();
+            ETYPE knownType = ETYPE.CONTRACT;
+            string[] goodArray =
+            {
+                testID.ToString(),
+                FIRST_NAMES[random.Next(0,FIRST_NAMES.Count() - 1)],
+                LAST_NAMES[random.Next(0,LAST_NAMES.Count() -1 )],
+                (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString()
+            };
+            Assert.IsTrue(toTest.CanAddFromStringArray(knownType, goodArray));
+            string[] badArray = new string[goodArray.Count()];
+            goodArray.CopyTo(badArray, 0);
+            //Set first name to two words
+            badArray[1] = badArray[1] + " " + badArray[1];
+            Assert.IsFalse(toTest.CanAddFromStringArray(knownType, badArray));
+            //reset bad array
+            goodArray.CopyTo(badArray, 0);
+            //add letters to something that should only be a number
+            badArray[badArray.Count() - 1] = badArray[badArray.Count() - 1] + badArray[1];
+            Assert.IsFalse(toTest.CanAddFromStringArray(knownType, badArray));
+        }
+        [TestMethod]
+        public void TestAddFromStringArray()
+        {
+
+            BusinessRules toTest = new BusinessRules();
+            uint testID = 0;
+            Random random = new Random();
+            ETYPE knownType = ETYPE.CONTRACT;
+            string[] goodArray =
+            {
+                testID.ToString(),
+                FIRST_NAMES[random.Next(0,FIRST_NAMES.Count() - 1)],
+                LAST_NAMES[random.Next(0,LAST_NAMES.Count() -1 )],
+                (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString()
+            };
+            Assert.IsTrue(toTest.AddFromStringArray(knownType, goodArray));
+            Assert.IsTrue(toTest.Count() > 0);
+            string[] badArray = new string[goodArray.Count()];
+            goodArray.CopyTo(badArray, 0);
+            //Set first name to two words
+            badArray[1] = badArray[1] + " " + badArray[1];
+            Assert.IsFalse(toTest.AddFromStringArray(knownType, badArray));
+            Assert.IsFalse(toTest.Count() > 1);
+            //reset bad array
+            goodArray.CopyTo(badArray, 0);
+            //add letters to something that should only be a number
+            badArray[badArray.Count() - 1] = badArray[badArray.Count() - 1] + badArray[1];
+            Assert.IsFalse(toTest.AddFromStringArray(knownType, badArray));
+            Assert.IsFalse(toTest.Count() > 1);
+        }
+        [TestMethod]
+        public void TestAddandRemove()
+        {
+
+        }
+        [TestMethod]
+        public void TestContains()
+        {
+
+        }
+        [TestMethod]
+        public void TestIndexOfandRemoveAt()
+        {
+
+        }
+        [TestMethod]
+        public void TestCopyTo()
+        {
+
         }
         /// <summary>
         /// Populates a BusinessRules object with a specified number of random employees
@@ -261,26 +338,26 @@ namespace EmployeeLabUnitTests
                 switch ((ETYPE)(i % numETypes))
                 {
                     case ETYPE.CONTRACT:
-                        toPopulate[i] = (new Contract((uint)i,
+                        toPopulate.Add(new Contract((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
                     case ETYPE.HOURLY:
-                        toPopulate[i] = (new Hourly((uint)i,
+                        toPopulate.Add(new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
                     case ETYPE.SALARY:
-                        toPopulate[i] = (new Salary((uint)i,
+                        toPopulate.Add(new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
                     case ETYPE.SALES:
-                        toPopulate[i] = (new Sales((uint)i,
+                        toPopulate.Add(new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.Next() * random.NextDouble()),
@@ -383,26 +460,26 @@ namespace EmployeeLabUnitTests
                 switch ((ETYPE)(i % numETypes))
                 {
                     case ETYPE.CONTRACT:
-                        toPopulate[i] = (new Contract((uint)i,
+                        toPopulate.Add(new Contract((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
                     case ETYPE.HOURLY:
-                        toPopulate[i] = (new Hourly((uint)i,
+                        toPopulate.Add(new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
                     case ETYPE.SALARY:
-                        toPopulate[i] = (new Salary((uint)i,
+                        toPopulate.Add(new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
                     case ETYPE.SALES:
-                        toPopulate[i] = (new Sales((uint)i,
+                        toPopulate.Add(new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.Next() * random.NextDouble()),

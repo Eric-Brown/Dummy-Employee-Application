@@ -19,9 +19,8 @@ namespace Lab_03_EAB
         #region Constants
         /// <summary>
         /// Utility regex that is used to determine if a string is comprised of only characters from a to z.
-        /// <todo>This actually doesn't work right now. It matches words that are actually seperated by spaces.</todo>
         /// </summary>
-        private static readonly Regex isWord = new Regex(@"(?i)[a-z]+(?!=\b[a-z]+)", RegexOptions.Compiled);
+        private static readonly Regex isOneWord = new Regex(@"(?i)(?<!\s*\S+\s*)[a-z]+(?!\s*\S+)", RegexOptions.Compiled);
         /// <summary>
         /// Utility regex that is used to determine if a string is comprised of only digits and a possible decimal point.
         /// </summary>
@@ -60,8 +59,15 @@ namespace Lab_03_EAB
             }
             set
             {
-                if (i < 0 || i >= employeeCollection.Count) return;
-                if (value != null && employeeCollection.ContainsKey(value.EmpID));
+                if (i < 0 || i >= employeeCollection.Count)
+                {
+                    return;
+                }
+                if(value == null)
+                {
+                    employeeCollection.Remove(employeeCollection.ElementAt(i).Key);
+                }
+                else if (employeeCollection.ContainsKey(value.EmpID))
                 {
                     if (Object.Equals(employeeCollection[value.EmpID], value))
                         return;
@@ -72,10 +78,6 @@ namespace Lab_03_EAB
                 {
                     value.EmpIDChanged += EmpIDChangeHandler;
                     employeeCollection.Add(value.EmpID, value);
-                }
-                else
-                {
-                    employeeCollection[employeeCollection.ElementAt(i).Key] = null;
                 }
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
@@ -109,13 +111,13 @@ namespace Lab_03_EAB
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
-
         private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
         /// <summary>
         /// Property for the sorted dictionary. 
         /// When assigning a new dictionary, the setter will ensure that the business class is registered with all employees.
+        /// <todo>Make this private.</todo>
         /// </summary>
-        private SortedDictionary<uint, Employee> EmployeeCollection
+        public SortedDictionary<uint, Employee> EmployeeCollection
         {
             get => employeeCollection;
             set
@@ -154,13 +156,17 @@ namespace Lab_03_EAB
             employeeCollection.Remove(args.oldValue);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-
         #endregion
         #region Constructors
         #endregion
         #region IListImplementation
-
+        /// <summary>
+        /// Returns the number of currently contained employees.
+        /// </summary>
         int ICollection<Employee>.Count => employeeCollection.Count;
+        /// <summary>
+        /// Expresses whether or not the collection is non-modifiable.
+        /// </summary>
         public bool IsReadOnly => false;
         /// <summary>
         /// Exposes the datastructures clear method. Might remove later for enforcing encapsulation.
@@ -171,13 +177,12 @@ namespace Lab_03_EAB
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
         /// <summary>
-        /// Exposes the datastructures last element added.
+        /// Exposes the datastructures last element. If the collection is empty, null is returned.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The last element in the collection</returns>
         public Employee Last() => (employeeCollection.Count == 0) ? null : employeeCollection.Last().Value;
         /// <summary>
-        /// Implements the function from IList
-        /// Returns a value from the enumerator of the datastructure
+        /// Returns an enumerator for employee objects that are contained in the collection.
         /// </summary>
         /// <returns>An enumerator which returns Employee objects.</returns>
         public IEnumerator<Employee> GetEnumerator()
@@ -187,6 +192,22 @@ namespace Lab_03_EAB
                 yield return pair.Value;
             }
         }
+        /// <summary>
+        /// Returns an enumerator that iterates through employee objects.
+        /// </summary>
+        /// <returns>An enumerator that returns employee objects.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            foreach (KeyValuePair<uint, Employee> pair in employeeCollection.ToList())
+            {
+                yield return pair.Value;
+            }
+        }
+        /// <summary>
+        /// Returns the index of the employee specified.
+        /// </summary>
+        /// <param name="item">The value to find the index of.</param>
+        /// <returns>The index of the item, or -1 if it is not found.</returns>
         public int IndexOf(Employee item)
         {
             if (employeeCollection.ContainsKey(item.EmpID))
@@ -199,50 +220,81 @@ namespace Lab_03_EAB
             else return -1;
         }
         /// <summary>
-        /// Due to working with a sorted dictionary, this cannot be implemented. Do not call.
+        /// Adds an item to the collection. If a ID that matches the value already exists, the old value will be overridden.
+        /// Null items are ignored.
+        /// <warning>This function will not work as expected. Items are automatically sorted as they are added.</warning>
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="item"></param>
-        /// <exception cref="NotImplementedException">This will always throw</exception>
+        /// <param name="index">This is ignored.</param>
+        /// <param name="item">The value to be added.</param>
         public void Insert(int index, Employee item)
         {
-            throw new NotImplementedException();
-        }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            foreach (KeyValuePair<uint, Employee> pair in employeeCollection.ToList())
+            if (item == null) return;
+            if(employeeCollection.ContainsKey(item.EmpID))
             {
-                yield return pair.Value;
+                if (Object.Equals(item, employeeCollection[item.EmpID]))
+                    return;
+                employeeCollection.Remove(item.EmpID);
             }
+            if(item != null)
+            {
+                employeeCollection.Add(item.EmpID, item);
+                item.EmpIDChanged += EmpIDChangeHandler;
+            }
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
+        /// <summary>
+        /// Removes the value contained at the given index.
+        /// If the index is out of range, nothing will be done.
+        /// </summary>
+        /// <param name="index">The index of the value to be removed.</param>
         public void RemoveAt(int index)
         {
-            Employee[] temp = employeeCollection.Values.ToArray();
-            if (index < temp.Count())
+            if (index < employeeCollection.Count && index >= 0)
             {
-                employeeCollection.Remove(temp[index].EmpID);
+                employeeCollection.Remove(employeeCollection.ElementAt(index).Key);
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
+        /// <summary>
+        /// Adds an employee to the collection.
+        /// If an employee already has the same ID, the old value will be removed.
+        /// Null values are ignored.
+        /// </summary>
+        /// <param name="item">The value to add.</param>
         public void Add(Employee item)
         {
-            if (employeeCollection.ContainsKey(item.EmpID))
-                employeeCollection[item.EmpID] = item;
-            else
-                employeeCollection.Add(item.EmpID, item);
-            if (item != null) item.EmpIDChanged += EmpIDChangeHandler;
+            if (item == null) return;
+            if(employeeCollection.ContainsKey(item.EmpID))
+            {
+                employeeCollection.Remove(item.EmpID);
+            }
+            employeeCollection.Add(item.EmpID, item);
+            item.EmpIDChanged += EmpIDChangeHandler;
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-
+        /// <summary>
+        /// Determines whether a given item is contained in the collection
+        /// </summary>
+        /// <param name="item">The item to search for</param>
+        /// <returns>A bool specifying whether the item is in the collection</returns>
         public bool Contains(Employee item)
         {
             return employeeCollection.ContainsValue(item);
         }
-
+        /// <summary>
+        /// Copies contained employees to an array starting at the specified index.
+        /// </summary>
+        /// <param name="array">The array to copy to</param>
+        /// <param name="arrayIndex">The index to start at</param>
         public void CopyTo(Employee[] array, int arrayIndex)
         {
             employeeCollection.Values.CopyTo(array, arrayIndex);
         }
+        /// <summary>
+        /// Removes the specified value if it is contained in the collection.
+        /// </summary>
+        /// <param name="item">The item to be removed.</param>
+        /// <returns>Whether or not the removal was successful</returns>
         public bool Remove(Employee item)
         {
             if (employeeCollection.ContainsValue(item))
@@ -254,72 +306,81 @@ namespace Lab_03_EAB
             else
                 return false;
         }
-
-
         #endregion
         #region Methods
-        internal void AddFromArray(ETYPE selected, string[] v)
+        /// <summary>
+        /// Attempts to add an employee of the specified type through a string array.
+        /// </summary>
+        /// <param name="selected">The type of employee to create</param>
+        /// <param name="attributeArray">A string array of the attributes. MUST have the order of: ID, First, Last, Sup1, Sup2, Sup3</param>
+        /// <returns>Whether or not the operation was successful</returns>
+        /// <exception cref="OverflowException">Thrown if the formatting was good, but results in an overflow for the datatype.</exception>
+        public bool AddFromStringArray(ETYPE selected, string[] attributeArray)
         {
             try
             {
-                uint idToAdd = uint.Parse(v[0]);
+                uint idToAdd = uint.Parse(attributeArray[0]);
                 if (employeeCollection.ContainsKey(idToAdd)) employeeCollection.Remove(idToAdd);
                 switch (selected)
                 {
                     case ETYPE.CONTRACT:
-                        employeeCollection.Add(idToAdd, new Contract(idToAdd, v[1], v[2], decimal.Parse(v[3])));
+                        employeeCollection.Add(idToAdd, new Contract(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3])));
                         break;
                     case ETYPE.HOURLY:
-                        employeeCollection.Add(idToAdd, new Hourly(idToAdd, v[1], v[2], decimal.Parse(v[3]), double.Parse(v[4])));
+                        employeeCollection.Add(idToAdd, new Hourly(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3]), double.Parse(attributeArray[4])));
                         break;
                     case ETYPE.SALARY:
-                        employeeCollection.Add(idToAdd, new Salary(idToAdd, v[1], v[2], decimal.Parse(v[3])));
+                        employeeCollection.Add(idToAdd, new Salary(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3])));
                         break;
                     case ETYPE.SALES:
-                        employeeCollection.Add(idToAdd, new Sales(idToAdd, v[1], v[2], decimal.Parse(v[3]), decimal.Parse(v[4]), decimal.Parse(v[5])));
+                        employeeCollection.Add(idToAdd, new Sales(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3]), decimal.Parse(attributeArray[4]), decimal.Parse(attributeArray[5])));
                         break;
                 }
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                return true;
             }
-            catch (FormatException e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message);
+                if (ex is ArgumentNullException || ex is FormatException)
+                    return false;
+                else
+                    throw;
             }
         }
         /// <summary>
-        /// 
+        /// Determines whether or not a call to AddFromStringArray will succeed.
         /// </summary>
         /// <param name="selectedItem">The type of the employee that could be added.</param>
-        /// <param name="v">Array with entries that are ordered: ID, First, Last, Sup1, Sup2, Sup3</param>
-        /// <returns></returns>
-        internal bool CanAddEntry(ETYPE selectedItem, string[] v)
+        /// <param name="attributeArray">Array with entries that are ordered: ID, First, Last, Sup1, Sup2, Sup3</param>
+        /// <returns>Whether or not AddFromStringArray will succeed.</returns>
+        public bool CanAddFromStringArray(ETYPE selectedItem, string[] attributeArray)
         {
-            //test shit here
             //All employees will have: ID, First, Last
             try
             {
-                if (isNumber.IsMatch(v[0]) && isWord.IsMatch(v[1]) && isWord.IsMatch(v[2]))
+                if (isNumber.IsMatch(attributeArray[0]) && isOneWord.IsMatch(attributeArray[1]) && isOneWord.IsMatch(attributeArray[2]))
                 {
                     switch (selectedItem)
                     {
                         //Contract has 1
                         case ETYPE.CONTRACT:
-                            return (isNumber.IsMatch(v[3]));
+                            return (isNumber.IsMatch(attributeArray[3]));
                         //Hourly has 2
                         case ETYPE.HOURLY:
-                            return (isNumber.IsMatch(v[3]) && isNumber.IsMatch(v[4]));
+                            return (isNumber.IsMatch(attributeArray[3]) && isNumber.IsMatch(attributeArray[4]));
                         //Salary has 1
                         case ETYPE.SALARY:
-                            return (isNumber.IsMatch(v[3]));
+                            return (isNumber.IsMatch(attributeArray[3]));
                         //Sales has 3
                         case ETYPE.SALES:
-                            return (isNumber.IsMatch(v[3]) && isNumber.IsMatch(v[4]) && isNumber.IsMatch(v[5]));
+                            return (isNumber.IsMatch(attributeArray[3]) && isNumber.IsMatch(attributeArray[4]) && isNumber.IsMatch(attributeArray[5]));
                     }
                 }
             }
-            //Exception catch will cause a return of false
+            //Exceptions are silenced
             catch (Exception e)
-            { }
+            {
+            }
             return false;
         }
         internal void AddTestEmps(int numTestEmps = DEFAULT_NUM_TEST_EMPS)

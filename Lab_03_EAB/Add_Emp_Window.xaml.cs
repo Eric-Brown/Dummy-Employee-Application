@@ -59,9 +59,9 @@ namespace Lab_03_EAB
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CBxEmpType.ItemsSource = Enum.GetNames(typeof(ETYPE));
-            if (selectedItem != null)
+            if (valToModify != null)
             {
-                Employee temp = selectedItem as Employee;
+                Employee temp = valToModify as Employee;
                 CBxEmpType.SelectedItem = Enum.GetName(typeof(ETYPE),temp?.EmpType);
                 CBxEmpType.IsEnabled = false;
                 TxtFirst.Text = temp?.FirstName;
@@ -95,7 +95,7 @@ namespace Lab_03_EAB
             }
         }
 
-        private object selectedItem;
+        private object valToModify;
         /// <summary>
         /// Event handler for the Add/Mod button click.
         /// Attempts to add an employee, and displays a message box on failure.
@@ -113,14 +113,14 @@ namespace Lab_03_EAB
                 TxtSup3.Text
             };
             ETYPE selected = (ETYPE)Enum.Parse(typeof(ETYPE), CBxEmpType.SelectedItem.ToString());
-            if (businessRules.CanAddEntry(selected, entries.ToArray()))
+            if (businessRules.CanAddFromStringArray(selected, entries.ToArray()))
             {
-                if(selectedItem == null && businessRules.EmployeeCollection.ContainsKey(uint.Parse(TxtEmpID.Text)))
+                if(valToModify == null && businessRules[(uint.Parse(TxtEmpID.Text))] != null)
                 {
                     MessageBox.Show(EMP_EXISTS_ERR, EMP_NOT_ADDED_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
 
                 }
-                businessRules.AddFromArray(selected, entries.ToArray());
+                businessRules.AddFromStringArray(selected, entries.ToArray());
                 this.Close();
             }
             else
@@ -145,7 +145,7 @@ namespace Lab_03_EAB
             InitializeComponent();
             if (selectedItem != null)
             {
-                this.selectedItem = selectedItem;
+                this.valToModify = selectedItem;
                 Title = MOD_EMP_TITLE;
                 BtnAddMod.Content = MOD_EMP_BTN_NAME;
             }
