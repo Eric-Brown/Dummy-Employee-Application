@@ -28,7 +28,6 @@ namespace Lab_03_EAB
         {
             rules.CopyTo(employeeDB);
         }
-
         
         private SortedDictionary<uint, Employee> employeeDB = new SortedDictionary<uint, Employee>();
         public SortedDictionary<uint, Employee> EmployeeDB

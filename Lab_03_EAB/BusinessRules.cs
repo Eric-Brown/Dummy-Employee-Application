@@ -6,7 +6,8 @@ using System.Text;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Windows;
-
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace Lab_03_EAB
 {
@@ -37,6 +38,14 @@ namespace Lab_03_EAB
         /// Default number of random employees to create when creating test employees.
         /// </summary>
         private const int DEFAULT_NUM_TEST_EMPS = 10;
+        #endregion
+        #region MemberData
+        private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
+        private string myFileName;
+        private string myPath;
+        [NonSerialized]
+        private FileIO myFile;
+
         #endregion
         #region Properties
         /// <summary>
@@ -82,6 +91,9 @@ namespace Lab_03_EAB
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
+
+
+
         /// <summary>
         /// Indexer that gets or sets an Employee based on lookup though ID
         /// <preconditions>When attempting an assignment, the value's key (if it is not null)
@@ -111,7 +123,6 @@ namespace Lab_03_EAB
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
-        private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
         /// <summary>
         /// Property for the sorted dictionary. 
         /// When assigning a new dictionary, the setter will ensure that the business class is registered with all employees.
@@ -130,6 +141,10 @@ namespace Lab_03_EAB
                 }
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
+        }
+        public string FileName
+        {
+            get => myFileName;
         }
         #endregion
         #region EventsAndHandlers
@@ -158,6 +173,19 @@ namespace Lab_03_EAB
         }
         #endregion
         #region Constructors
+        public BusinessRules()
+        {
+            myFile = new FileIO(this);
+        }
+        public BusinessRules(string path)
+        {
+            myFile = new FileIO(this);
+            myPath = path;
+            myFileName = Path.GetFileName(path);
+            myFile.ReadFileDB(myPath);
+            //Property call so that if there are any objects, they are properly handled.
+            EmployeeCollection = myFile.EmployeeDB;
+        }
         #endregion
         #region IListImplementation
         /// <summary>
@@ -430,7 +458,25 @@ namespace Lab_03_EAB
             foreach (var pair in employeeCollection)
                 destination.Add(pair.Key, pair.Value);
         }
+        internal void Newfile()
+        {
+            throw new NotImplementedException();
+        }
 
+        internal void OpenFile()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void SaveFile()
+        {
+            throw new NotImplementedException();
+        }
+        [OnDeserialized]
+        private void Deserialized()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }//End Class BusinessRules Definition
 }// End Lab_03_EAB Namespace scope
