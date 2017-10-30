@@ -2,17 +2,43 @@
 using System;
 namespace Lab_03_EAB
 {
+    /// <summary>
+    /// Enum that represents the known subtypes of an employee.
+    /// <warning>Other code in the project relies on these being default integral values.</warning>
+    /// </summary>
     [Serializable]
     public enum ETYPE { SALARY, SALES, HOURLY, CONTRACT};
+    /// <summary>
+    /// Abstract class which contains all the information and behaviors which are in common for all employees.
+    /// </summary>
     [Serializable]
     public abstract class Employee
     {
-        public event System.EventHandler<PropertyChangeEventArgs<uint>> EmpIDChanged;
-        
+        #region Constants
+        /// <summary>
+        /// Used to call string.Format without having to use several "magic" strings.
+        /// </summary>
         private const string FORMAT_STRING = "EmpID: {0}\nEmpType: {1}\nFirst Name: {2}\nLast Name: {3}\n";
-        
+        #endregion
+        #region EventsAndHandlers
+        /// <summary>
+        /// Event delegate for when the employee's ID has been changed.
+        /// </summary>
+        public event System.EventHandler<PropertyChangeEventArgs<uint>> EmpIDChanged;
+        /// <summary>
+        /// Broadcasts to any listeners that the employee ID has changed.
+        /// </summary>
+        /// <param name="e">EventArgs subtype that contains old and new value of changed property</param>
+        protected virtual void OnEmpIDChanged(PropertyChangeEventArgs<uint> e)
+        {
+            EmpIDChanged?.Invoke(this, e);
+        }
+        #endregion
+        #region Properties
         private uint empID;
-
+        /// <summary>
+        /// Represents the unique ID of the employee.
+        /// </summary>
         public uint EmpID
         {
             get => empID;
@@ -25,21 +51,10 @@ namespace Lab_03_EAB
                 OnEmpIDChanged(new PropertyChangeEventArgs<uint>(oldValue, empID));
             }
         }
-        /// <summary>
-        /// Broadcasts to any listeners that the employee ID has changed.
-        /// </summary>
-        /// <param name="e">EventArgs subtype that contains old and new value of changed property</param>
-        protected virtual void OnEmpIDChanged(PropertyChangeEventArgs<uint> e)
-        {
-            EmpIDChanged?.Invoke(this, e);
-        }
-        private ETYPE empType;
-        public ETYPE EmpType { get => empType; set => empType = value; }
-        /// <summary>
-        /// FirstName property and backing field. Rejects null or empty names.
-        /// </summary>
-        
         private string firstName;
+        /// <summary>
+        /// Represents the first name of the employee. Rejects null or empty values.
+        /// </summary>
         public string FirstName
         {
             get => firstName;
@@ -49,11 +64,10 @@ namespace Lab_03_EAB
                     firstName = value;
             }
         }
-        /// <summary>
-        /// LastName property and backing field. Rejects null or empty names.
-        /// </summary>
-        
         private string lastName;
+        /// <summary>
+        /// Represents the last name of the employee. Rejects null or empty values.
+        /// </summary>
         public string LastName
         {
             get => lastName;
@@ -63,19 +77,30 @@ namespace Lab_03_EAB
                     lastName = value;
             }
         }
+        private ETYPE empType;
         /// <summary>
-        /// Constructor. Initializes fields.
+        /// Represents the type of the employee.
         /// </summary>
+        public ETYPE EmpType { get => empType; private set => empType = value; }
+        #endregion
+        #region Constructors
+        /// <summary>
+        /// Constructor.
+        /// Is protected since only subtypes of this class should call it.
+        /// </summary>
+        /// <param name="type">The type of the employee.</param>
         /// <param name="id">The Employees Identifiying Number</param>
         /// <param name="first">The Employees first name</param>
         /// <param name="last">The Employees last name</param>
-        public Employee(uint id, ETYPE type, string first, string last)
+        protected Employee(uint id, ETYPE type, string first, string last)
         {
-            EmpID = id;
-            EmpType = type;
-            FirstName = first;
-            LastName = last;
+            empID = id;
+            empType = type;
+            firstName = first;
+            lastName = last;
         }
+        #endregion
+        #region Methods
         /// <summary>
         /// Gives a string representation of the class
         /// </summary>
@@ -84,5 +109,6 @@ namespace Lab_03_EAB
         {
             return string.Format(FORMAT_STRING, EmpID, EmpType, FirstName, LastName);
         }
-    }
-}
+        #endregion
+    }//End Class Employee Definition
+}//End Namespace Lab_03_EAB Scope
