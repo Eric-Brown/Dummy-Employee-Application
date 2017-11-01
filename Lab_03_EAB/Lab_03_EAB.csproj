@@ -61,12 +61,19 @@
       <DependentUpon>Add_Emp_Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="BusinessRules.cs" />
+    <Compile Include="DataGridBusinessView.xaml.cs">
+      <DependentUpon>DataGridBusinessView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileIO.cs" />
     <Compile Include="IFileAccess.cs" />
     <Compile Include="PropertyChangeEventArgs.cs" />
     <Compile Include="Salary.cs" />
     <Compile Include="Sales.cs" />
     <Page Include="Add_Emp_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DataGridBusinessView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

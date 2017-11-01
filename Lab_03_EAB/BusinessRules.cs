@@ -15,7 +15,7 @@ namespace Lab_03_EAB
     /// Class that contains the business rules for the application
     /// </summary>
     [Serializable]
-    public sealed class BusinessRules : IList<Employee>, INotifyCollectionChanged
+    public sealed class BusinessRules : ICollection<Employee>, INotifyCollectionChanged
     {
         #region Constants
         /// <summary>
@@ -187,7 +187,7 @@ namespace Lab_03_EAB
             EmployeeCollection = myFile.EmployeeDB;
         }
         #endregion
-        #region IListImplementation
+        #region ICollection Implementation
         /// <summary>
         /// Returns the number of currently contained employees.
         /// </summary>
@@ -204,11 +204,6 @@ namespace Lab_03_EAB
             employeeCollection.Clear();
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-        /// <summary>
-        /// Exposes the datastructures last element. If the collection is empty, null is returned.
-        /// </summary>
-        /// <returns>The last element in the collection</returns>
-        public Employee Last() => (employeeCollection.Count == 0) ? null : employeeCollection.Last().Value;
         /// <summary>
         /// Returns an enumerator for employee objects that are contained in the collection.
         /// </summary>
@@ -232,58 +227,6 @@ namespace Lab_03_EAB
             }
         }
         /// <summary>
-        /// Returns the index of the employee specified.
-        /// </summary>
-        /// <param name="item">The value to find the index of.</param>
-        /// <returns>The index of the item, or -1 if it is not found.</returns>
-        public int IndexOf(Employee item)
-        {
-            if (employeeCollection.ContainsKey(item.EmpID))
-            {
-                int i = 0;
-                while (!Object.Equals(employeeCollection.ElementAt(i).Value, item))
-                    ++i;
-                return i;
-            }
-            else return -1;
-        }
-        /// <summary>
-        /// Adds an item to the collection. If a ID that matches the value already exists, the old value will be overridden.
-        /// Null items are ignored.
-        /// <warning>This function will not work as expected. Items are automatically sorted as they are added.</warning>
-        /// </summary>
-        /// <param name="index">This is ignored.</param>
-        /// <param name="item">The value to be added.</param>
-        public void Insert(int index, Employee item)
-        {
-            if (item == null) return;
-            if(employeeCollection.ContainsKey(item.EmpID))
-            {
-                if (Object.Equals(item, employeeCollection[item.EmpID]))
-                    return;
-                employeeCollection.Remove(item.EmpID);
-            }
-            if(item != null)
-            {
-                employeeCollection.Add(item.EmpID, item);
-                item.EmpIDChanged += EmpIDChangeHandler;
-            }
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-        /// <summary>
-        /// Removes the value contained at the given index.
-        /// If the index is out of range, nothing will be done.
-        /// </summary>
-        /// <param name="index">The index of the value to be removed.</param>
-        public void RemoveAt(int index)
-        {
-            if (index < employeeCollection.Count && index >= 0)
-            {
-                employeeCollection.Remove(employeeCollection.ElementAt(index).Key);
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-        }
-        /// <summary>
         /// Adds an employee to the collection.
         /// If an employee already has the same ID, the old value will be removed.
         /// Null values are ignored.
@@ -292,7 +235,7 @@ namespace Lab_03_EAB
         public void Add(Employee item)
         {
             if (item == null) return;
-            if(employeeCollection.ContainsKey(item.EmpID))
+            if (employeeCollection.ContainsKey(item.EmpID))
             {
                 employeeCollection.Remove(item.EmpID);
             }

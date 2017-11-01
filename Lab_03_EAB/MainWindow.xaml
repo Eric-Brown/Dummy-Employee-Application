@@ -43,39 +43,6 @@
                 <ColumnDefinition Width="2*"/>
                 <!-- These column definitions are here in case I want to add back the RTB I had before.-->
             </Grid.ColumnDefinitions>
-            <TabControl x:Name="TabCntrlDisplay" 
-                        MinHeight="230"
-                        Grid.Column="0"
-                        Margin="3,0,0,2" Grid.ColumnSpan="1"
-                        Width="auto">
-                <TabItem Header="Default" Name="TabItm1" IsEnabled="False">
-                    <DataGrid Name="DatGridTab1" 
-                              VerticalAlignment="Stretch" 
-                              AlternatingRowBackground="AntiqueWhite" 
-                              ScrollViewer.CanContentScroll="True"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                              AutoGenerateColumns="False"
-                              CanUserReorderColumns="True"
-                              CanUserSortColumns="True"
-                              CanUserResizeColumns="True"
-                             IsReadOnly="True"
-                              SelectionMode="Single" SelectionUnit="FullRow"
-                              MouseDoubleClick="DatGridTab1_MouseDoubleClick"
-                              SelectionChanged="DatGridTab1_SelectionChanged">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
-                            <DataGridTextColumn Binding="{Binding FirstName}"  Header="First Name"/>
-                            <DataGridTextColumn Binding="{Binding LastName}"  Header="Last Name"/>
-                            <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type"/>
-                        </DataGrid.Columns>
-                        <!--DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                Add stuff here if I want a row details panel. Might be useful.
-                            </DataTemplate>
-                        </-->
-                    </DataGrid>
-                </TabItem>
-            </TabControl>
             <RichTextBox Name="RTBxOutput" 
                          ScrollViewer.CanContentScroll="True" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto" 
