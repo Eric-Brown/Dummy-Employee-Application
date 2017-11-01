@@ -53,13 +53,9 @@ Created by: Eric Brown",
 
         private void MnuSave_Click(object sender, RoutedEventArgs e)
         {
-            try
+            using (FileIO file = new FileIO(businessLogic))
             {
-                businessLogic.SaveFile();
-            }
-            catch (Exception ex)
-            {
-                DisplayException(ex);
+
             }
         }
 

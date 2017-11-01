@@ -43,8 +43,6 @@ namespace Lab_03_EAB
         private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
         private string myFileName;
         private string myPath;
-        [NonSerialized]
-        private FileIO myFile;
 
         #endregion
         #region Properties
@@ -142,10 +140,8 @@ namespace Lab_03_EAB
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
-        public string FileName
-        {
-            get => myFileName;
-        }
+        public string FileName => myFileName;
+        public string FilePath => myPath;
         #endregion
         #region EventsAndHandlers
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -175,16 +171,15 @@ namespace Lab_03_EAB
         #region Constructors
         public BusinessRules()
         {
-            myFile = new FileIO(this);
         }
-        public BusinessRules(string path)
+        public BusinessRules(SortedDictionary<uint, Employee> dictionary, string path = null)
         {
-            myFile = new FileIO(this);
-            myPath = path;
-            myFileName = Path.GetFileName(path);
-            myFile.ReadFileDB(myPath);
-            //Property call so that if there are any objects, they are properly handled.
-            EmployeeCollection = myFile.EmployeeDB;
+            EmployeeCollection = dictionary;
+            if(!string.IsNullOrEmpty(path))
+            {
+                myPath = path;
+                myFileName = Path.GetFileName(path);
+            }
         }
         #endregion
         #region ICollection Implementation
@@ -400,25 +395,6 @@ namespace Lab_03_EAB
         {
             foreach (var pair in employeeCollection)
                 destination.Add(pair.Key, pair.Value);
-        }
-        internal void Newfile()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void OpenFile()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void SaveFile()
-        {
-            throw new NotImplementedException();
-        }
-        [OnDeserialized]
-        private void Deserialized()
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }//End Class BusinessRules Definition
