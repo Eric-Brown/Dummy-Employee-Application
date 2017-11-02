@@ -141,7 +141,15 @@ namespace Lab_03_EAB
             }
         }
         public string FileName => myFileName;
-        public string FilePath => myPath;
+        public string FilePath
+        {
+            get => myPath;
+            set
+            {
+                myPath = value;
+                myFileName = Path.GetFileName(myPath);
+            }
+        }
         #endregion
         #region EventsAndHandlers
         public event NotifyCollectionChangedEventHandler CollectionChanged;

@@ -1,89 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Lab_03_EAB.Contract">
-    <Position X="1.5" Y="0.75" Width="1.5" />
+    <Position X="4" Y="0.5" Width="1.5" />
     <InheritanceLine Type="Lab_03_EAB.Employee" FixedToPoint="true">
       <Path>
-        <Point X="3.5" Y="1.624" />
-        <Point X="3" Y="1.624" />
+        <Point X="5.75" Y="1.374" />
+        <Point X="5.5" Y="1.374" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAABAAAAAACAAAAAgAEAAAAAAAA=</HashCode>
-      <FileName>Contract.cs</FileName>
+      <FileName>EmployeeModel\Contract.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Employee">
-    <Position X="3.5" Y="0.5" Width="1.5" />
+    <Position X="5.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAACEAAAAhCAAQEAAAAAIAAAAAAAAAAAAAACAAAAAg=</HashCode>
-      <FileName>Employee.cs</FileName>
+      <FileName>EmployeeModel\Employee.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Hourly">
-    <Position X="5.5" Y="2.25" Width="1.5" />
+    <Position X="5.75" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAIAAACCAAEAAAAAAEAAAABAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Hourly.cs</FileName>
+      <FileName>EmployeeModel\Hourly.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Salary">
-    <Position X="3.5" Y="4.75" Width="1.5" />
+    <Position X="4" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAgEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
-      <FileName>Salary.cs</FileName>
+      <FileName>EmployeeModel\Salary.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.Sales">
-    <Position X="1.5" Y="4" Width="1.5" />
+    <Position X="4" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAIAAAACAAEAAAAAIAAAAEAAAABAAAAAAAAAAA=</HashCode>
-      <FileName>Sales.cs</FileName>
+      <FileName>EmployeeModel\Sales.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.MainWindow">
-    <Position X="7.25" Y="0.5" Width="1.5" />
+    <Position X="9.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>JKAAAAABAQAAIAAAQAAAAAYEAAAAAIAAAAAAIAAACCA=</HashCode>
-      <FileName>MainWindow.xaml.cs</FileName>
+      <HashCode>JKAAAAABQQACIgEAQAAAAEaEAAAAAIAAAAAAAAAABCA=</HashCode>
+      <FileName>EmployeeViews\MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Lab_03_EAB.BusinessRules">
-    <Position X="9.75" Y="1.5" Width="1.5" />
+    <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CEIAAEAAAAAAABAQCAAIhEAAAAAAABAECAACAABQIAA=</HashCode>
-      <FileName>BusinessRules.cs</FileName>
+      <HashCode>CBIUAEAAAAAAABAQCAAKhAAAgAAAABAEAEhAIABQKIA=</HashCode>
+      <FileName>EmployeeModel\BusinessRules.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Lab_03_EAB.PropertyChangeEventArgs&lt;T&gt;">
-    <Position X="5.5" Y="5.75" Width="1.5" />
+    <Position X="2.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>PropertyChangeEventArgs.cs</FileName>
+      <FileName>Helpers\PropertyChangeEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Lab_03_EAB.FileIO">
-    <Position X="0.5" Y="3.75" Width="1.5" />
+    <Position X="0.5" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAsAAAAAIAAAAAAAAAAAAAAAAAAACABAGAAAAAAQAAA=</HashCode>
-      <FileName>FileIO.cs</FileName>
+      <HashCode>AAsAAAAAICAAAAAAAAQEIAEAAoAACABAGAAAAAAQAAA=</HashCode>
+      <FileName>Helpers\FileIO.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
+  <Class Name="Lab_03_EAB.EmployeeViewModel.BusinessRulesViewModel">
+    <Position X="11" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAGgAFADCAAAAAACACAAICEAAAMIABCABAAAAAAA=</HashCode>
+      <FileName>EmployeeViewModel\BusinessRulesViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="Lab_03_EAB.IFileAccess">
-    <Position X="0.5" Y="1.25" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAsAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAQAAA=</HashCode>
-      <FileName>IFileAccess.cs</FileName>
+      <FileName>Helpers\IFileAccess.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="Lab_03_EAB.ETYPE">
-    <Position X="5.25" Y="0.5" Width="1.5" />
+    <Position X="2.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAIAAAAAAAAAAEAAAAAAAAAAAAAAAIACAAAAAAAAA=</HashCode>
-      <FileName>Employee.cs</FileName>
+      <FileName>EmployeeModel\Employee.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

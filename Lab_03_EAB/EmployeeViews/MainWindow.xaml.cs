@@ -53,45 +53,44 @@ Created by: Eric Brown",
 
         private void MnuSave_Click(object sender, RoutedEventArgs e)
         {
-            try
+            using (FileIO file = new FileIO(businessLogic))
             {
-                businessLogic.SaveFile();
+                try
+                {
+                    file.OpenSaveFileDB();
+                    file.WriteFileDB();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception ex)
-            {
-                DisplayException(ex);
-            }
-        }
-
-        private void DisplayException(Exception ex)
-        {
-            throw new NotImplementedException();
         }
 
         private void MnuOpen_Click(object sender, RoutedEventArgs e)
         {
-            try
+            using (FileIO file = new FileIO(businessLogic))
             {
-                businessLogic.OpenFile();
-            }
-            catch(Exception ex)
-            {
-                DisplayException(ex);
+                try
+                {
+                    file.OpenFileDB();
+                    file.ReadFileDB();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
         private void MnuNew_Click(object sender, RoutedEventArgs e)
         {
-            businessLogic.Clear();
-            //What I want:
-            //businessLogic.NewFile();
-            //Maybe overloaded to accept path of new file?
-            businessLogic.Newfile();
+            businessLogic = new BusinessRules();
         }
 
         private void BtnMod_Click(object sender, RoutedEventArgs e)
         {
-            Add_Emp_Window window = new Add_Emp_Window(DatGridTab1.SelectedItem, businessLogic);
+            Add_Emp_Window window = new Add_Emp_Window(DatGridView.SelectedItem, businessLogic);
             window.Show();
         }
 
@@ -103,7 +102,7 @@ Created by: Eric Brown",
         private void DatGridTab1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             RTBxOutput.Document.Blocks.Clear();
-            RTBxOutput.AppendText(DatGridTab1.SelectedItem?.ToString());
+            RTBxOutput.AppendText(DatGridView.SelectedItem?.ToString());
         }
 
         private void BtnTestNum_Click(object sender, RoutedEventArgs e)
@@ -113,7 +112,7 @@ Created by: Eric Brown",
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            businessLogic.Remove(DatGridTab1.SelectedItem as Employee);
+            businessLogic.Remove(DatGridView.SelectedItem as Employee);
         }
 
         /// <summary>
@@ -132,7 +131,7 @@ Created by: Eric Brown",
         public MainWindow()
         {
             InitializeComponent();
-            DatGridTab1.ItemsSource = businessLogic;
+            DataContext = new EmployeeViewModel.BusinessRulesViewModel();
         }
         /// <summary>
         /// Attempts to add an employee to the list. If it cannot add an employee it either shows an error window or it spits out an error to the output textbox
