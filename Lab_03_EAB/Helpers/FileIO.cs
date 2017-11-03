@@ -23,7 +23,7 @@ namespace Lab_03_EAB
         private const string BAD_PATH_MESSAGE = "Provided path did not exist.";
         #endregion
         #region MemberFields and Properties
-        static private BinaryFormatter serializer = new BinaryFormatter();
+        private static readonly DataContractSerializer serializer = new DataContractSerializer(typeof(SortedDictionary<uint,Employee>));
         private FileStream stream;
         private BusinessRules myBusinessRules;
         private SortedDictionary<uint, Employee> employeeDB = new SortedDictionary<uint, Employee>();
@@ -68,8 +68,9 @@ namespace Lab_03_EAB
                 return;
             }
             using (GZipStream gzip = new GZipStream(stream, CompressionLevel.Optimal, true))
+            using (var binWriter = XmlDictionaryWriter.CreateBinaryWriter(gzip))
             {
-                serializer.Serialize(stream, employeeDB);
+                serializer.WriteObject(binWriter, employeeDB);
             }
             myBusinessRules.EmployeeCollection = employeeDB;
             myBusinessRules.FilePath = stream.Name;
@@ -140,8 +141,9 @@ namespace Lab_03_EAB
                 return;
             }
             using (GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress, true))
+                using(var binReader = XmlDictionaryReader.CreateBinaryReader(gzip, new XmlDictionaryReaderQuotas()))
             {
-                employeeDB = (SortedDictionary<uint, Employee>)serializer.Deserialize(stream);
+                employeeDB = (SortedDictionary<uint, Employee>)serializer.ReadObject(binReader);
             }
             myBusinessRules.EmployeeCollection = employeeDB;
             myBusinessRules.FilePath = stream.Name;

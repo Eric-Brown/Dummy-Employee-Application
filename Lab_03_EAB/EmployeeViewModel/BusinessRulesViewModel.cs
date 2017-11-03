@@ -157,7 +157,8 @@ namespace Lab_03_EAB.EmployeeViewModel
                 {
                     theFile.OpenFileDB();
                     theFile.ReadFileDB();
-                    EmployeesCollections.Add(toAdd);
+                    if(!EmployeesCollections.Contains(toAdd))
+                        EmployeesCollections.Add(toAdd);
                 }
             }
             catch (Exception ex)

@@ -20,6 +20,8 @@ using System.IO;
 using System.Windows;
 using Lab_03_EAB;
 using System.Xml;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO.Compression;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -27,6 +29,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace EmployeeLabUnitTests
 {
+    [DataContract]
+    public class Dummy
+    {
+        public Dummy() { }
+        [DataMember]
+       public SortedDictionary<uint, int> greg { get; set; }
+    }
     /// <summary>
     /// This class contains tests which tests the functionality of Employee and it's subtypes.
     /// </summary>
@@ -396,8 +405,29 @@ namespace EmployeeLabUnitTests
             a.Add(toAdd);
             Assert.IsTrue(a.Contains(toAdd));
         }
-
         [TestMethod]
+        public void TestSerializing()
+        {
+            BusinessRules a = new BusinessRules();
+            PopulateBusinessRules(a);
+            MemoryStream s = new MemoryStream();
+            DataContractSerializer greg = new DataContractSerializer(typeof(BusinessRules));
+            greg.WriteObject(s, a);
+        }
+        [TestMethod]
+        public void TestDeserializing()
+        {
+            BusinessRules a = new BusinessRules();
+            PopulateBusinessRules(a);
+            MemoryStream s = new MemoryStream();
+            DataContractSerializer greg = new DataContractSerializer(typeof(BusinessRules));
+            greg.WriteObject(s, a);
+            s.Seek(0, SeekOrigin.Begin);
+            BusinessRules b = (BusinessRules)greg.ReadObject(s);
+            Assert.IsTrue(b.Equals(a));
+        }
+
+    [TestMethod]
         public void TestCopyTo()
         {
             BusinessRules a = new BusinessRules();

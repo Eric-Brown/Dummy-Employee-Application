@@ -15,6 +15,7 @@ namespace Lab_03_EAB
     /// <summary>
     /// Class that contains the business rules for the application
     /// </summary>
+    [DataContract]
     [Serializable]
     public sealed class BusinessRules : ICollection<Employee>, INotifyCollectionChanged, INotifyPropertyChanged
     {
@@ -31,8 +32,11 @@ namespace Lab_03_EAB
         private static readonly Regex isNumber = new Regex(@"^\d*\.?\d*$", RegexOptions.Compiled);
         #endregion
         #region MemberData
+        [DataMember]
         private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
+        [DataMember]
         private string myFileName = "New...";
+        [DataMember]
         private string myPath;
 
         #endregion
@@ -138,7 +142,9 @@ namespace Lab_03_EAB
             set
             {
                 myPath = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(FilePath)));
                 myFileName = Path.GetFileName(myPath);
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(FileName)));
             }
         }
         #endregion
@@ -146,6 +152,10 @@ namespace Lab_03_EAB
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e);
+        }
         /// <summary>
         /// Implementation of INotifyCollectionChanged.
         /// Invokes the handler. This function is called whenever the data has changed.
@@ -355,6 +365,25 @@ namespace Lab_03_EAB
         {
             foreach (var pair in employeeCollection)
                 destination.Add(pair.Key, pair.Value);
+        }
+        [OnDeserialized]
+        private void ReRegister(StreamingContext context)
+        {
+            foreach(var pair in employeeCollection)
+            {
+                employeeCollection[pair.Key].EmpIDChanged += EmpIDChangeHandler;
+            }
+        }
+        public bool Equals(BusinessRules obj)
+        {
+            bool toReturn = true;
+            toReturn = toReturn && myFileName == obj.myFileName;
+            toReturn = toReturn && myPath == obj.myPath;
+            foreach(var pair in employeeCollection)
+            {
+                toReturn = toReturn && (obj.employeeCollection[pair.Key] != null);
+            }
+            return toReturn;
         }
         #endregion
     }//End Class BusinessRules Definition
