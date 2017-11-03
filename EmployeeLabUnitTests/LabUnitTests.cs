@@ -19,6 +19,11 @@ using System.Linq;
 using System.IO;
 using System.Windows;
 using Lab_03_EAB;
+using System.Xml;
+using System.IO.Compression;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+
 
 namespace EmployeeLabUnitTests
 {
@@ -60,15 +65,15 @@ namespace EmployeeLabUnitTests
         [TestMethod]
         public void TestSalesToString()
         {
-            Sales testSalesEmp = new Sales(0, FIRST, LAST,setMonthlySalary,setCommission,setGrossSales);
-            string expected = string.Format(BASE_FORMAT_STRING + SALARY_FORMAT_STRING + SALES_FORMAT_STRING, 0, testSalesEmp.EmpType, FIRST, LAST, setMonthlySalary,setCommission,setGrossSales);
+            Sales testSalesEmp = new Sales(0, FIRST, LAST, setMonthlySalary, setCommission, setGrossSales);
+            string expected = string.Format(BASE_FORMAT_STRING + SALARY_FORMAT_STRING + SALES_FORMAT_STRING, 0, testSalesEmp.EmpType, FIRST, LAST, setMonthlySalary, setCommission, setGrossSales);
             string actual = testSalesEmp.ToString();
             Assert.AreEqual(expected, testSalesEmp.ToString());
         }
         [TestMethod]
         public void TestSalaryToString()
         {
-            Salary testSalaryEmp = new Salary(0, FIRST, LAST,setMonthlySalary);
+            Salary testSalaryEmp = new Salary(0, FIRST, LAST, setMonthlySalary);
             string expected = string.Format(BASE_FORMAT_STRING + SALARY_FORMAT_STRING, 0, testSalaryEmp.EmpType, FIRST, LAST, setMonthlySalary);
             Assert.AreEqual(expected, testSalaryEmp.ToString());
         }
@@ -143,6 +148,79 @@ namespace EmployeeLabUnitTests
             testSalaryEmp.MonthlySalary = unexpected;
             Assert.AreNotEqual(unexpected, testSalaryEmp.MonthlySalary);
         }
+        [TestMethod]
+        public void TestSerializing()
+        {
+            var ds = new DataContractSerializer(typeof(Employee));
+            const string First = "Sam";
+            const string Last = "Iam";
+            const decimal DummyDecimal = 10.10m;
+            const double DummyDouble = 10.0;
+            uint ID = 0;
+            Contract toTest = new Contract(ID++, First, Last, DummyDecimal);
+            var s = new MemoryStream();
+            ds.WriteObject(s, toTest);
+            Salary a = new Salary(ID++, First, Last, DummyDecimal);
+            ds.WriteObject(s, a);
+            Hourly b = new Hourly(ID++, First, Last, DummyDecimal, DummyDouble);
+            ds.WriteObject(s, b);
+            Sales c = new Sales(ID++, First, Last, DummyDecimal, DummyDecimal, DummyDecimal);
+            ds.WriteObject(s, c);
+        }
+        [TestMethod]
+        public void TestDeserializing()
+        {
+            var ds = new DataContractSerializer(typeof(Employee));
+            const string First = "Sam";
+            const string Last = "Iam";
+            const decimal DummyDecimal = 10.10m;
+            const double DummyDouble = 10.0;
+            uint ID = 0;
+            Contract toTest = new Contract(ID++, First, Last, DummyDecimal);
+            var s = new MemoryStream();
+            ds.WriteObject(s, toTest);
+            s.Seek(0, SeekOrigin.Begin); //Set stream to beginning
+            Contract readToTest = (Contract)ds.ReadObject(s);
+            Assert.IsTrue(readToTest.EmpID == toTest.EmpID
+                && readToTest.ContractWage == toTest.ContractWage
+                && readToTest.EmpType == toTest.EmpType
+                && readToTest.FirstName == toTest.FirstName
+                && readToTest.LastName == toTest.LastName);
+            Salary a = new Salary(ID++, First, Last, DummyDecimal);
+            s.SetLength(0);
+            ds.WriteObject(s, a);
+            s.Seek(0, SeekOrigin.Begin); //Set stream to beginning
+            Salary reada = (Salary)ds.ReadObject(s);
+            Assert.IsTrue(reada.EmpID == a.EmpID
+    && reada.MonthlySalary == a.MonthlySalary
+    && reada.EmpType == a.EmpType
+    && reada.FirstName == a.FirstName
+    && reada.LastName == a.LastName);
+            Hourly b = new Hourly(ID++, First, Last, DummyDecimal, DummyDouble);
+            s.SetLength(0);
+            ds.WriteObject(s, b);
+            s.Seek(0, SeekOrigin.Begin); //Set stream to beginning
+            Hourly readb = (Hourly)ds.ReadObject(s);
+            Assert.IsTrue(readb.EmpID == b.EmpID
+    && readb.HoursWorked == b.HoursWorked
+    && readb.EmpType == b.EmpType
+    && readb.FirstName == b.FirstName
+    && readb.LastName == b.LastName
+    && readb.HourlyRate == b.HourlyRate);
+            Sales c = new Sales(ID++, First, Last, DummyDecimal, DummyDecimal, DummyDecimal);
+            s.SetLength(0);
+            ds.WriteObject(s, c);
+            s.Seek(0, SeekOrigin.Begin); //Set stream to beginning
+            Sales readc = (Sales)ds.ReadObject(s);
+            Assert.IsTrue(readc.EmpID == c.EmpID
+    && readc.MonthlySalary == c.MonthlySalary
+    && readc.EmpType == c.EmpType
+    && readc.FirstName == c.FirstName
+    && readc.LastName == c.LastName
+    && readc.GrossSales == c.GrossSales
+    && readc.Commission == c.Commission);
+
+        }
 
     }
     /// <summary>
@@ -196,18 +274,7 @@ namespace EmployeeLabUnitTests
             toTest.Clear();
             Assert.AreEqual(0, toTest.Count());
         }
-        /// <summary>
-        /// Tests the .Last() method of BusinessRules
-        /// </summary>
-        [TestMethod]
-        public void TestLast()
-        {
-            BusinessRules toTest = new BusinessRules();
-            Assert.AreEqual(toTest.Last(), null);
-            PopulateBusinessRules(toTest);
-            Assert.AreNotEqual(toTest.Last(), null);
-            Assert.AreEqual(toTest[DEFAULT_EMPS_TO_CREATE - 1], toTest.Last());
-        }
+
         /// <summary>
         /// Tests the indexing of BusinessRules using employee ID as a key
         /// </summary>
@@ -306,22 +373,43 @@ namespace EmployeeLabUnitTests
         [TestMethod]
         public void TestAddandRemove()
         {
-
+            BusinessRules a = new BusinessRules();
+            BusinessRules b = new BusinessRules();
+            PopulateBusinessRules(b);
+            foreach(var emp in b)
+            {
+                a.Add(emp);
+            }
+            Assert.AreEqual(b.Count(), a.Count());
+            foreach(var emp in b)
+            {
+                a.Remove(emp);
+            }
+            Assert.AreEqual(0, a.Count());
         }
         [TestMethod]
         public void TestContains()
         {
-
+            Contract toAdd = new Contract(0, "Sam", "Iam", 10.00m);
+            BusinessRules a = new BusinessRules();
+            Assert.IsFalse(a.Contains(toAdd));
+            a.Add(toAdd);
+            Assert.IsTrue(a.Contains(toAdd));
         }
-        [TestMethod]
-        public void TestIndexOfandRemoveAt()
-        {
 
-        }
         [TestMethod]
         public void TestCopyTo()
         {
-
+            BusinessRules a = new BusinessRules();
+            PopulateBusinessRules(a);
+            Employee[] employee = new Employee[DEFAULT_EMPS_TO_CREATE];
+            a.CopyTo(employee, 0);
+            int index = 0;
+            foreach (var emp in a)
+            {
+                Assert.IsTrue(a.Contains(employee[index]));
+                index++;
+            }
         }
         /// <summary>
         /// Populates a BusinessRules object with a specified number of random employees

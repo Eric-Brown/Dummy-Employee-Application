@@ -3,16 +3,17 @@ using System.Runtime.Serialization;
 
 namespace Lab_03_EAB
 {
+    [DataContract]
     [Serializable]
     public sealed class Contract : Employee
     {
-        
+        [DataMember]
         private const string CONTRACT_FORMAT_STRING = "Contract Wage: {0}\n",
             BAD_WAGE_CONSTR = "Only non-negative values of wage may be used to construct a Contract employee.";
         /// <summary>
         /// ContractWage property and backing field. Negative values are rejected.
         /// </summary>
-        
+        [DataMember]
         private decimal contractWage;
         public Decimal ContractWage
         {

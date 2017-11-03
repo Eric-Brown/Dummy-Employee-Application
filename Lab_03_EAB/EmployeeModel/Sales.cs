@@ -3,15 +3,17 @@ using System.Runtime.Serialization;
 
 namespace Lab_03_EAB
 {
+    [DataContract]
     [Serializable]
     public sealed class Sales : Salary
     {
-
+        [DataMember]
         private const string FORMAT_STRING = "Commission: {0}\nGross Sales: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Sales employee.";
         /// <summary>
         /// Property Commission and backing field. Negative values are rejected.
         /// </summary>
+        [DataMember]
         private decimal commission;
         public Decimal Commission
         {
@@ -25,6 +27,7 @@ namespace Lab_03_EAB
         /// <summary>
         /// Property GrossSales and backing field. Negative values are rejected.
         /// </summary>
+        [DataMember]
         private decimal grossSales;
         public Decimal GrossSales
         {

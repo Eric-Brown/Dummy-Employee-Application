@@ -6,11 +6,23 @@ namespace Lab_03_EAB
     /// Enum that represents the known subtypes of an employee.
     /// <warning>Other code in the project relies on these being default integral values.</warning>
     /// </summary>
+    [DataContract]
     [Serializable]
-    public enum ETYPE { SALARY, SALES, HOURLY, CONTRACT};
+    public enum ETYPE
+    {
+        [EnumMember]
+        SALARY,
+        [EnumMember]
+        SALES,
+        [EnumMember]
+        HOURLY,
+        [EnumMember]
+        CONTRACT
+    };
     /// <summary>
     /// Abstract class which contains all the information and behaviors which are in common for all employees.
     /// </summary>
+    [DataContract, KnownType(typeof(Contract)), KnownType(typeof(Salary)), KnownType(typeof(Sales)), KnownType(typeof(Hourly))]
     [Serializable]
     public abstract class Employee
     {
@@ -18,6 +30,7 @@ namespace Lab_03_EAB
         /// <summary>
         /// Used to call string.Format without having to use several "magic" strings.
         /// </summary>
+        [DataMember]
         private const string FORMAT_STRING = "EmpID: {0}\nEmpType: {1}\nFirst Name: {2}\nLast Name: {3}\n";
         #endregion
         #region EventsAndHandlers
@@ -35,6 +48,7 @@ namespace Lab_03_EAB
         }
         #endregion
         #region Properties
+        [DataMember]
         private uint empID;
         /// <summary>
         /// Represents the unique ID of the employee.
@@ -51,6 +65,7 @@ namespace Lab_03_EAB
                 OnEmpIDChanged(new PropertyChangeEventArgs<uint>(oldValue, empID));
             }
         }
+        [DataMember]
         private string firstName;
         /// <summary>
         /// Represents the first name of the employee. Rejects null or empty values.
@@ -64,6 +79,7 @@ namespace Lab_03_EAB
                     firstName = value;
             }
         }
+        [DataMember]
         private string lastName;
         /// <summary>
         /// Represents the last name of the employee. Rejects null or empty values.
@@ -77,6 +93,7 @@ namespace Lab_03_EAB
                     lastName = value;
             }
         }
+        [DataMember]
         private ETYPE empType;
         /// <summary>
         /// Represents the type of the employee.

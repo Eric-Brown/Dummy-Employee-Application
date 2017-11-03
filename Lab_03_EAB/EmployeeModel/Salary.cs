@@ -6,16 +6,17 @@ namespace Lab_03_EAB
     /// <summary>
     /// Represents a Salaried Employee
     /// </summary>
+    [DataContract]
     [Serializable]
     public class Salary :Employee
     {
-        
+        [DataMember]
         private const string SALARY_FORMAT_STRING = "Monthly Salary: {0}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values of salary may be used to construct a Salary employee.";
         /// <summary>
         /// MonthlySalary property and backing field. Negative values are rejected.
         /// </summary>
-
+        [DataMember]
         private decimal monthlySalary;
         public Decimal MonthlySalary
         {

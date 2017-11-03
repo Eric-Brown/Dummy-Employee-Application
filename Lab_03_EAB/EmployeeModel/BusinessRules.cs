@@ -284,6 +284,7 @@ namespace Lab_03_EAB
         /// <exception cref="OverflowException">Thrown if the formatting was good, but results in an overflow for the datatype.</exception>
         public bool AddFromStringArray(ETYPE selected, string[] attributeArray)
         {
+            if (!CanAddFromStringArray(selected, attributeArray)) return false;
             try
             {
                 uint idToAdd = uint.Parse(attributeArray[0]);
