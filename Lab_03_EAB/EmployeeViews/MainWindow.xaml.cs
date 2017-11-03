@@ -34,134 +34,22 @@ namespace Lab_03_EAB
     /// </summary>
     public partial class MainWindow : Window
     {
-        //Constants used by the program
-        private const uint NUM_TEST_EMPS = 10;
-        private const string
-            ABOUT = "About",
-            ERROR = "Error",
-            NEW_EMP_LINE = "-------New Employee-------\n",
-            HELP_MSG = @"Use the file menu to navigate to an employee database that is already created.
+        private readonly string HELP_MSG = @"Use the file menu to navigate to an employee database that is already created.
 Or click the buttons to manually add employees, or to create test employees, or to modify an existing employee.
 Created by: Eric Brown",
-            INVALID_EMP_TYPE_ERROR = "Invalid Employee Type",
+                ABOUT = "About";
 
-            ALL_EMP_LINE = "\n------All Employees-----";
-
-        //End Constants
-        //Business Rules, used as storage.
-        private BusinessRules businessLogic = new BusinessRules();
-
-        private void MnuSave_Click(object sender, RoutedEventArgs e)
-        {
-            using (FileIO file = new FileIO(businessLogic))
-            {
-                try
-                {
-                    file.OpenSaveFileDB();
-                    file.WriteFileDB();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void MnuOpen_Click(object sender, RoutedEventArgs e)
-        {
-            using (FileIO file = new FileIO(businessLogic))
-            {
-                try
-                {
-                    file.OpenFileDB();
-                    file.ReadFileDB();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void MnuNew_Click(object sender, RoutedEventArgs e)
-        {
-            businessLogic = new BusinessRules();
-        }
-
-        private void BtnMod_Click(object sender, RoutedEventArgs e)
-        {
-            Add_Emp_Window window = new Add_Emp_Window(DatGridView.SelectedItem, businessLogic);
-            window.Show();
-        }
-
-        private void DatGridTab1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            BtnMod_Click(sender, e);
-        }
-
-        private void DatGridTab1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            RTBxOutput.Document.Blocks.Clear();
-            RTBxOutput.AppendText(DatGridView.SelectedItem?.ToString());
-        }
-
-        private void BtnTestNum_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void BtnDelete_Click(object sender, RoutedEventArgs e)
-        {
-            businessLogic.Remove(DatGridView.SelectedItem as Employee);
-        }
-
-        /// <summary>
-        /// Creates a set of test employees with dummy data and stores it in a list
-        /// </summary>
-        /// <param name="sender">The object listener</param>
-        /// <param name="e">Any additional event handler arguments</param>
-        private void BtnTest_Click(object sender, RoutedEventArgs e)
-        {
-            businessLogic.AddTestEmps();
-        }
-        
         /// <summary>
         /// Initializes the components of the WPF form and also populates the combobox with values from an enum
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new EmployeeViewModel.BusinessRulesViewModel();
+            //DataContext = new EmployeeViewModel.BusinessRulesViewModel();
         }
-        /// <summary>
-        /// Attempts to add an employee to the list. If it cannot add an employee it either shows an error window or it spits out an error to the output textbox
-        /// </summary>
-        /// <param name="sender">The object listener</param>
-        /// <param name="e">Any additional event handler arguments</param>
-        private void BtnAddEmp_Click(object sender, RoutedEventArgs e)
+        public void MnuAbout_Click(object sender, EventArgs e)
         {
-            Add_Emp_Window window = new Add_Emp_Window(businessLogic);
-            window.Show();
+            MessageBox.Show(HELP_MSG, ABOUT, MessageBoxButton.OK, MessageBoxImage.Information);
         }
-        /// <summary>
-        /// Displays a messagebox that lists directions and purpose for the program
-        /// </summary>
-        /// <param name="sender">The object listener</param>
-        /// <param name="e">Any additional event handler arguments</param>
-        private void MnuAbout_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(HELP_MSG,ABOUT,MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        /// <summary>
-        /// Immediately exits the program
-        /// </summary>
-        /// <param name="sender">The object listener</param>
-        /// <param name="e">Any additional event handler arguments</param>
-        private void MnuExit_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-
-
     }
 }

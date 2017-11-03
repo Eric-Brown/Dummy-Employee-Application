@@ -15,10 +15,10 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Lab_03_EAB;
 using System.Linq;
 using System.IO;
 using System.Windows;
+using Lab_03_EAB;
 
 namespace EmployeeLabUnitTests
 {

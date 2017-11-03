@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.IO;
 using System.Runtime.Serialization;
+using System.ComponentModel;
 
 namespace Lab_03_EAB
 {
@@ -15,33 +16,23 @@ namespace Lab_03_EAB
     /// Class that contains the business rules for the application
     /// </summary>
     [Serializable]
-    public sealed class BusinessRules : ICollection<Employee>, INotifyCollectionChanged
+    public sealed class BusinessRules : ICollection<Employee>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         #region Constants
         /// <summary>
         /// Utility regex that is used to determine if a string is comprised of only characters from a to z.
         /// </summary>
+        [NonSerialized]
         private static readonly Regex isOneWord = new Regex(@"(?i)(?<!\s*\S+\s*)[a-z]+(?!\s*\S+)", RegexOptions.Compiled);
         /// <summary>
         /// Utility regex that is used to determine if a string is comprised of only digits and a possible decimal point.
         /// </summary>
+        [NonSerialized]
         private static readonly Regex isNumber = new Regex(@"^\d*\.?\d*$", RegexOptions.Compiled);
-        /// <summary>
-        /// Used to create random first names for employees.
-        /// </summary>
-        private static readonly string[] FIRST_NAMES = { "Stewart", "Sunny", "Grant", "Greg", "Micheal", "Seth", "Anthony", "Matthew", "Jonathon", "Jenny", "Sam" };
-        /// <summary>
-        /// Used to create random last names for employees.
-        /// </summary>
-        private static readonly string[] LAST_NAMES = { "Linder", "Brown", "DePoirot", "Johnson", "Williams", "Xavier", "Green", "Goldberg", "Greenburg", "Flotsam", "Jenkins", "Jensen", "Null" };
-        /// <summary>
-        /// Default number of random employees to create when creating test employees.
-        /// </summary>
-        private const int DEFAULT_NUM_TEST_EMPS = 10;
         #endregion
         #region MemberData
         private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
-        private string myFileName;
+        private string myFileName = "New...";
         private string myPath;
 
         #endregion
@@ -153,6 +144,7 @@ namespace Lab_03_EAB
         #endregion
         #region EventsAndHandlers
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Implementation of INotifyCollectionChanged.
@@ -162,6 +154,7 @@ namespace Lab_03_EAB
         private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(this, e);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EmployeeCollection)));
         }
         /// <summary>
         /// Event Handler for when an employees id has changed
@@ -356,48 +349,6 @@ namespace Lab_03_EAB
             {
             }
             return false;
-        }
-        internal void AddTestEmps(int numTestEmps = DEFAULT_NUM_TEST_EMPS)
-        {
-            Random random = new Random();
-            //RTBxOutput.Document.Blocks.Clear();
-            Clear();
-            int numETypes = Enum.GetNames(typeof(ETYPE)).Length;
-            //Iterate through the numbers and choose randomly from the first and last names. Other values are randomly generated using Random
-            for (int i = 0; i < numTestEmps; i++)
-            {
-                switch ((ETYPE)(i % numETypes))
-                {
-                    case ETYPE.CONTRACT:
-                        employeeCollection.Add((uint)i, new Contract((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.NextDouble() * random.Next())));
-                        break;
-                    case ETYPE.HOURLY:
-                        employeeCollection.Add((uint)i, new Hourly((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.NextDouble() * random.Next()),
-                            random.NextDouble() * random.Next()));
-                        break;
-                    case ETYPE.SALARY:
-                        employeeCollection.Add((uint)i, new Salary((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.NextDouble() * random.Next())));
-                        break;
-                    case ETYPE.SALES:
-                        employeeCollection.Add((uint)i, new Sales((uint)i,
-                            FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
-                            LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
-                            (decimal)(random.Next() * random.NextDouble()),
-                            (decimal)(random.Next() * random.NextDouble()),
-                            (decimal)(random.Next() * random.NextDouble())));
-                        break;
-                }//End Switch
-            }//End for loop
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
         public void CopyTo(SortedDictionary<uint, Employee> destination)
         {

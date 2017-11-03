@@ -4,13 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab_03_EAB"
+        xmlns:viewmodels="clr-namespace:Lab_03_EAB.EmployeeViewModel"
         mc:Ignorable="d"
         Title="Lab_03_EAB" Width="525" SizeToContent="Height" MinHeight="300" MaxHeight="700">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Width" Value="50"/>
         </Style>
+        <viewmodels:BusinessRulesViewModel x:Key="ViewModelMain"/>
     </Window.Resources>
+    <Window.DataContext>
+        <viewmodels:BusinessRulesViewModel/>
+    </Window.DataContext>
     <StackPanel>
         <Menu Name="MnuMain">
             <MenuItem Name="MnuFile" Header="File">
@@ -47,46 +52,70 @@
                         Grid.Column="0"
                         Margin="3,0,0,2" Grid.ColumnSpan="1"
                         Width="auto"
-                        ItemsSource="{Binding Employees}">
+                        ItemsSource="{Binding EmployeesCollections}"
+                        SelectedItem="{Binding Employees, Mode=TwoWay}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <!--Apparently my context here is from fucking BusinessRules-->
+                        <Label Content="{Binding FileName}"/>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <DataGrid 
+                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False"
+                            CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="True"
+                            SelectionMode="Single" SelectionUnit="FullRow"
+                            ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabControl}}, Path=SelectedItem}"
+                            SelectedItem="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type"/>
+                                <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"/>
+                                <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"/>
+                                <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+                <!--TabItem Header="{Binding Employees.FileName}">
+                    <DataGrid 
+                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False"
+                            CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="True"
+                            SelectionMode="Single" SelectionUnit="FullRow"
+                            ItemsSource="{Binding Employees}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type"/>
+                            <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"/>
+                            <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"/>
+                            <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </-->
+                <!--TabItem Header="{Binding Employees.FileName}"/-->
+                <!--TabControl.ItemContainerStyle>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Header" Value="{Binding Employees.FileName}"/>
+                    </Style>
+                </TabControl.ItemContainerStyle-->
+                <!--TabControl.ContentTemplate>
                     <DataTemplate>
                         <DataGrid 
                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                             ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.VerticalScrollBarVisibility="Auto" AutoGenerateColumns="True"
                             CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="False"
-                            SelectionMode="Single" SelectionUnit="FullRow" SelectedItem="{Binding SelectedEmployee}"
-                            ItemsSource="{Binding ElementName=TabCntrlDisplay, Path=}">
+                            SelectionMode="Single" SelectionUnit="FullRow"
+                            ItemsSource="{Binding Employees.EmployeeCollection}">
                         </DataGrid>
                     </DataTemplate>
-                </TabControl.ContentTemplate>
-                <!--TabItem Header="Default" Name="TabItm1" IsEnabled="False">
-                    <DataGrid Name="DatGridView" 
-                              VerticalAlignment="Stretch" 
-                              AlternatingRowBackground="AntiqueWhite" 
-                              ScrollViewer.CanContentScroll="True"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                              AutoGenerateColumns="False"
-                              CanUserReorderColumns="True"
-                              CanUserSortColumns="True"
-                              CanUserResizeColumns="True"
-                              IsReadOnly="True"
-                              SelectionMode="Single" SelectionUnit="FullRow"
-                              MouseDoubleClick="DatGridTab1_MouseDoubleClick"
-                              SelectionChanged="DatGridTab1_SelectionChanged">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
-                            <DataGridTextColumn Binding="{Binding FirstName}"  Header="First Name"/>
-                            <DataGridTextColumn Binding="{Binding LastName}"  Header="Last Name"/>
-                            <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type"/>
-                        </DataGrid.Columns>
-                        <DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                Add stuff here if I want a row details panel. Might be useful.
-                            </DataTemplate>
-                        </>
-                    </DataGrid>
                 </-->
+
             </TabControl>
 
             <RichTextBox Name="RTBxOutput" 
