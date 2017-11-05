@@ -13,7 +13,7 @@
         <Style TargetType="Label">
             <Setter Property="Margin" Value="2,5,0,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="MinWidth" Value="100"/>
@@ -22,6 +22,8 @@
         </Style>
         <Style TargetType="ComboBox">
             <Setter Property="Margin" Value="3,3,3,3"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="MinWidth" Value="100"/>
         </Style>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="5,5,5,5"/>
@@ -29,69 +31,72 @@
         </Style>
         <BooleanToVisibilityConverter x:Key="visibilityConverter"/>
     </Window.Resources>
-    <StackPanel Orientation="Horizontal">
-    <StackPanel Orientation="Vertical" VerticalAlignment="Center"><!--Begin Employee Entry Side-->
-            <Label Content="Employee Information" HorizontalAlignment="Center"/>
-            <StackPanel Orientation="Horizontal">
-            <Label Content="Employee Type:" HorizontalAlignment="Left"/>
-                <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentWork.Type}"/>
-                <Label Content="Employee ID#:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding CurrentWork.ID, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="First Name:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding CurrentWork.FirstName, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <Label Content="Last Name:" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding CurrentWork.LastName, UpdateSourceTrigger=PropertyChanged}"/>
-
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Suppliment1Lable, Mode=OneWay}" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding CurrentWork.Suppliment1, UpdateSourceTrigger=PropertyChanged}"/>
-                <Label Content="{Binding Suppliment2Lable, Mode=OneWay}" HorizontalAlignment="Left"
-                       Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
-                <TextBox Text="{Binding CurrentWork.Suppliment2, UpdateSourceTrigger=PropertyChanged}"
-                         Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding Suppliment3Lable, Mode=OneWay}" HorizontalAlignment="Left"
-                       Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
-                <TextBox Text="{Binding CurrentWork.Suppliment3, UpdateSourceTrigger=PropertyChanged}"
-                         Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="{Binding AddButtonContent}" HorizontalAlignment="Center" Command="{Binding AddModifyEmployeeCommand}"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"><!--Begin Main Stack Panel Horizontal-->
+        <DockPanel Name="DockPnlEmp"><!--Begin Employee Side SP Vertical-->
+            <TextBlock TextDecorations="Underline" Text="Employee Information" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
+                <Button Content="{Binding AddButtonContent}" Command="{Binding AddModifyEmployeeCommand}"/>
                 <Button Name="BtnCancel" Content="Cancel" HorizontalAlignment="Center" Click="BtnCancel_Click"/>
             </StackPanel>
-        </StackPanel><!--End Original Vertical Stack-->
-        <Separator/>
-        <StackPanel Orientation="Vertical" VerticalAlignment="Center"><!--Begin Course Addition Info-->
-            <Label Content="Course Information" HorizontalAlignment="Center"/>
-            <StackPanel Orientation="Horizontal">
+            <DockPanel><!--Begin Employee Information Dock-->
+                <StackPanel Orientation="Vertical"><!--Begin Employee Left Half-->
+                    <DockPanel>
+                        <Label Content="Employee Type:" HorizontalAlignment="Left"/>
+                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentWork.Type}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="First Name:"/>
+                        <TextBox Text="{Binding CurrentWork.FirstName, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="{Binding Suppliment1Lable, Mode=OneWay}"/>
+                        <TextBox Text="{Binding CurrentWork.Suppliment1, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="{Binding Suppliment3Lable, Mode=OneWay}" Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
+                        <TextBox Text="{Binding CurrentWork.Suppliment3, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
+                    </DockPanel>
+                </StackPanel><!--End Employee Left Half-->
+                <StackPanel Orientation="Vertical"><!--Begin Employee Right Half-->
+                    <DockPanel>
+                        <Label Content="Employee ID#:"/>
+                        <TextBox Text="{Binding CurrentWork.ID, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="Last Name:"/>
+                        <TextBox Text="{Binding CurrentWork.LastName, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="{Binding Suppliment2Lable, Mode=OneWay}" Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
+                        <TextBox Text="{Binding CurrentWork.Suppliment2, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
+                    </DockPanel>
+                </StackPanel><!--End Employee Right Half-->
+            </DockPanel><!--End Employee Information Dock-->
+        </DockPanel><!--End Employee Side SP Vertical-->
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        <StackPanel Orientation="Vertical"><!--Begin Course Side SP Vertical-->
+            <TextBlock TextDecorations="Underline" Text="Course Information" HorizontalAlignment="Center"/>
+            <DockPanel>
                 <Label Content="Course ID:"/>
                 <TextBox Text="{Binding CourseToAdd.CourseID, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Course Description"/>
+            </DockPanel>
+            <DockPanel>
+                <Label Content="Course Description:"/>
                 <TextBox Text="{Binding CourseToAdd.CourseDescription, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            </DockPanel>
+            <DockPanel>
                 <Label Content="Course Grade:"/>
                 <ComboBox Name="CmbBoxGrade" SelectedItem="{Binding CourseToAdd.Grade}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Approved Date"/>
+            </DockPanel>
+            <DockPanel>
+                <Label Content="Approved Date:"/>
                 <DatePicker SelectedDate="{Binding CourseToAdd.ApprovedDate}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            </DockPanel>
+            <DockPanel>
                 <Label Content="Course Credits:"/>
                 <TextBox Text="{Binding CourseCreditsToAdd, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
-            <StackPanel HorizontalAlignment="Center">
-                <Button Content="Add Course" Command="{Binding AddCourseCommand}"/>
-            </StackPanel>
-        </StackPanel><!--End Course Addition-->
-        <ListBox ItemsSource="{Binding Courses}"/>
-    </StackPanel><!--End Original Horizontal Stack-->
+            </DockPanel>
+            <Button Content="Add Course" Command="{Binding AddCourseCommand}"/>
+        </StackPanel><!--End Course Side SP Vertical-->
+    </StackPanel><!--End Main Stack Panel Horizontal-->
 </Window>

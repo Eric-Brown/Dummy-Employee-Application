@@ -1,11 +1,12 @@
 ﻿// Project Prolog
 // Name: Eric Brown
 // CS3260 Section 001
-// Project: Lab_06
-// Date: 10/19/17 10:00 PM
+// Project: Lab_08
+// Date: 11/4/17 10:00 PM
 // Purpose: To display a window allowing the client to add employees or create random employees
 // Changed BusinessRules class to work with a sorted dictionary and added some commonsense restrictions
 // for the properties of the employee objects.
+// Change: Added MVVM support. Added new data to employee. Added more controls to the window.
 // I declare that the following code was written by me or provided 
 // by the instructor for this project. I understand that copying source
 // code from any other source constitutes plagiarism, and that I will receive
@@ -55,16 +56,6 @@ Created by: Eric Brown",
             if(DataContext is BusinessRulesViewModel model)
             {
                 add_Emp_Window.DataContext =  new EmployeeViewModel.EmployeeViewModel(model.Employees);
-            }
-            add_Emp_Window.Show();
-        }
-        private void OnModifyEmployeeRequest(object sender, RoutedEventArgs e)
-        {
-            Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
-            if (DataContext is BusinessRulesViewModel model)
-            {
-                Employee selected = model.SelectedEmployee;
-                add_Emp_Window.DataContext = new EmployeeViewModel.EmployeeViewModel(model.SelectedEmployee, model.Employees);
             }
             add_Emp_Window.Show();
         }
