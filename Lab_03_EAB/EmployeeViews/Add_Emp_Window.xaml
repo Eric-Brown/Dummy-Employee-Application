@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:helper="clr-namespace:Lab_03_EAB.Helpers"
         xmlns:local="clr-namespace:Lab_03_EAB"
         mc:Ignorable="d"
-        Title="Add Employee" SizeToContent="WidthAndHeight" Loaded="Window_Loaded">
+        Title="Add Employee" SizeToContent="WidthAndHeight" Loaded="Window_Loaded"
+        helper:DialogCloser.DialogResult="{Binding CloseWindowFlag}">
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="2,5,0,0"/>
@@ -15,6 +18,7 @@
         <Style TargetType="TextBox">
             <Setter Property="MinWidth" Value="100"/>
             <Setter Property="Margin" Value="3,3,3,3"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
         </Style>
         <Style TargetType="ComboBox">
             <Setter Property="Margin" Value="3,3,3,3"/>
@@ -23,49 +27,71 @@
             <Setter Property="Margin" Value="5,5,5,5"/>
             <Setter Property="MinWidth" Value="75"/>
         </Style>
+        <BooleanToVisibilityConverter x:Key="visibilityConverter"/>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <Label Name="LblEmpType" Content="Employee Type:" 
-               Grid.Row="0" Grid.Column="0"/>
-        <Label Name="LblEmpID" Content="Employee ID:" 
-               Grid.Row="0" Grid.Column="2"/>
-        <Label Name="LblFirst" Content="First Name:" 
-               Grid.Row="1" Grid.Column="0"/>
-        <Label Name="LblLast" Content="Last Name:" 
-               Grid.Row="2" Grid.Column="0"/>
-        <Label Name="LblSup1" Content="Temp" 
-               Visibility="Visible" 
-               Grid.Row="3" Grid.Column="0"/>
-        <Label Name="LblSup2" Content="Temp" 
-               Visibility="Collapsed" 
-               Grid.Row="1" Grid.Column="2"/>
-        <Label Name="LblSup3" Content="Temp" 
-               Visibility="Collapsed" 
-               Grid.Row="2" Grid.Column="2"/>
-        <ComboBox Name="CBxEmpType" Grid.Row="0" Grid.Column="1" SelectionChanged="CBxEmpType_SelectionChanged"/>
-        <TextBox x:Name="TxtEmpID" Grid.Row="0" Grid.Column="3"/>
-        <TextBox Name="TxtFirst" Grid.Row="1" Grid.Column="1"/>
-        <TextBox Name="TxtLast" Grid.Row="2" Grid.Column="1"/>
-        <TextBox Name="TxtSup1" Grid.Row="3" Grid.Column="1" Visibility="Visible"/>
-        <TextBox Name="TxtSup2" Grid.Row="1" Grid.Column="3" Visibility="Collapsed"/>
-        <TextBox Name="TxtSup3" Grid.Row="2" Grid.Column="3" Visibility="Collapsed"/>
-        <Button Name="BtnAddMod" Content="Add"
-                Grid.Row="5" Grid.Column="1" Click="BtnAddMod_Click"/>
-        <Button Name="BtnCancel" Content="Cancel"
-                Grid.Row="5" Grid.Column="2"
-                Click="BtnCancel_Click"/>
-    </Grid>
+    <StackPanel Orientation="Horizontal">
+    <StackPanel Orientation="Vertical" VerticalAlignment="Center"><!--Begin Employee Entry Side-->
+            <Label Content="Employee Information" HorizontalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal">
+            <Label Content="Employee Type:" HorizontalAlignment="Left"/>
+                <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentWork.Type}"/>
+                <Label Content="Employee ID#:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding CurrentWork.ID, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="First Name:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding CurrentWork.FirstName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <Label Content="Last Name:" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding CurrentWork.LastName, UpdateSourceTrigger=PropertyChanged}"/>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Suppliment1Lable, Mode=OneWay}" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding CurrentWork.Suppliment1, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="{Binding Suppliment2Lable, Mode=OneWay}" HorizontalAlignment="Left"
+                       Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
+                <TextBox Text="{Binding CurrentWork.Suppliment2, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding Suppliment3Lable, Mode=OneWay}" HorizontalAlignment="Left"
+                       Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
+                <TextBox Text="{Binding CurrentWork.Suppliment3, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="{Binding AddButtonContent}" HorizontalAlignment="Center" Command="{Binding AddModifyEmployeeCommand}"/>
+                <Button Name="BtnCancel" Content="Cancel" HorizontalAlignment="Center" Click="BtnCancel_Click"/>
+            </StackPanel>
+        </StackPanel><!--End Original Vertical Stack-->
+        <Separator/>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center"><!--Begin Course Addition Info-->
+            <Label Content="Course Information" HorizontalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Course ID:"/>
+                <TextBox Text="{Binding CourseToAdd.CourseID, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Course Description"/>
+                <TextBox Text="{Binding CourseToAdd.CourseDescription, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Course Grade:"/>
+                <ComboBox Name="CmbBoxGrade" SelectedItem="{Binding CourseToAdd.Grade}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Approved Date"/>
+                <DatePicker SelectedDate="{Binding CourseToAdd.ApprovedDate}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Course Credits:"/>
+                <TextBox Text="{Binding CourseCreditsToAdd, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center">
+                <Button Content="Add Course" Command="{Binding AddCourseCommand}"/>
+            </StackPanel>
+        </StackPanel><!--End Course Addition-->
+        <ListBox ItemsSource="{Binding Courses}"/>
+    </StackPanel><!--End Original Horizontal Stack-->
 </Window>

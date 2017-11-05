@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Lab_03_EAB"
         xmlns:viewmodels="clr-namespace:Lab_03_EAB.EmployeeViewModel"
         mc:Ignorable="d"
-        Title="Lab_03_EAB" Width="525" SizeToContent="Height" MinHeight="300" MaxHeight="700">
+        Title="Lab_03_EAB" Width="525" SizeToContent="WidthAndHeight" MinHeight="300" MaxHeight="700">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Width" Value="50"/>
@@ -26,21 +26,21 @@
                 <!--MenuItem Name="MnuExit" Header="Exit" Click="MnuExit_Click"/-->
             </MenuItem>
             <MenuItem Name="MnuEdit" Header="Edit">
-                <MenuItem Name="MnuAdd" Header="Add" Command="{Binding AddEmployeeCommand}"/>
-                <MenuItem Name="MnuModify" Header="Modify" Command="{Binding ChangeEmployeeCommand}" />
-                <!--MenuItem Name="MnuDelete" Header="Delete"/>
-                <MenuItem Name="MnuMove" Header="Move"/-->
+                <MenuItem Name="MnuAdd" Header="Add" Click="OnAddRequest"/>
+                <!--MenuItem Name="MnuModify" Header="Modify" Click="OnModifyEmployeeRequest" /-->
+                <MenuItem Name="MnuDelete" Header="Delete" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
+                <!--MenuItem Name="MnuMove" Header="Move" Command="{Binding MoveEmployeeCommand}"/-->
             </MenuItem>
             <MenuItem Name="MnuHelp" Header="Help">
                 <MenuItem Name="MnuAbout" Header="About" Click="MnuAbout_Click"/>
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Command="{Binding AddEmployeeCommand}"/>
-            <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Command="{Binding CreateTestEmployeesCommand}"/>
-            <!--Button Name="BtnTestNum" Content="Test..." VerticalAlignment="Bottom" Click="BtnTestNum_Click"/-->
-            <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Command="{Binding ChangeEmployeeCommand}"/>
-            <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom" Command="{Binding RemoveEmployeeCommand}"/>
+            <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Click="OnAddRequest" Focusable="False"/>
+            <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Command="{Binding CreateTestEmployeesCommand}" Focusable="False"/>
+            <!--Button Name="BtnTestNum" Content="Test..." VerticalAlignment="Bottom" Click="OnAddTestEmployeesCountrequest"/-->
+            <!--Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Click="OnModifyEmployeeRequest" Focusable="False"/-->
+            <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}" Focusable="False"/>
         </StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -75,58 +75,25 @@
                                 <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"/>
                                 <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"/>
                                 <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
+                                <DataGridCheckBoxColumn Binding="{Binding Overtime, Mode=OneWay}" Header="Gets Overtime"/>
+                                <DataGridCheckBoxColumn Binding="{Binding Benefits, Mode=OneWay}" Header="Benefits"/>
+                                <DataGridCheckBoxColumn Binding="{Binding HasCommission, Mode=OneWay}" Header="Commission"/>
+                                <DataGridCheckBoxColumn Binding="{Binding EducationalBenefits, Mode=OneWay}" Header="Educational Benefits"/>
                             </DataGrid.Columns>
                         </DataGrid>
 
                     </DataTemplate>
                 </TabControl.ContentTemplate>
-                <!--TabItem Header="{Binding Employees.FileName}">
-                    <DataGrid 
-                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                            ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False"
-                            CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="True"
-                            SelectionMode="Single" SelectionUnit="FullRow"
-                            ItemsSource="{Binding Employees}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type"/>
-                            <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"/>
-                            <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"/>
-                            <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                </-->
-                <!--TabItem Header="{Binding Employees.FileName}"/-->
-                <!--TabControl.ItemContainerStyle>
-                    <Style TargetType="TabItem">
-                        <Setter Property="Header" Value="{Binding Employees.FileName}"/>
-                    </Style>
-                </TabControl.ItemContainerStyle-->
-                <!--TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <DataGrid 
-                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                            ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto" AutoGenerateColumns="True"
-                            CanUserSortColumns="True" CanUserDeleteRows="True" IsReadOnly="False"
-                            SelectionMode="Single" SelectionUnit="FullRow"
-                            ItemsSource="{Binding Employees.EmployeeCollection}">
-                        </DataGrid>
-                    </DataTemplate>
-                </-->
-
             </TabControl>
-
-            <RichTextBox Name="RTBxOutput" 
+            <TextBlock Name="TBxDescription" 
                          ScrollViewer.CanContentScroll="True" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                         IsReadOnly="True"
                          Grid.Column="1"
                          Margin="5,5,5,5"
                          MaxHeight="500" FontFamily="Consolas"
-                         Background="WhiteSmoke"
-                         />
+                       TextWrapping="Wrap"
+                         Background="WhiteSmoke" Text="{Binding Source={StaticResource ResourceKey=ViewModelMain}, Path=SelectedEmployeeDescription, UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
+            </TextBlock>
         </Grid>
     </StackPanel>
 </Window>

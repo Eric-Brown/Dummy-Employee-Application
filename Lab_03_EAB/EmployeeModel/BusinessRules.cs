@@ -12,6 +12,84 @@ using System.ComponentModel;
 
 namespace Lab_03_EAB
 {
+    public class EmployeeStrings : INotifyPropertyChanged
+    {
+        private string id;
+        public string ID
+        {
+            get => id;
+            set
+            {
+                id = value;
+                OnPropertyChanged(nameof(ID));
+            }
+        }
+        private string firstName;
+        public string FirstName
+        {
+            get => firstName;
+            set
+            {
+                firstName = value;
+                OnPropertyChanged(nameof(FirstName));
+            }
+        }
+        private string lastName;
+        public string LastName
+        {
+            get => lastName;
+            set
+            {
+                lastName = value;
+                OnPropertyChanged(nameof(LastName));
+            }
+        }
+        private string sup1;
+        public string Suppliment1
+        {
+            get => sup1;
+            set
+            {
+                sup1 = value;
+                OnPropertyChanged(nameof(Suppliment1));
+            }
+        }
+        private string sup2;
+        public string Suppliment2
+        {
+            get => sup2;
+            set
+            {
+                sup2 = value;
+                OnPropertyChanged(nameof(Suppliment2));
+            }
+        }
+        private string sup3;
+        public string Suppliment3
+        {
+            get => sup3;
+            set
+            {
+                sup3 = value;
+                OnPropertyChanged(nameof(Suppliment3));
+            }
+        }
+        private ETYPE eTYPE;
+        public ETYPE Type
+        {
+            get => eTYPE;
+            set
+            {
+                eTYPE = value;
+                OnPropertyChanged(nameof(Type));
+            }
+        }
+       private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+    }
     /// <summary>
     /// Class that contains the business rules for the application
     /// </summary>
@@ -24,12 +102,12 @@ namespace Lab_03_EAB
         /// Utility regex that is used to determine if a string is comprised of only characters from a to z.
         /// </summary>
         [NonSerialized]
-        private static readonly Regex isOneWord = new Regex(@"(?i)(?<!\s*\S+\s*)[a-z]+(?!\s*\S+)", RegexOptions.Compiled);
+        private static readonly Regex IsAlpha = new Regex(@"(?i)(?!.*[\d]+.*)^.*", RegexOptions.Compiled);
         /// <summary>
         /// Utility regex that is used to determine if a string is comprised of only digits and a possible decimal point.
         /// </summary>
         [NonSerialized]
-        private static readonly Regex isNumber = new Regex(@"^\d*\.?\d*$", RegexOptions.Compiled);
+        private static readonly Regex IsNumber = new Regex(@"^\d*\.?\d*$", RegexOptions.Compiled);
         #endregion
         #region MemberData
         [DataMember]
@@ -292,28 +370,30 @@ namespace Lab_03_EAB
         /// <param name="attributeArray">A string array of the attributes. MUST have the order of: ID, First, Last, Sup1, Sup2, Sup3</param>
         /// <returns>Whether or not the operation was successful</returns>
         /// <exception cref="OverflowException">Thrown if the formatting was good, but results in an overflow for the datatype.</exception>
-        public bool AddFromStringArray(ETYPE selected, string[] attributeArray)
+        public bool AddFromEmployeeStrings(EmployeeStrings employee, IEnumerable<Course> courses)
         {
-            if (!CanAddFromStringArray(selected, attributeArray)) return false;
+            if (!CanAddFromEmployeeString(employee)) return false;
             try
             {
-                uint idToAdd = uint.Parse(attributeArray[0]);
+                uint idToAdd = uint.Parse(employee.ID);
                 if (employeeCollection.ContainsKey(idToAdd)) employeeCollection.Remove(idToAdd);
-                switch (selected)
+                switch (employee.Type)
                 {
                     case ETYPE.CONTRACT:
-                        employeeCollection.Add(idToAdd, new Contract(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3])));
+                        employeeCollection.Add(idToAdd, new Contract(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1)));
                         break;
                     case ETYPE.HOURLY:
-                        employeeCollection.Add(idToAdd, new Hourly(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3]), double.Parse(attributeArray[4])));
+                        employeeCollection.Add(idToAdd, new Hourly(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1), double.Parse(employee.Suppliment2)));
                         break;
                     case ETYPE.SALARY:
-                        employeeCollection.Add(idToAdd, new Salary(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3])));
+                        employeeCollection.Add(idToAdd, new Salary(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1)));
                         break;
                     case ETYPE.SALES:
-                        employeeCollection.Add(idToAdd, new Sales(idToAdd, attributeArray[1], attributeArray[2], decimal.Parse(attributeArray[3]), decimal.Parse(attributeArray[4]), decimal.Parse(attributeArray[5])));
+                        employeeCollection.Add(idToAdd, new Sales(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1), decimal.Parse(employee.Suppliment2), decimal.Parse(employee.Suppliment3)));
                         break;
                 }
+                foreach (Course toAdd in courses)
+                    employeeCollection[idToAdd].CourseRoster.Add(toAdd.CourseID, toAdd);
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 return true;
             }
@@ -331,32 +411,32 @@ namespace Lab_03_EAB
         /// <param name="selectedItem">The type of the employee that could be added.</param>
         /// <param name="attributeArray">Array with entries that are ordered: ID, First, Last, Sup1, Sup2, Sup3</param>
         /// <returns>Whether or not AddFromStringArray will succeed.</returns>
-        public bool CanAddFromStringArray(ETYPE selectedItem, string[] attributeArray)
+        public bool CanAddFromEmployeeString(EmployeeStrings employee)
         {
             //All employees will have: ID, First, Last
             try
             {
-                if (isNumber.IsMatch(attributeArray[0]) && isOneWord.IsMatch(attributeArray[1]) && isOneWord.IsMatch(attributeArray[2]))
+                if (IsNumber.IsMatch(employee.ID) && IsAlpha.IsMatch(employee.FirstName) && IsAlpha.IsMatch(employee.LastName))
                 {
-                    switch (selectedItem)
+                    switch (employee.Type)
                     {
                         //Contract has 1
                         case ETYPE.CONTRACT:
-                            return (isNumber.IsMatch(attributeArray[3]));
+                            return (IsNumber.IsMatch(employee.Suppliment1));
                         //Hourly has 2
                         case ETYPE.HOURLY:
-                            return (isNumber.IsMatch(attributeArray[3]) && isNumber.IsMatch(attributeArray[4]));
+                            return (IsNumber.IsMatch(employee.Suppliment1) && IsNumber.IsMatch(employee.Suppliment2));
                         //Salary has 1
                         case ETYPE.SALARY:
-                            return (isNumber.IsMatch(attributeArray[3]));
+                            return (IsNumber.IsMatch(employee.Suppliment1));
                         //Sales has 3
                         case ETYPE.SALES:
-                            return (isNumber.IsMatch(attributeArray[3]) && isNumber.IsMatch(attributeArray[4]) && isNumber.IsMatch(attributeArray[5]));
+                            return (IsNumber.IsMatch(employee.Suppliment1) && IsNumber.IsMatch(employee.Suppliment2) && IsNumber.IsMatch(employee.Suppliment3));
                     }
                 }
             }
             //Exceptions are silenced
-            catch (Exception e)
+            catch (Exception)
             {
             }
             return false;

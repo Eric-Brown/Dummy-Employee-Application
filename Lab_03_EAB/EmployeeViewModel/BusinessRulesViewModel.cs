@@ -21,15 +21,48 @@ namespace Lab_03_EAB.EmployeeViewModel
         /// <summary>
         /// Used to create random first names for employees.
         /// </summary>
-        private static readonly string[] FIRST_NAMES = { "Stewart", "Sunny", "Grant", "Greg", "Micheal", "Seth", "Anthony", "Matthew", "Jonathon", "Jenny", "Sam" };
+        private static readonly string[] FIRST_NAMES = {
+            "D'Marcus", "T'varisuness", "Tyroil", "D'Squarius", "Ibrahim",
+            "T.J.", "Jackmerius", "D'Isiah", "D'Jasper", "Leoz", "Javaris", "Davoin",
+            "Grant", "Hingle", "L'Carpetron", "J'Dinkalage", "Xmus Jaxon",
+            "Greg", "Saggitariutt", "D'Glester", "Swirvithan", "Quatro", "Beezer",
+            "Micheal", "Shakiraquan", "X-Wing", "Sequester", "Scoish", "T.J. A.J.",
+            "Seth", "Donkey", "Torque", "Eeeeeee", "Coznesster", "Elipses", "Nyquillus",
+            "Anthony", "Bismo", "Decatholac", "Mergatroid", "Quiznatodd", "D'Pez", "Quackadilly",
+            "Matthew", "Goolius", "Bisquiteen", "Fartrell", "Blyrone", "Cartoons", "Jammie",
+            "Jonathon", "Equine", "Dahistorius", "Ewokoniad", "Eqqsnuizitine", "Huka'laknaka",
+            "Jenny", "King", "Ladennifer", "Harvard", "Firstname", "Creme", "Cosgrove", "Ha Ha",
+            "Sam", "Doink", "Legume", "Leger", "Quisperny", "Grunky","D'Brickashaw", "Strunk",
+            "Stumptavian", "Cornelius", "Vagonius", "Marmadune","Swordless", "Prince", "J.R. Junior",
+            "Faux", "Fozzy", "Myriad", "Busters", "Turdine", "Rerutweeds", "Ishmaa'ily", "Takittothu'",
+            "Snarf", "Frostee", "Splendiferous", "Triple", "Logjammer"
+        };
         /// <summary>
         /// Used to create random last names for employees.
         /// </summary>
-        private static readonly string[] LAST_NAMES = { "Linder", "Brown", "DePoirot", "Johnson", "Williams", "Xavier", "Green", "Goldberg", "Greenburg", "Flotsam", "Jenkins", "Jensen", "Null" };
+        private static readonly string[] LAST_NAMES = {
+            "Linder", "Williums", "juckson", "King", "Smoochie-Wallace", "Green",
+            "Brown", "Moizoos", "Tacktheritrix", "Billings-Clyde", "Probincrux III",
+            "DePoirot", "Jilliumz", "Javarison-Lamar", "Shower-Handel", "McCringleberry",
+            "Johnson", "Dookmarriot", "Morgoone", "Flaxon-Waxon", "Jefferspin", "Hardunkichud",
+            "Williams", "L'Goodling-Splatt", "Quatro", "Buckshank", "Washingbeard", "Carter",
+            "Xavier", "@Aliciousness", "Grundelplith", "Maloish", "Backslishinfourth V",
+            "Green", "Eeeeeeee", "Teeth", "Lewith", "Smiff", "Corter", "Dillwad", "Funyuns",
+            "Goldberg", "Mango", "Skittle", "Bidness", "Poopsie", "Blip", "Boozler", "Trisket",
+            "Greenburg", "Cluggins", "Blashington", "Plural", "Jammie-Jammie", "Ducklings",
+            "Flotsam", "Lamystorius", "Sigourneth JuniorStein", "Buble-Schineslow", "Hakanakaheekalucka'hukahakafaka",
+            "Jenkins", "Chambermaid", "Jadaniston", "University", "Lastname", "De La Creme",
+            "Jensen", "Shumway", "Clinton-Dix", "Ahanahue","Duprix","Douzable","G'Dunzoid Sr.",
+            "Null", "Peep", "Ferguson","Flugget","Roboclick", "Carradine","Thicket-Suede","Shazbot",
+            "Mimetown", "Amukamara","Juniors Jr.", "Doadles","Whittaker","Profiteroles","Brownce",
+            "Cupcake","Myth","Kitchen","Limit","Mintz-Plasse","Rucker","Finch","Parakeet-Shoes",
+            "D'Baggagecling", "Ron Rodgers"
+        };
         /// <summary>
         /// Default number of random employees to create when creating test employees.
         /// </summary>
         private const int DEFAULT_NUM_TEST_EMPS = 10;
+        private const string OPEN_FILE_MSG = "This file is already open.";
         #endregion
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -42,6 +75,7 @@ namespace Lab_03_EAB.EmployeeViewModel
             {
                 selectedEmployee = (Employee)value;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(SelectedEmployee)));
+                SelectedEmployeeDescription = selectedEmployee.ToString();
             }
         }
 
@@ -84,22 +118,29 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(EmployeesCollections)));
             }
         }
+        private string selectedEmployeeDescr;
+        public string SelectedEmployeeDescription
+        {
+            get => selectedEmployeeDescr;
+            private set
+            {
+                selectedEmployeeDescr = value;
+                PropertyChanged?.Invoke(this, (new PropertyChangedEventArgs(nameof(SelectedEmployeeDescription))));
+            }
+        }
         #endregion
         #region Command Properties
-        public RelayCommand AddEmployeeCommand
-        {
-            get; set;
-        }
 
         public RelayCommand RemoveEmployeeCommand
         {
             get; set;
         }
 
-        public RelayCommand ChangeEmployeeCommand
+        public RelayCommand MoveEmployeeCommand
         {
             get; set;
         }
+
 
         public RelayCommand SaveFileCommand
         {
@@ -132,17 +173,8 @@ namespace Lab_03_EAB.EmployeeViewModel
             SaveFileCommand = new RelayCommand(SaveFile);
             NewFileCommand = new RelayCommand(NewFile);
             OpenFileCommand = new RelayCommand(OpenFile);
+            RemoveEmployeeCommand = new RelayCommand(RemoveEmployee);
         }
-        private void AddEmployee()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private void ChangeEmployee()
-        {
-            throw new System.NotImplementedException();
-        }
-
         private void NewFile(object parameter)
         {
             EmployeesCollections.Add(new BusinessRules());
@@ -157,8 +189,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 {
                     theFile.OpenFileDB();
                     theFile.ReadFileDB();
-                    if(!EmployeesCollections.Contains(toAdd))
+                    if (EmployeesCollections.Where(a => a.FilePath == toAdd.FilePath).Count() == 0)
                         EmployeesCollections.Add(toAdd);
+                    else MessageBox.Show(OPEN_FILE_MSG, ERROR_CAPTION, MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
@@ -183,9 +216,9 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
         }
 
-        private void RemoveEmployee()
+        private void RemoveEmployee(object parameter)
         {
-            employees.Remove(SelectedEmployee as Employee);
+            employees.Remove(parameter as Employee);
         }
 
         private void CreateTestEmployees(object parameter)
@@ -231,14 +264,5 @@ namespace Lab_03_EAB.EmployeeViewModel
             EmployeesCollections.Add(toAdd);
         }
 
-        private void CanAddEmployee()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private void CanChangeEmployee()
-        {
-            throw new System.NotImplementedException();
-        }
     }//End Class BusinessRulesViewModel
 }//End Namespace

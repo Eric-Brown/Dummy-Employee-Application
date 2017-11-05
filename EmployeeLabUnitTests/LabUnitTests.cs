@@ -329,25 +329,21 @@ namespace EmployeeLabUnitTests
             BusinessRules toTest = new BusinessRules();
             uint testID = 0;
             Random random = new Random();
-            ETYPE knownType = ETYPE.CONTRACT;
-            string[] goodArray =
-            {
-                testID.ToString(),
-                FIRST_NAMES[random.Next(0,FIRST_NAMES.Count() - 1)],
-                LAST_NAMES[random.Next(0,LAST_NAMES.Count() -1 )],
-                (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString()
-            };
-            Assert.IsTrue(toTest.CanAddFromStringArray(knownType, goodArray));
-            string[] badArray = new string[goodArray.Count()];
-            goodArray.CopyTo(badArray, 0);
-            //Set first name to two words
-            badArray[1] = badArray[1] + " " + badArray[1];
-            Assert.IsFalse(toTest.CanAddFromStringArray(knownType, badArray));
-            //reset bad array
-            goodArray.CopyTo(badArray, 0);
-            //add letters to something that should only be a number
-            badArray[badArray.Count() - 1] = badArray[badArray.Count() - 1] + badArray[1];
-            Assert.IsFalse(toTest.CanAddFromStringArray(knownType, badArray));
+            EmployeeStrings goodArray = new EmployeeStrings();
+
+            goodArray.ID = testID.ToString();
+            goodArray.FirstName = FIRST_NAMES[random.Next(0, FIRST_NAMES.Count() - 1)];
+            goodArray.LastName = LAST_NAMES[random.Next(0, LAST_NAMES.Count() - 1)];
+            goodArray.Suppliment1 = (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString();
+            goodArray.Type = ETYPE.CONTRACT;
+            EmployeeStrings bad = new EmployeeStrings();
+            bad.Type = goodArray.Type;
+            bad.ID = goodArray.ID;
+            bad.FirstName = goodArray.FirstName + goodArray.FirstName;
+            bad.LastName = goodArray.LastName + goodArray.LastName;
+            bad.Suppliment1 = goodArray.FirstName;
+            Assert.IsTrue(toTest.CanAddFromEmployeeString(goodArray));
+            Assert.IsFalse(toTest.CanAddFromEmployeeString(bad));
         }
         [TestMethod]
         public void TestAddFromStringArray()
@@ -356,28 +352,25 @@ namespace EmployeeLabUnitTests
             BusinessRules toTest = new BusinessRules();
             uint testID = 0;
             Random random = new Random();
-            ETYPE knownType = ETYPE.CONTRACT;
-            string[] goodArray =
-            {
-                testID.ToString(),
-                FIRST_NAMES[random.Next(0,FIRST_NAMES.Count() - 1)],
-                LAST_NAMES[random.Next(0,LAST_NAMES.Count() -1 )],
-                (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString()
-            };
-            Assert.IsTrue(toTest.AddFromStringArray(knownType, goodArray));
+            EmployeeStrings goodArray = new EmployeeStrings();
+
+            goodArray.ID = testID.ToString();
+            goodArray.FirstName = FIRST_NAMES[random.Next(0, FIRST_NAMES.Count() - 1)];
+            goodArray.LastName = LAST_NAMES[random.Next(0, LAST_NAMES.Count() - 1)];
+            goodArray.Suppliment1 = (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString();
+            goodArray.Type = ETYPE.CONTRACT;
+            Assert.IsTrue(toTest.AddFromEmployeeStrings(goodArray, null));
             Assert.IsTrue(toTest.Count() > 0);
-            string[] badArray = new string[goodArray.Count()];
-            goodArray.CopyTo(badArray, 0);
+            EmployeeStrings bad = new EmployeeStrings();
+            bad.Type = goodArray.Type;
+            bad.ID = goodArray.ID;
+            bad.FirstName = goodArray.FirstName + goodArray.FirstName;
+            bad.LastName = goodArray.LastName + goodArray.LastName;
+            bad.Suppliment1 = goodArray.FirstName;
             //Set first name to two words
-            badArray[1] = badArray[1] + " " + badArray[1];
-            Assert.IsFalse(toTest.AddFromStringArray(knownType, badArray));
+            Assert.IsFalse(toTest.AddFromEmployeeStrings(bad, null));
             Assert.IsFalse(toTest.Count() > 1);
-            //reset bad array
-            goodArray.CopyTo(badArray, 0);
             //add letters to something that should only be a number
-            badArray[badArray.Count() - 1] = badArray[badArray.Count() - 1] + badArray[1];
-            Assert.IsFalse(toTest.AddFromStringArray(knownType, badArray));
-            Assert.IsFalse(toTest.Count() > 1);
         }
         [TestMethod]
         public void TestAddandRemove()

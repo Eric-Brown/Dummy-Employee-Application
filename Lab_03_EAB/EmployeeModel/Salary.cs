@@ -52,7 +52,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary);
+            return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary) + CourseListing();
         }
     }
 

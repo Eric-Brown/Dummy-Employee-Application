@@ -26,6 +26,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Lab_03_EAB.EmployeeViewModel;
 
 namespace Lab_03_EAB
 {
@@ -47,6 +48,31 @@ Created by: Eric Brown",
             InitializeComponent();
             //DataContext = new EmployeeViewModel.BusinessRulesViewModel();
         }
+
+        private void OnAddRequest(object sender, RoutedEventArgs e)
+        {
+            Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
+            if(DataContext is BusinessRulesViewModel model)
+            {
+                add_Emp_Window.DataContext =  new EmployeeViewModel.EmployeeViewModel(model.Employees);
+            }
+            add_Emp_Window.Show();
+        }
+        private void OnModifyEmployeeRequest(object sender, RoutedEventArgs e)
+        {
+            Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
+            if (DataContext is BusinessRulesViewModel model)
+            {
+                Employee selected = model.SelectedEmployee;
+                add_Emp_Window.DataContext = new EmployeeViewModel.EmployeeViewModel(model.SelectedEmployee, model.Employees);
+            }
+            add_Emp_Window.Show();
+        }
+        private void OnAddTestEmployeesCountRequest(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         public void MnuAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(HELP_MSG, ABOUT, MessageBoxButton.OK, MessageBoxImage.Information);
