@@ -61,7 +61,7 @@
                 <StackPanel Orientation="Vertical"><!--Begin Employee Left Half-->
                     <DockPanel>
                         <Label Content="Employee Type:" HorizontalAlignment="Left"/>
-                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentEmployee.Type}"/>
+                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding SelectedType}"/>
                     </DockPanel>
                     <DockPanel>
                         <Label Content="First Name:"/>

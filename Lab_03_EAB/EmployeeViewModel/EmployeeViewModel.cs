@@ -62,6 +62,17 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(CurrentEmployee));
             }
         }
+        private ETYPE selected;
+        public ETYPE SelectedType
+        {
+            get => selected;
+            set
+            {
+                selected = value;
+                OnPropertyChanged(nameof(SelectedType));
+                EmployeeTypeChanged()
+            }
+        }
         private bool isNew;
         public bool IsNew
         {
@@ -186,10 +197,9 @@ namespace Lab_03_EAB.EmployeeViewModel
             resultDestination.Add(currentEmployee);
             CloseWindowFlag = false;
         }
-        private void EmployeeTypeChanged(object parameter, PropertyChangedEventArgs eventArgs)
+        private void EmployeeTypeChanged()
         {
-            if (eventArgs.PropertyName == "EmpType")
-            {
+
                 switch (currentEmployee.EmpType)
                 {
                     case ETYPE.CONTRACT:
@@ -218,7 +228,6 @@ namespace Lab_03_EAB.EmployeeViewModel
                     default:
                         break;
                 }
-            }
         }
         #endregion
         private BusinessRules resultDestination;
