@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Lab_03_EAB.Helpers;
 
 namespace Lab_03_EAB
 {
@@ -10,6 +11,9 @@ namespace Lab_03_EAB
         [DataMember]
         private const string FORMAT_STRING = "Commission: {0}\nGross Sales: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Sales employee.";
+        private const string COMM_ERR_MSG = "Commission must be a positive value.";
+        private const string GROSS_ERR_MSG = "Gross Sales must be a positive value.";
+
         /// <summary>
         /// Property Commission and backing field. Negative values are rejected.
         /// </summary>
@@ -20,7 +24,6 @@ namespace Lab_03_EAB
             get => commission;
             set
             {
-                if (value >= 0)
                     commission = value;
             }
         }
@@ -34,7 +37,6 @@ namespace Lab_03_EAB
             get => grossSales;
             set
             {
-                if (value >= 0)
                     grossSales = value;
             }
         }
@@ -64,6 +66,27 @@ namespace Lab_03_EAB
         public override string ToString()
         {
             return base.ToString() + string.Format(FORMAT_STRING, commission, GrossSales) + CourseListing();
+        }
+        public override string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                switch(columnName)
+                {
+                    case nameof(Commission):
+                        if (Commission < 0)
+                            result = COMM_ERR_MSG;
+                        break;
+                    case nameof(GrossSales):
+                        if (GrossSales < 0)
+                            result = GROSS_ERR_MSG;
+                        break;
+                    default:
+                        return base[columnName];
+                }
+                return result;
+            }
         }
     }
 }

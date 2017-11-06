@@ -1,0 +1,174 @@
+﻿using Lab_03_EAB.Helpers;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lab_03_EAB.EmployeeModel
+{
+    [DataContract]
+    [Serializable]
+    ///Represents the possible recieved grades in a course.
+    public enum COURSE_GRADE
+    {
+        [EnumMember]
+        A,
+        [EnumMember]
+        A_MINUS,
+        [EnumMember]
+        B_PLUS,
+        [EnumMember]
+        B,
+        [EnumMember]
+        B_MINUS,
+        [EnumMember]
+        C_PLUS,
+        [EnumMember]
+        C,
+        [EnumMember]
+        C_MINUS,
+        [EnumMember]
+        D_PLUS,
+        [EnumMember]
+        D,
+        [EnumMember]
+        D_MINUS,
+        [EnumMember]
+        E
+    }
+    [DataContract]
+    public class Course : INotifyPropertyChanged, IDataErrorInfo
+    {
+        [DataMember]
+        private const string FORMAT_STRING = "\tCourse ID: {0}\n\tCourse Description: {1}\n\tCourse Grade: {2}\n\tCourse Credits: {3}\n\tApproved Date: {4:d}";
+        private const string DATE_BAD_ERR_MSG = "The course must have been approved within the current century.";
+        private const string BAD_CRED_ERR_MSG = "Credits must be between 1 and 5.";
+        private const string BAD_DESC_ERR_MSG = "Course must have a description.";
+        private const string BAD_ID_ERR_MSG = "Course must have an ID.";
+        [DataMember]
+        protected readonly DateTime TOO_EARLY = new DateTime(1917, 1, 1);
+        protected readonly DateTime TOO_LATE = new DateTime(2117, 1, 1);
+        [DataMember]
+        private string cID = "";
+        public string CourseID
+        {
+            get => cID;
+            set
+            {
+                cID = value;
+                OnPropertyChanged(nameof(CourseID));
+            }
+        }
+        [DataMember]
+        private string cDesc = "";
+        public string CourseDescription
+        {
+            get => cDesc;
+            set
+            {
+                cDesc = value;
+                OnPropertyChanged(nameof(CourseDescription));
+            }
+        }
+        [DataMember]
+        private COURSE_GRADE grd = COURSE_GRADE.A;
+        public COURSE_GRADE Grade
+        {
+            get => grd;
+            set
+            {
+                grd = value;
+                OnPropertyChanged(nameof(Grade));
+            }
+        }
+        [DataMember]
+        private DateTime date = new DateTime(2015, 11, 10);
+        public DateTime ApprovedDate
+        {
+            get => date;
+            set
+            {
+                date = value;
+                OnPropertyChanged(nameof(ApprovedDate));
+            }
+        }
+        [DataMember]
+        private int cred = 0;
+        public int Credits
+        {
+            get => cred;
+            set
+            {
+                cred = value;
+                OnPropertyChanged(nameof(Credits));
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                StringBuilder errors = new StringBuilder();
+                errors.Append(this[nameof(ApprovedDate)]);
+                errors.Append(this[nameof(CourseID)]);
+                errors.Append(this[nameof(CourseDescription)]);
+                errors.Append(this[nameof(Credits)]);
+                if (errors.Length == 0) return null;
+                return errors.ToString();
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                switch (columnName)
+                {
+                    case nameof(ApprovedDate):
+                        if (ApprovedDate <= TOO_EARLY || ApprovedDate >= TOO_LATE)
+                            result = DATE_BAD_ERR_MSG;
+                        break;
+                    case nameof(CourseID):
+                        if (string.IsNullOrEmpty(CourseID))
+                            result = BAD_ID_ERR_MSG;
+                        break;
+                    case nameof(CourseDescription):
+                        if (string.IsNullOrEmpty(CourseDescription))
+                            result = BAD_DESC_ERR_MSG;
+                        break;
+                    case nameof(Credits):
+                        if (Credits < 1 || Credits > 5)
+                            result = BAD_CRED_ERR_MSG;
+                        break;
+                }
+                return result;
+            }
+        }
+
+        public Course()
+        {
+        }
+        public Course(string ID, string Description, COURSE_GRADE gRADE, DateTime date, int creds)
+        {
+            CourseID = ID;
+            CourseDescription = Description;
+            Grade = gRADE;
+            ApprovedDate = date;
+            Credits = creds;
+        }
+        private void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public override string ToString()
+        {
+            return string.Format(FORMAT_STRING, CourseID, CourseDescription, Grade, Credits, ApprovedDate);
+        }
+    }
+}

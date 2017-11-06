@@ -23,20 +23,21 @@
                 <MenuItem Name="MnuOpen" Header="Open" Command="{Binding OpenFileCommand}"/>
                 <MenuItem Name="MnuSave" Header="Save" Command="{Binding SaveFileCommand}"/>
                 <!--MenuItem Name="MnuSaveAll" Header="Save All"/-->
-                <!--MenuItem Name="MnuExit" Header="Exit" Click="MnuExit_Click"/-->
+                <Separator/>
+                <MenuItem Name="MnuExit" Header="Exit" Click="MnuExit_Click"/>
             </MenuItem>
             <MenuItem Name="MnuEdit" Header="Edit">
-                <MenuItem Name="MnuAdd" Header="Add" Click="OnAddRequest"/>
+                <MenuItem Name="MnuAdd" Header="Add" Command="{Binding AddEmployeeCommand}"/>
                 <MenuItem Name="MnuModify" Header="Modify" Command="{Binding ModifyEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}" />
                 <MenuItem Name="MnuDelete" Header="Delete" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
-                <MenuItem Name="MnuMove" Header="Move" Command="{Binding MoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
+                <!--MenuItem Name="MnuMove" Header="Move" Command="{Binding MoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/-->
             </MenuItem>
             <MenuItem Name="MnuHelp" Header="Help">
                 <MenuItem Name="MnuAbout" Header="About" Click="MnuAbout_Click"/>
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal">
-            <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Click="OnAddRequest"/>
+            <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Command="{Binding AddEmployeeCommand}"/>
             <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Command="{Binding CreateTestEmployeesCommand}" Focusable="False"/>
             <!--Button Name="BtnTestNum" Content="Test..." VerticalAlignment="Bottom" Click="OnAddTestEmployeesCountrequest"/-->
             <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Command="{Binding ModifyEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>

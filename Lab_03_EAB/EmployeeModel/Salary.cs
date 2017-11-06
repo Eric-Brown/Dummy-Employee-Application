@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Lab_03_EAB.Helpers;
 
 namespace Lab_03_EAB
 {
@@ -13,6 +14,8 @@ namespace Lab_03_EAB
         [DataMember]
         private const string SALARY_FORMAT_STRING = "Monthly Salary: {0}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values of salary may be used to construct a Salary employee.";
+        private const string SAL_ERR_MSG = "Salary must be a positive value.";
+
         /// <summary>
         /// MonthlySalary property and backing field. Negative values are rejected.
         /// </summary>
@@ -52,7 +55,26 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary) + CourseListing();
+            if(EmpType == ETYPE.SALARY)
+                return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary + CourseListing());
+            return base.ToString() + string.Format(SALARY_FORMAT_STRING, monthlySalary);
+        }
+        public override string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                switch(columnName)
+                {
+                    case nameof(MonthlySalary):
+                        if (MonthlySalary < 0)
+                            result = SAL_ERR_MSG;
+                        break;
+                    default:
+                        return base[columnName];
+                }
+                return result;
+            }
         }
     }
 

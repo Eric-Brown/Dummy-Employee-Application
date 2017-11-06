@@ -4,6 +4,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using Lab_03_EAB.Helpers;
+using Lab_03_EAB.EmployeeModel;
+using System.Text.RegularExpressions;
 
 namespace Lab_03_EAB
 {
@@ -24,124 +27,12 @@ namespace Lab_03_EAB
         [EnumMember]
         CONTRACT
     };
-    [DataContract]
-    [Serializable]
-    ///Represents the possible recieved grades in a course.
-    public enum COURSE_GRADE
-    {
-        [EnumMember]
-        A,
-        [EnumMember]
-        A_MINUS,
-        [EnumMember]
-        B_PLUS,
-        [EnumMember]
-        B,
-        [EnumMember]
-        B_MINUS,
-        [EnumMember]
-        C_PLUS,
-        [EnumMember]
-        C,
-        [EnumMember]
-        C_MINUS,
-        [EnumMember]
-        D_PLUS,
-        [EnumMember]
-        D,
-        [EnumMember]
-        D_MINUS,
-        [EnumMember]
-        E
-    }
-    [DataContract]
-    public class Course :INotifyPropertyChanged
-    {
-        [DataMember]
-        private const string FORMAT_STRING = "\tCourse ID: {0}\n\tCourse Description: {1}\n\tCourse Grade: {2}\n\tCourse Credits: {3}\n\tApproved Date: {4:d}";
-        [DataMember]
-        private string cID = "";
-        public string CourseID
-        {
-            get => cID;
-            set
-            {
-                cID = value;
-                OnPropertyChanged(nameof(CourseID));
-            }
-        }
-        [DataMember]
-        private string cDesc = "";
-        public string CourseDescription
-        {
-            get => cDesc;
-            set
-            {
-                cDesc = value;
-                OnPropertyChanged(nameof(CourseDescription));
-            }
-        }
-        [DataMember]
-        private COURSE_GRADE grd = COURSE_GRADE.A;
-        public COURSE_GRADE Grade
-        {
-            get => grd;
-            set
-            {
-                grd = value;
-                OnPropertyChanged(nameof(Grade));
-            }
-        }
-        [DataMember]
-        private DateTime date = new DateTime(2015,11,10);
-        public DateTime ApprovedDate
-        {
-            get => date;
-            set
-            {
-                date = value;
-                OnPropertyChanged(nameof(ApprovedDate));
-            }
-        }
-        [DataMember]
-        private int cred = 0;
-        public int Credits
-        {
-            get => cred;
-            set
-            {
-                cred = value;
-                OnPropertyChanged(nameof(Credits));
-            }
-        }
-        public Course()
-        {
-        }
-        public Course(string ID, string Description, COURSE_GRADE gRADE, DateTime date, int creds)
-        {
-            CourseID = ID;
-            CourseDescription = Description;
-            Grade = gRADE;
-            ApprovedDate = date;
-            Credits = creds;
-        }
-        private void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public override string ToString()
-        {
-            return string.Format(FORMAT_STRING, CourseID, CourseDescription, Grade, Credits, ApprovedDate);
-        }
-    }
     /// <summary>
     /// Abstract class which contains all the information and behaviors which are in common for all employees.
     /// </summary>
     [DataContract, KnownType(typeof(Contract)), KnownType(typeof(Salary)), KnownType(typeof(Sales)), KnownType(typeof(Hourly))]
     [Serializable]
-    public abstract class Employee
+    public abstract class Employee : IDataErrorInfo, INotifyPropertyChanged
     {
         #region Constants
         /// <summary>
@@ -155,12 +46,23 @@ namespace Lab_03_EAB
         private const int SALES_MIN_CREDITS = 3;
         [DataMember]
         private const int HOURLY_MIN_CREDITS = 1;
+        [DataMember]
+        protected const string IS_ALPHA_PTN = @"(?i)(?!.*[\d]+.*)^.*";
+        protected const string IS_POS_NUM_PTN = @"^\d*\.?\d*$";
+        protected const string IS_POS_INT_PTN = @"^\d+$";
+        protected readonly Regex IS_ALPHA = new Regex(IS_ALPHA_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected readonly Regex IS_POS_NUM = new Regex(IS_POS_NUM_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        protected readonly Regex IS_POS_INT = new Regex(IS_POS_INT_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private const string NAME_BAD_ERR_MSG = "Please ensure that the name contains no numbers and is not empty.";
+        private const string ID_BAD_ERR_MSG = "Please ensure that the Employee's ID is only a number and contains no letters.";
         #endregion
         #region EventsAndHandlers
         /// <summary>
         /// Event delegate for when the employee's ID has been changed.
         /// </summary>
         public event System.EventHandler<PropertyChangeEventArgs<uint>> EmpIDChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Broadcasts to any listeners that the employee ID has changed.
         /// </summary>
@@ -168,6 +70,10 @@ namespace Lab_03_EAB
         protected virtual void OnEmpIDChanged(PropertyChangeEventArgs<uint> e)
         {
             EmpIDChanged?.Invoke(this, e);
+        }
+        protected virtual void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         #endregion
         #region Properties
@@ -186,6 +92,7 @@ namespace Lab_03_EAB
                 uint oldValue = empID;
                 empID = value;
                 OnEmpIDChanged(new PropertyChangeEventArgs<uint>(oldValue, empID));
+                OnPropertyChanged(nameof(EmpID));
             }
         }
         [DataMember]
@@ -198,8 +105,8 @@ namespace Lab_03_EAB
             get => firstName;
             set
             {
-                if (!string.IsNullOrEmpty(value))
-                    firstName = value;
+                firstName = value;
+                OnPropertyChanged(nameof(FirstName));
             }
         }
         [DataMember]
@@ -212,8 +119,8 @@ namespace Lab_03_EAB
             get => lastName;
             set
             {
-                if (!string.IsNullOrEmpty(value))
-                    lastName = value;
+                lastName = value;
+                OnPropertyChanged(nameof(LastName));
             }
         }
         [DataMember]
@@ -221,7 +128,15 @@ namespace Lab_03_EAB
         /// <summary>
         /// Represents the type of the employee.
         /// </summary>
-        public ETYPE EmpType { get => empType; private set => empType = value; }
+        public ETYPE EmpType
+        {
+            get => empType;
+            private set
+            {
+                empType = value;
+                OnPropertyChanged(nameof(EmpType));
+            }
+        }
 
         public bool Overtime
         {
@@ -258,6 +173,7 @@ namespace Lab_03_EAB
             set
             {
                 roster = value;
+                OnPropertyChanged(nameof(CourseRoster));
             }
         }
         /// <summary>
@@ -284,6 +200,36 @@ namespace Lab_03_EAB
                 }
             }
         }
+
+        public string Error => null;
+
+        public virtual string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                switch(columnName)
+                {
+                    case nameof(EmpID):
+                        break;
+                    case nameof(EmpType):
+                        break;
+                    case nameof(FirstName):
+                        if (string.IsNullOrEmpty(firstName) || !IS_ALPHA.IsMatch(firstName))
+                            result = NAME_BAD_ERR_MSG;
+                        break;
+                    case nameof(LastName):
+                        if (string.IsNullOrEmpty(lastName) || !IS_ALPHA.IsMatch(lastName))
+                            result = NAME_BAD_ERR_MSG;
+                        break;
+                    case nameof(CourseRoster):
+                        break;
+                    default:
+                        break;
+                }
+                return result;
+            }
+        }
         #endregion
         #region Constructors
         /// <summary>
@@ -302,6 +248,10 @@ namespace Lab_03_EAB
             lastName = last;
             CourseRoster = new SortedDictionary<string, Course>();
         }
+        protected Employee(ETYPE type)
+        {
+            EmpType = type;
+        }
         #endregion
         #region Methods
         private bool MeetsRequirements(COURSE_GRADE minGrade, int minCreds)
@@ -312,7 +262,7 @@ namespace Lab_03_EAB
             totalCredits = CourseRoster.Values.Aggregate(totalCredits, (a, b) => a + b.Credits);
             COURSE_GRADE gradeAverage = (COURSE_GRADE)System.Math.Round((totalGrade / (double)CourseRoster.Count()));
             //The better grades will have a lower value
-            return (gradeAverage <= minGrade && totalGrade >= minCreds);
+            return (gradeAverage <= minGrade && totalCredits >= minCreds);
         }
         /// <summary>
         /// Gives a string representation of the class
@@ -339,6 +289,7 @@ namespace Lab_03_EAB
             if (roster == null)
                 roster = new SortedDictionary<string, Course>();
         }
+
         #endregion
     }//End Class Employee Definition
 }//End Namespace Lab_03_EAB Scope

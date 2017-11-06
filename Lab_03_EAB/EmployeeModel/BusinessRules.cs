@@ -9,6 +9,7 @@ using System.Windows;
 using System.IO;
 using System.Runtime.Serialization;
 using System.ComponentModel;
+using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB
 {

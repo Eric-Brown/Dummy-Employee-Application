@@ -1,4 +1,5 @@
-﻿using Lab_03_EAB.Helpers;
+﻿using Lab_03_EAB.EmployeeModel;
+using Lab_03_EAB.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,9 +29,18 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-#endregion
+        #endregion
         #region Observable Properties
-        public ObservableCollection<Course> Courses;
+        private ObservableCollection<Course> courses;
+        public ObservableCollection<Course> Courses
+        {
+            get => courses;
+            set
+            {
+                courses = value;
+                OnPropertyChanged(nameof(Courses));
+            }
+        }
         private Course courseToAdd;
         public Course CourseToAdd
         {
@@ -42,14 +52,24 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
         }
 
-        private EmployeeStrings currentWork;
-        public EmployeeStrings CurrentWork
+        private Employee currentEmployee;
+        public Employee CurrentEmployee
         {
-            get => currentWork;
+            get => currentEmployee;
             set
             {
-                currentWork = value;
-                OnPropertyChanged(nameof(CurrentWork));
+                currentEmployee = value;
+                OnPropertyChanged(nameof(CurrentEmployee));
+            }
+        }
+        private bool isNew;
+        public bool IsNew
+        {
+            get => isNew;
+            set
+            {
+                isNew = value;
+                OnPropertyChanged(nameof(IsNew));
             }
         }
         private string suppliment1;
@@ -137,46 +157,40 @@ namespace Lab_03_EAB.EmployeeViewModel
         #region Commands
         public RelayCommand AddCourseCommand
         {
-            get;set;
+            get; set;
         }
         private void AddCourse(object parameter)
         {
             bool isGood;
             var query = Courses?.Where((a) => a.CourseID == courseToAdd.CourseID);
             int queryCount = query?.Count() ?? 0;
-            int parsed = 0;
-            isGood = !(queryCount > 0 || string.IsNullOrEmpty(courseToAdd.CourseID) || string.IsNullOrEmpty(courseToAdd.CourseDescription)
-                || !int.TryParse(CourseCreditsToAdd, out parsed) || parsed > 5 || parsed < 0);
+            isGood = !(queryCount > 0 || CourseToAdd.Error != null);
             if (!isGood)
             {
                 MessageBox.Show(COURSE_BAD_MSG, COURSE_BAD_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            courseToAdd.Credits = parsed;
             Courses.Add(courseToAdd);
             CourseToAdd = new Course();
         }
         public RelayCommand AddModifyEmployeeCommand
         {
-            get;set;
+            get; set;
         }
+
         private void AddModEmployee(object parameter)
         {
-            bool result = resultDestination.CanAddFromEmployeeString(currentWork);
-            if (result == false)
-            {
-                MessageBox.Show(EMPLOYEE_BAD_MSG, EMPLOYEE_BAD_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            resultDestination.AddFromEmployeeStrings(currentWork, Courses);
+            if (resultDestination[CurrentEmployee.EmpID] != null)
+                resultDestination.Remove(resultDestination[CurrentEmployee.EmpID]);
+            resultDestination.Add(currentEmployee);
             CloseWindowFlag = false;
         }
         private void EmployeeTypeChanged(object parameter, PropertyChangedEventArgs eventArgs)
         {
-            if (eventArgs.PropertyName == "Type")
+            if (eventArgs.PropertyName == "EmpType")
             {
-                switch (currentWork.Type)
+                switch (currentEmployee.EmpType)
                 {
                     case ETYPE.CONTRACT:
                         Suppliment1Lable = WAGE_LABLE;
@@ -209,71 +223,27 @@ namespace Lab_03_EAB.EmployeeViewModel
         #endregion
         private BusinessRules resultDestination;
         public EmployeeViewModel(BusinessRules rules)
-            :this(null, rules)
+            : this(null, rules)
         {
 
         }
         public EmployeeViewModel(Employee employee, BusinessRules rules)
         {
             AddButtonContent = employee == null ? "Add" : "Modify";
+            IsNew = (employee == null) ? true : false;
             resultDestination = rules;
-            currentWork = new EmployeeStrings();
             courseToAdd = new Course();
-            Courses = new ObservableCollection<Course>();
-            currentWork.Type = employee?.EmpType ?? ETYPE.CONTRACT;
-            currentWork.PropertyChanged += EmployeeTypeChanged;
-            currentWork.FirstName = employee?.FirstName;
-            currentWork.LastName = employee?.LastName;
-            currentWork.ID = employee?.EmpID.ToString();
-            switch(currentWork.Type)
-            {
-                case ETYPE.CONTRACT:
-                    if (employee is Contract contractEmp)
-                        currentWork.Suppliment1 = contractEmp?.ContractWage.ToString();
-                    Suppliment1Lable = WAGE_LABLE;
-                    Suppliment2Visibility = false;
-                    Suppliment3Visibility = false;
-                    break;
-                case ETYPE.HOURLY:
-                    if (employee is Hourly hourlyEmp)
-                    {
-                        currentWork.Suppliment1 = hourlyEmp?.HourlyRate.ToString();
-                        currentWork.Suppliment2 = hourlyEmp?.HoursWorked.ToString();
-                    }
-                    Suppliment1Lable = HOUR_RATE_LABEL;
-                    Suppliment2Lable = HOURS_WORKED_LABEL;
-                    Suppliment2Visibility = true;
-                    Suppliment3Visibility = false;
-                    break;
-                case ETYPE.SALARY:
-                    if(employee is Salary salEmp)
-                    {
-                        currentWork.Suppliment1 = salEmp?.MonthlySalary.ToString();
-                    }
-                    Suppliment1Lable = SALARY_LABEL;
-                    Suppliment2Visibility = false;
-                    Suppliment3Visibility = false;
-                    break;
-                case ETYPE.SALES:
-                    if(employee is Sales salesEmp)
-                    {
-                        currentWork.Suppliment1 = salesEmp?.MonthlySalary.ToString();
-                        currentWork.Suppliment2 = salesEmp?.Commission.ToString();
-                        currentWork.Suppliment3 = salesEmp?.GrossSales.ToString();
-                    }
-                    Suppliment1Lable = SALARY_LABEL;
-                    Suppliment2Lable = COMMISSION_LABEL;
-                    Suppliment3Lable = GROSS_SALES_LABEL;
-                    Suppliment2Visibility = true;
-                    Suppliment3Visibility = true;
-                    break;
-                default:
-                    break;
-            }//end switch
-            
+            List<Course> list = employee?.CourseRoster?.Values?.ToList();
+            if (list == null)
+                Courses = new ObservableCollection<Course>();
+            else
+                Courses = new ObservableCollection<Course>(list);
+            if (employee == null)
+                CurrentEmployee = new Contract();
+            else
+                CurrentEmployee = employee;
             AddCourseCommand = new RelayCommand(AddCourse);
             AddModifyEmployeeCommand = new RelayCommand(AddModEmployee);
-            
         }//end constructor
     }//end class
 }//end namespace

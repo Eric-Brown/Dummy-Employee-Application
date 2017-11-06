@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Lab_03_EAB.Helpers;
+using System.ComponentModel;
 
 namespace Lab_03_EAB
 {
@@ -10,6 +12,8 @@ namespace Lab_03_EAB
         [DataMember]
         private const string CONTRACT_FORMAT_STRING = "Contract Wage: {0}\n",
             BAD_WAGE_CONSTR = "Only non-negative values of wage may be used to construct a Contract employee.";
+        private const string BAD_WAG_ERROR_MSG = "Please ensure that the Contract Wage is not empty and that it is a positive number.";
+
         /// <summary>
         /// ContractWage property and backing field. Negative values are rejected.
         /// </summary>
@@ -20,7 +24,6 @@ namespace Lab_03_EAB
             get => contractWage;
             set
             {
-                if (value >= 0)
                     contractWage = value;
             }
         }
@@ -37,6 +40,11 @@ namespace Lab_03_EAB
             if (wage < 0) throw new ArgumentException(BAD_WAGE_CONSTR);
             ContractWage = wage;
         }
+        public Contract()
+            :base(ETYPE.CONTRACT)
+        {
+
+        }
         /// <summary>
         /// Gives a string representation of the class
         /// </summary>
@@ -44,6 +52,24 @@ namespace Lab_03_EAB
         public override string ToString()
         {
             return base.ToString() + string.Format(CONTRACT_FORMAT_STRING, ContractWage) + base.CourseListing();
+        }
+
+        public override string this[string columnname]
+        {
+            get
+            {
+                string result = null;
+                switch(columnname)
+                {
+                    case nameof(ContractWage):
+                        if (contractWage < 0)
+                            result = BAD_WAG_ERROR_MSG;
+                        break;
+                    default:
+                        return base[columnname];
+                }
+                return result;
+            }
         }
     }
 }

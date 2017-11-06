@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lab_03_EAB.EmployeeModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,5 +44,6 @@ namespace Lab_03_EAB
             CmbBoxGrade.ItemsSource = Enum.GetValues(typeof(COURSE_GRADE));
             DataContext = new EmployeeViewModel.EmployeeViewModel(new BusinessRules());
         }
+
     }
 }

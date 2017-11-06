@@ -135,51 +135,62 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+        private void RemoveEmployee(object employee)
+        {
+            employees.Remove(employee as Employee);
+        }
 
         public RelayCommand MoveEmployeeCommand
         {
             get; set;
         }
+        public RelayCommand AddEmployeeCommand
+        {
+            get;set;
+        }
+        private void AddEmployee(object parameter)
+        {
+            Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
+            add_Emp_Window.DataContext = new EmployeeViewModel(Employees);
+            add_Emp_Window.Show();
+        }
 
+        public RelayCommand ModifyEmployeeCommand
+        {
+            get;set;
+        }
+        private void ModifyEmployee(object employee)
+        {
+            Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
+            Employee toPass = employee as Employee;
+            add_Emp_Window.DataContext = new EmployeeViewModel(toPass, Employees);
+            add_Emp_Window.Show();
+        }
 
         public RelayCommand SaveFileCommand
         {
             get; set;
+        }
+        private void SaveFile(object parameter)
+        {
+            try
+            {
+                using (FileIO thefile = new FileIO(Employees))
+                {
+                    thefile.OpenSaveFileDB();
+                    thefile.WriteFileDB();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ERROR_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public RelayCommand OpenFileCommand
         {
             get; set;
         }
-
-        public RelayCommand NewFileCommand
-        {
-            get; set;
-        }
-
-        public RelayCommand CreateTestEmployeesCommand
-        {
-            get; set;
-        }
-        #endregion
-
-        public BusinessRulesViewModel()
-        {
-            EmployeesCollections = new ObservableCollection<BusinessRules>();
-            CreateTestEmployees(null);
-            Employees = EmployeesCollections.First<BusinessRules>();
-            //Set up commands next
-            CreateTestEmployeesCommand = new RelayCommand(CreateTestEmployees);
-            SaveFileCommand = new RelayCommand(SaveFile);
-            NewFileCommand = new RelayCommand(NewFile);
-            OpenFileCommand = new RelayCommand(OpenFile);
-            RemoveEmployeeCommand = new RelayCommand(RemoveEmployee);
-        }
-        private void NewFile(object parameter)
-        {
-            EmployeesCollections.Add(new BusinessRules());
-        }
-
         private void OpenFile(object parameter)
         {
             BusinessRules toAdd;
@@ -200,27 +211,19 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
         }
 
-        private void SaveFile(object parameter)
+        public RelayCommand NewFileCommand
         {
-            try
-            {
-                using (FileIO thefile = new FileIO(Employees))
-                {
-                    thefile.OpenSaveFileDB();
-                    thefile.WriteFileDB();
-                }
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, ERROR_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            get; set;
+        }
+        private void NewFile(object parameter)
+        {
+            EmployeesCollections.Add(new BusinessRules());
         }
 
-        private void RemoveEmployee(object parameter)
+        public RelayCommand CreateTestEmployeesCommand
         {
-            employees.Remove(parameter as Employee);
+            get; set;
         }
-
         private void CreateTestEmployees(object parameter)
         {
             Random random = new Random();
@@ -263,6 +266,27 @@ namespace Lab_03_EAB.EmployeeViewModel
             }//End for loop
             EmployeesCollections.Add(toAdd);
         }
+
+        #endregion
+
+        public BusinessRulesViewModel()
+        {
+            EmployeesCollections = new ObservableCollection<BusinessRules>();
+            CreateTestEmployees(null);
+            Employees = EmployeesCollections.First<BusinessRules>();
+            //Set up commands next
+            CreateTestEmployeesCommand = new RelayCommand(CreateTestEmployees);
+            SaveFileCommand = new RelayCommand(SaveFile);
+            NewFileCommand = new RelayCommand(NewFile);
+            OpenFileCommand = new RelayCommand(OpenFile);
+            RemoveEmployeeCommand = new RelayCommand(RemoveEmployee);
+            ModifyEmployeeCommand = new RelayCommand(ModifyEmployee);
+            AddEmployeeCommand = new RelayCommand(AddEmployee);
+        }
+
+
+
+
 
     }//End Class BusinessRulesViewModel
 }//End Namespace

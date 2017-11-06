@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using Lab_03_EAB.Helpers;
 
 namespace Lab_03_EAB
 {
@@ -15,6 +16,9 @@ namespace Lab_03_EAB
         [DataMember]
         private const string HOURLY_FORMAT_STRING = "Hourly Rate: {0}\nHours Worked: {1}\n",
             BAD_VAL_ERR_MSG = "Only non-negative values may be used to construct a Hourly employee.";
+        private const string HOUR_WORK_ERR_MSG = "Hours worked must be a positive value.";
+        private const string HOUR_RATE_ERR_MSG = "Hourly rate must be a positive value.";
+
         /// <summary>
         /// HourlyRate property and backing field. Negative values are rejected.
         /// </summary>
@@ -25,7 +29,6 @@ namespace Lab_03_EAB
             get => hourlyRate;
             set
             {
-                if (value >= 0)
                     hourlyRate = value;
             }
         }
@@ -39,7 +42,6 @@ namespace Lab_03_EAB
             get => hoursWorked;
             set
             {
-                if (value >= 0)
                     hoursWorked = value;
             }
         }
@@ -60,6 +62,30 @@ namespace Lab_03_EAB
                 throw new ArgumentException(BAD_VAL_ERR_MSG, hours.GetType().Name);
             HourlyRate = rate;
             HoursWorked = hours;
+        }
+        public Hourly()
+            : base(ETYPE.HOURLY)
+        { }
+        public override string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                switch(columnName)
+                {
+                    case nameof(HoursWorked):
+                        if (hoursWorked < 0)
+                            result = HOUR_WORK_ERR_MSG;
+                        break;
+                    case nameof(HourlyRate):
+                        if (hourlyRate < 0)
+                            result = HOUR_RATE_ERR_MSG;
+                        break;
+                    default:
+                        return base[columnName];
+                }
+                return result;
+            }
         }
         /// <summary>
         /// Gives a string representation of the class

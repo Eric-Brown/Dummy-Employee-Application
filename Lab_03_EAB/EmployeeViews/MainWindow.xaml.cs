@@ -50,20 +50,14 @@ Created by: Eric Brown",
             //DataContext = new EmployeeViewModel.BusinessRulesViewModel();
         }
 
-        private void OnAddRequest(object sender, RoutedEventArgs e)
-        {
-            Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
-            if(DataContext is BusinessRulesViewModel model)
-            {
-                add_Emp_Window.DataContext =  new EmployeeViewModel.EmployeeViewModel(model.Employees);
-            }
-            add_Emp_Window.Show();
-        }
         private void OnAddTestEmployeesCountRequest(object sender, RoutedEventArgs e)
         {
 
         }
-
+        public void MnuExit_Click(object sender, EventArgs eventArgs)
+        {
+            Close();
+        }
         public void MnuAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(HELP_MSG, ABOUT, MessageBoxButton.OK, MessageBoxImage.Information);

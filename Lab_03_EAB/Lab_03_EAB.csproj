@@ -118,6 +118,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EmployeeModel\Course.cs" />
     <Compile Include="EmployeeViewModel\BusinessRulesViewModel.cs" />
     <Compile Include="EmployeeViewModel\EmployeeViewModel.cs" />
     <Compile Include="EmployeeViews\Add_Emp_Window.xaml.cs">
@@ -176,7 +177,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Diagrams\Lab_03_Class_Diagram_Overview.cd" />
+    <None Include="Diagrams\Helpers Diagrams.cd" />
+    <None Include="Diagrams\Model and ViewModel Diagrams.cd" />
+    <None Include="Diagrams\View Diagrams.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
