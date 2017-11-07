@@ -260,6 +260,7 @@ namespace Lab_03_EAB
             EmpID = textEmployee.EmpID ?? uint.MaxValue;
             FirstName = textEmployee.FirstName;
             LastName = textEmployee.LastName;
+            CourseRoster = new SortedDictionary<string, Course>();
         }
         #endregion
         #region Methods
@@ -288,7 +289,7 @@ namespace Lab_03_EAB
             StringBuilder toReturn = new StringBuilder();
             foreach (Course value in CourseRoster?.Values)
             {
-                toReturn.AppendLine(value.ToString());
+                toReturn.AppendLine(value.ToString() + "\n");
             }
             return toReturn.ToString();
         }

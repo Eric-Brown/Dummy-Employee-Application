@@ -59,7 +59,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + string.Format(CONTRACT_FORMAT_STRING, ContractWage) + base.CourseListing();
+            return base.ToString() + string.Format(CONTRACT_FORMAT_STRING, ContractWage) +"\n" + base.CourseListing();
         }
 
         public override string this[string columnname]

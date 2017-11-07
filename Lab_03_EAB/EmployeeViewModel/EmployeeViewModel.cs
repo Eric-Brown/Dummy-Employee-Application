@@ -167,7 +167,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             AddButtonContent = employee == null ? "Add" : "Modify";
             IsNew = (employee == null) ? true : false;
-            CanAdd = false;
+            CanAdd = (employee == null) ? false : true;
             CanAddCourse = false;
             resultDestination = rules;
             courseToAdd = new Course();

@@ -81,7 +81,7 @@ namespace Lab_03_EAB
         public override string ToString()
         {
             if(EmpType == ETYPE.SALARY)
-                return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary + CourseListing());
+                return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary) + "\n" + CourseListing();
             return base.ToString() + string.Format(SALARY_FORMAT_STRING, monthlySalary);
         }
         public override string this[string columnName]

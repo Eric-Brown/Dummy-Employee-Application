@@ -131,7 +131,53 @@
         </StackPanel><!--End Course Side SP Vertical-->
         <StackPanel Orientation="Vertical">
             <TextBlock Text="Current Courses" TextDecorations="Underline" HorizontalAlignment="Center"/>
-            <ListBox ItemsSource="{Binding Courses}"/>
+            <ListBox ItemsSource="{Binding Courses}" MinWidth="200">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander>
+                            <Expander.Header>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Course ID: {0}">
+                                            <Binding Path="CourseID"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Expander.Header>
+                            <StackPanel>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Course Description: {0}">
+                                            <Binding Path="CourseDescription"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Approved Date: {0}">
+                                            <Binding Path="ApprovedDate"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Credits: {0}">
+                                            <Binding Path="Credits"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Grade: {0}">
+                                            <Binding Path="Grade"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
     </StackPanel><!--End Main Stack Panel Horizontal-->
 </Window>

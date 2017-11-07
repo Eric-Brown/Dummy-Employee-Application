@@ -104,7 +104,7 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            return base.ToString() + string.Format(HOURLY_FORMAT_STRING, HourlyRate, HoursWorked)+ CourseListing();
+            return base.ToString() + string.Format(HOURLY_FORMAT_STRING, HourlyRate, HoursWorked) + "\n" + CourseListing();
         }
         public static new bool IsValidTextEmployee(TextEmployee toTest)
         {
