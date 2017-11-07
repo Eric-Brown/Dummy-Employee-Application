@@ -50,9 +50,9 @@ namespace Lab_03_EAB
         protected const string IS_ALPHA_PTN = @"(?i)(?!.*[\d]+.*)^.*";
         protected const string IS_POS_NUM_PTN = @"^\d*\.?\d*$";
         protected const string IS_POS_INT_PTN = @"^\d+$";
-        protected readonly Regex IS_ALPHA = new Regex(IS_ALPHA_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        protected readonly Regex IS_POS_NUM = new Regex(IS_POS_NUM_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        protected readonly Regex IS_POS_INT = new Regex(IS_POS_INT_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static protected readonly Regex IS_ALPHA = new Regex(IS_ALPHA_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static protected readonly Regex IS_POS_NUM = new Regex(IS_POS_NUM_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static protected readonly Regex IS_POS_INT = new Regex(IS_POS_INT_PTN, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private const string NAME_BAD_ERR_MSG = "Please ensure that the name contains no numbers and is not empty.";
         private const string ID_BAD_ERR_MSG = "Please ensure that the Employee's ID is only a number and contains no letters.";
         #endregion
@@ -248,9 +248,18 @@ namespace Lab_03_EAB
             lastName = last;
             CourseRoster = new SortedDictionary<string, Course>();
         }
-        protected Employee(ETYPE type)
+        /// <summary>
+        /// Creates a new employee object based off of the information in TextEmployee.
+        /// </summary>
+        /// <param name="textEmployee">The text information of the employee to be created.</param>
+        /// <param name="type">The type of the employee that is being constructed.</param>
+        /// <exception cref="ArgumentNullException">Thrown when TextEmployee is null.</exception>
+        protected Employee(TextEmployee textEmployee, ETYPE type)
         {
-            EmpType = type;
+            if (textEmployee == null) throw new ArgumentNullException(paramName: nameof(textEmployee));
+            EmpID = textEmployee.EmpID ?? uint.MaxValue;
+            FirstName = textEmployee.FirstName;
+            LastName = textEmployee.LastName;
         }
         #endregion
         #region Methods
@@ -282,6 +291,20 @@ namespace Lab_03_EAB
                 toReturn.AppendLine(value.ToString());
             }
             return toReturn.ToString();
+        }
+        public static bool IsValidTextEmployee(TextEmployee toTest)
+        {
+            if (toTest == null) return false;
+            bool result = false;
+            try
+            {
+                result = (IS_ALPHA.IsMatch(toTest.FirstName) && IS_ALPHA.IsMatch(toTest.LastName) && toTest.EmpID != null);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            return result;
         }
         [OnDeserialized]
         private void DeserializedFix(StreamingContext context)

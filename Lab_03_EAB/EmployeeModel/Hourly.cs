@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using Lab_03_EAB.Helpers;
+using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB
 {
@@ -63,9 +64,19 @@ namespace Lab_03_EAB
             HourlyRate = rate;
             HoursWorked = hours;
         }
-        public Hourly()
-            : base(ETYPE.HOURLY)
-        { }
+        public Hourly(TextEmployee employee)
+            : base(employee, ETYPE.HOURLY)
+        {
+            try
+            {
+                HourlyRate = decimal.Parse(employee.Suppliment1);
+                HoursWorked = double.Parse(employee.Suppliment2);
+            }
+            catch(Exception ex)
+            {
+                throw new ArgumentException(ex.Message, ex);
+            }
+        }
         public override string this[string columnName]
         {
             get
@@ -94,6 +105,19 @@ namespace Lab_03_EAB
         public override string ToString()
         {
             return base.ToString() + string.Format(HOURLY_FORMAT_STRING, HourlyRate, HoursWorked)+ CourseListing();
+        }
+        public static new bool IsValidTextEmployee(TextEmployee toTest)
+        {
+            bool toReturn = false;
+            try
+            {
+                toReturn = Employee.IsValidTextEmployee(toTest) && IS_POS_NUM.IsMatch(toTest?.Suppliment1) && IS_POS_NUM.IsMatch(toTest?.Suppliment2);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            return toReturn;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Lab_03_EAB.Helpers;
+using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB
 {
@@ -49,6 +50,30 @@ namespace Lab_03_EAB
         {
             MonthlySalary = salary;
         }
+        public Salary(TextEmployee employee)
+            :base(employee, ETYPE.SALARY)
+        {
+            try
+            {
+                MonthlySalary = decimal.Parse(employee.Suppliment1);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message, ex);
+            }
+        }
+        protected Salary(TextEmployee employee, ETYPE eTYPE)
+            :base(employee, eTYPE)
+        {
+            try
+            {
+                MonthlySalary = decimal.Parse(employee.Suppliment1);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message, ex);
+            }
+        }
         /// <summary>
         /// Gives a string representation of the class
         /// </summary>
@@ -75,6 +100,19 @@ namespace Lab_03_EAB
                 }
                 return result;
             }
+        }
+        public static new bool IsValidTextEmployee(TextEmployee toTest)
+        {
+            bool toReturn = false;
+            try
+            {
+                toReturn = Employee.IsValidTextEmployee(toTest) && IS_POS_NUM.IsMatch(toTest?.Suppliment1);
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            return toReturn;
         }
     }
 

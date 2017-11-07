@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-
+using Lab_03_EAB.EmployeeModel;
 
 namespace EmployeeLabUnitTests
 {
@@ -329,21 +329,21 @@ namespace EmployeeLabUnitTests
             BusinessRules toTest = new BusinessRules();
             uint testID = 0;
             Random random = new Random();
-            EmployeeStrings goodArray = new EmployeeStrings();
+            TextEmployee goodArray = new TextEmployee();
 
-            goodArray.ID = testID.ToString();
+            goodArray.EmpID = testID;
             goodArray.FirstName = FIRST_NAMES[random.Next(0, FIRST_NAMES.Count() - 1)];
             goodArray.LastName = LAST_NAMES[random.Next(0, LAST_NAMES.Count() - 1)];
             goodArray.Suppliment1 = (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString();
-            goodArray.Type = ETYPE.CONTRACT;
-            EmployeeStrings bad = new EmployeeStrings();
-            bad.Type = goodArray.Type;
-            bad.ID = goodArray.ID;
+            goodArray.EmpType = ETYPE.CONTRACT;
+            TextEmployee bad = new TextEmployee();
+            bad.EmpType = goodArray.EmpType;
+            bad.EmpID = goodArray.EmpID;
             bad.FirstName = goodArray.FirstName + goodArray.FirstName;
             bad.LastName = goodArray.LastName + goodArray.LastName;
             bad.Suppliment1 = goodArray.FirstName;
-            Assert.IsTrue(toTest.CanAddFromEmployeeString(goodArray));
-            Assert.IsFalse(toTest.CanAddFromEmployeeString(bad));
+            Assert.IsTrue(toTest.CanAddTextEmployee(goodArray));
+            Assert.IsFalse(toTest.CanAddTextEmployee(bad));
         }
         [TestMethod]
         public void TestAddFromStringArray()
@@ -352,18 +352,18 @@ namespace EmployeeLabUnitTests
             BusinessRules toTest = new BusinessRules();
             uint testID = 0;
             Random random = new Random();
-            EmployeeStrings goodArray = new EmployeeStrings();
+            TextEmployee goodArray = new TextEmployee();
 
-            goodArray.ID = testID.ToString();
+            goodArray.EmpID = testID;
             goodArray.FirstName = FIRST_NAMES[random.Next(0, FIRST_NAMES.Count() - 1)];
             goodArray.LastName = LAST_NAMES[random.Next(0, LAST_NAMES.Count() - 1)];
             goodArray.Suppliment1 = (random.NextDouble() * DEFAULT_EMPS_TO_CREATE).ToString();
-            goodArray.Type = ETYPE.CONTRACT;
+            goodArray.EmpType = ETYPE.CONTRACT;
             Assert.IsTrue(toTest.AddFromEmployeeStrings(goodArray, null));
             Assert.IsTrue(toTest.Count() > 0);
-            EmployeeStrings bad = new EmployeeStrings();
-            bad.Type = goodArray.Type;
-            bad.ID = goodArray.ID;
+            TextEmployee bad = new TextEmployee();
+            bad.EmpType = goodArray.EmpType;
+            bad.EmpID = goodArray.EmpID;
             bad.FirstName = goodArray.FirstName + goodArray.FirstName;
             bad.LastName = goodArray.LastName + goodArray.LastName;
             bad.Suppliment1 = goodArray.FirstName;

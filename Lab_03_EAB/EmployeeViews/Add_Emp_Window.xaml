@@ -45,6 +45,7 @@
                 </Trigger>
             </Style.Triggers>
             <Setter Property="Margin" Value="3,3,3,3"/>
+            <Setter Property="MinWidth" Value="100"/>
         </Style>
         <Style TargetType="DatePicker">
             <Setter Property="Margin" Value="3,3,3,3"/>
@@ -54,14 +55,14 @@
         <DockPanel Name="DockPnlEmp"><!--Begin Employee Side SP Vertical-->
             <TextBlock TextDecorations="Underline" Text="Employee Information" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
-                <Button Content="{Binding AddButtonContent}" Command="{Binding AddModifyEmployeeCommand}"/>
+                <Button Content="{Binding AddButtonContent}" Command="{Binding AddModifyEmployeeCommand}" IsEnabled="{Binding CanAdd}"/>
                 <Button Name="BtnCancel" Content="Cancel" HorizontalAlignment="Center" Click="BtnCancel_Click"/>
             </StackPanel>
             <DockPanel><!--Begin Employee Information Dock-->
                 <StackPanel Orientation="Vertical"><!--Begin Employee Left Half-->
                     <DockPanel>
                         <Label Content="Employee Type:" HorizontalAlignment="Left"/>
-                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding SelectedType}"/>
+                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentEmployee.EmpType}"/>
                     </DockPanel>
                     <DockPanel>
                         <Label Content="First Name:"/>
@@ -71,15 +72,15 @@
                                  Style="{StaticResource textBoxInError}"/>
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{Binding Suppliment1Lable, Mode=OneWay}"/>
+                        <Label Content="{Binding CurrentEmployee.Sup1Lable, Mode=OneWay}"/>
                         <TextBox Text="{Binding CurrentEmployee.Suppliment1, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{Binding Suppliment3Lable, Mode=OneWay}" Visibility="{Binding Suppliment3Visibility, Converter={StaticResource visibilityConverter}}"/>
+                        <Label Content="{Binding CurrentEmployee.Sup3Lable, Mode=OneWay}" Visibility="{Binding CurrentEmployee.Sup3Visibility, Converter={StaticResource visibilityConverter}}"/>
                         <TextBox Text="{Binding CurrentEmployee.Suppliment3, 
                             UpdateSourceTrigger=PropertyChanged, 
                             ValidatesOnDataErrors=True}" 
-                                 Visibility="{Binding Suppliment3Visibility, 
+                                 Visibility="{Binding CurrentEmployee.Sup3Visibility, 
                             Converter={StaticResource visibilityConverter}}" 
                                  Style="{StaticResource textBoxInError}"
                                  Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
@@ -88,15 +89,15 @@
                 <StackPanel Orientation="Vertical"><!--Begin Employee Right Half-->
                     <DockPanel>
                         <Label Content="Employee ID#:"/>
-                        <TextBox Text="{Binding CurrentEmployee.ID, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" IsEnabled="{Binding IsNew}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
+                        <TextBox Text="{Binding CurrentEmployee.EmpID, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" IsEnabled="{Binding IsNew}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
                     </DockPanel>
                     <DockPanel>
                         <Label Content="Last Name:"/>
                         <TextBox Text="{Binding CurrentEmployee.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{Binding Suppliment2Lable, Mode=OneWay}" Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}"/>
-                        <TextBox Text="{Binding CurrentEmployee.Suppliment2, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding Suppliment2Visibility, Converter={StaticResource visibilityConverter}}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
+                        <Label Content="{Binding CurrentEmployee.Sup2Lable, Mode=OneWay}" Visibility="{Binding CurrentEmployee.Sup2Visibility, Converter={StaticResource visibilityConverter}}"/>
+                        <TextBox Text="{Binding CurrentEmployee.Suppliment2, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding CurrentEmployee.Sup2Visibility, Converter={StaticResource visibilityConverter}}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
                     </DockPanel>
                 </StackPanel><!--End Employee Right Half-->
             </DockPanel><!--End Employee Information Dock-->
@@ -126,10 +127,10 @@
                 <Label Content="Course Credits:"/>
                 <TextBox Text="{Binding CourseToAdd.Credits, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
             </DockPanel>
-            <Button Content="Add Course" Command="{Binding AddCourseCommand}"/>
+            <Button Content="Add Course" Command="{Binding AddCourseCommand}" IsEnabled="{Binding CanAddCourse}"/>
         </StackPanel><!--End Course Side SP Vertical-->
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="Added Courses" TextDecorations="Underline" HorizontalAlignment="Center"/>
+            <TextBlock Text="Current Courses" TextDecorations="Underline" HorizontalAlignment="Center"/>
             <ListBox ItemsSource="{Binding Courses}"/>
         </StackPanel>
     </StackPanel><!--End Main Stack Panel Horizontal-->

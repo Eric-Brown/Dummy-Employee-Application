@@ -15,12 +15,6 @@ namespace Lab_03_EAB.EmployeeViewModel
     {
         private const string COURSE_BAD_MSG = "Cannot add the course as specified.\nPlease ensure that the data entered is correct and that you have not already added a course of the same ID.";
         private const string COURSE_BAD_CAPTION = "Cannot Add Course";
-        private const string WAGE_LABLE = "Contract Wage:";
-        private const string GROSS_SALES_LABEL = "Gross Sales:";
-        private const string COMMISSION_LABEL = "Commission:";
-        private const string SALARY_LABEL = "Salary:";
-        private const string HOURS_WORKED_LABEL = "Hours Worked:";
-        private const string HOUR_RATE_LABEL = "Hourly Rate:";
         private const string EMPLOYEE_BAD_MSG = "Employee could not be added as specified.\nPlease ensure that all data entered is correct and that an employee of the same ID does not already exist.";
         private const string EMPLOYEE_BAD_CAPTION = "Could not add employee.";
         #region Event and Handler
@@ -52,25 +46,14 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
         }
 
-        private Employee currentEmployee;
-        public Employee CurrentEmployee
+        private TextEmployee currentEmployee;
+        public TextEmployee CurrentEmployee
         {
             get => currentEmployee;
             set
             {
                 currentEmployee = value;
                 OnPropertyChanged(nameof(CurrentEmployee));
-            }
-        }
-        private ETYPE selected;
-        public ETYPE SelectedType
-        {
-            get => selected;
-            set
-            {
-                selected = value;
-                OnPropertyChanged(nameof(SelectedType));
-                EmployeeTypeChanged()
             }
         }
         private bool isNew;
@@ -83,54 +66,24 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(IsNew));
             }
         }
-        private string suppliment1;
-        public string Suppliment1Lable
+        private bool canAdd;
+        public bool CanAdd
         {
-            get => suppliment1;
+            get => canAdd;
             set
             {
-                suppliment1 = value;
-                OnPropertyChanged(nameof(Suppliment1Lable));
+                canAdd = value;
+                OnPropertyChanged(nameof(CanAdd));
             }
         }
-        private bool suppliment2Vis;
-        public bool Suppliment2Visibility
+        private bool canAddCourse;
+        public bool CanAddCourse
         {
-            get => suppliment2Vis;
+            get => canAddCourse;
             set
             {
-                suppliment2Vis = value;
-                OnPropertyChanged(nameof(Suppliment2Visibility));
-            }
-        }
-        private string suppliment2;
-        public string Suppliment2Lable
-        {
-            get => suppliment2;
-            set
-            {
-                suppliment2 = value;
-                OnPropertyChanged(nameof(Suppliment2Lable));
-            }
-        }
-        private bool suppliment3Vis;
-        public bool Suppliment3Visibility
-        {
-            get => suppliment3Vis;
-            set
-            {
-                suppliment3Vis = value;
-                OnPropertyChanged(nameof(Suppliment3Visibility));
-            }
-        }
-        private string suppliment3;
-        public string Suppliment3Lable
-        {
-            get => suppliment3;
-            set
-            {
-                suppliment3 = value;
-                OnPropertyChanged(nameof(Suppliment3Lable));
+                canAddCourse = value;
+                OnPropertyChanged(nameof(CanAddCourse));
             }
         }
         private string buttonLable;
@@ -141,16 +94,6 @@ namespace Lab_03_EAB.EmployeeViewModel
             {
                 buttonLable = value;
                 OnPropertyChanged(nameof(AddButtonContent));
-            }
-        }
-        private string courseCreditstoAdd;
-        public string CourseCreditsToAdd
-        {
-            get => courseCreditstoAdd;
-            set
-            {
-                courseCreditstoAdd = value;
-                OnPropertyChanged(nameof(CourseCreditsToAdd));
             }
         }
         private bool? closeWindowFlag;
@@ -192,43 +135,27 @@ namespace Lab_03_EAB.EmployeeViewModel
 
         private void AddModEmployee(object parameter)
         {
-            if (resultDestination[CurrentEmployee.EmpID] != null)
-                resultDestination.Remove(resultDestination[CurrentEmployee.EmpID]);
-            resultDestination.Add(currentEmployee);
-            CloseWindowFlag = false;
+            if (resultDestination.CanAddTextEmployee(CurrentEmployee) &&
+                ((IsNew && !resultDestination.ContainsKey(CurrentEmployee.EmpID ?? uint.MaxValue)) || !IsNew))
+            {
+                resultDestination.AddFromEmployeeStrings(CurrentEmployee, Courses);
+                CloseWindowFlag = false;
+            }
+            else
+                MessageBox.Show(EMPLOYEE_BAD_MSG, EMPLOYEE_BAD_CAPTION, MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        private void EmployeeTypeChanged()
-        {
 
-                switch (currentEmployee.EmpType)
-                {
-                    case ETYPE.CONTRACT:
-                        Suppliment1Lable = WAGE_LABLE;
-                        Suppliment2Visibility = false;
-                        Suppliment3Visibility = false;
-                        break;
-                    case ETYPE.HOURLY:
-                        Suppliment1Lable = HOUR_RATE_LABEL;
-                        Suppliment2Lable = HOURS_WORKED_LABEL;
-                        Suppliment2Visibility = true;
-                        Suppliment3Visibility = false;
-                        break;
-                    case ETYPE.SALARY:
-                        Suppliment1Lable = SALARY_LABEL;
-                        Suppliment2Visibility = false;
-                        Suppliment3Visibility = false;
-                        break;
-                    case ETYPE.SALES:
-                        Suppliment1Lable = SALARY_LABEL;
-                        Suppliment2Lable = COMMISSION_LABEL;
-                        Suppliment3Lable = GROSS_SALES_LABEL;
-                        Suppliment2Visibility = true;
-                        Suppliment3Visibility = true;
-                        break;
-                    default:
-                        break;
-                }
+        private void OnCurrentEmployeeChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (CurrentEmployee.Error != null) CanAdd = false;
+            else CanAdd = true;
         }
+        private void OnCourseChange(object sender, PropertyChangedEventArgs args)
+        {
+            if (CourseToAdd.Error != null) CanAddCourse = false;
+            else CanAddCourse = true;
+        }
+
         #endregion
         private BusinessRules resultDestination;
         public EmployeeViewModel(BusinessRules rules)
@@ -240,17 +167,18 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             AddButtonContent = employee == null ? "Add" : "Modify";
             IsNew = (employee == null) ? true : false;
+            CanAdd = false;
+            CanAddCourse = false;
             resultDestination = rules;
             courseToAdd = new Course();
+            courseToAdd.PropertyChanged += OnCourseChange;
             List<Course> list = employee?.CourseRoster?.Values?.ToList();
             if (list == null)
                 Courses = new ObservableCollection<Course>();
             else
                 Courses = new ObservableCollection<Course>(list);
-            if (employee == null)
-                CurrentEmployee = new Contract();
-            else
-                CurrentEmployee = employee;
+            CurrentEmployee = new TextEmployee(employee);
+            CurrentEmployee.PropertyChanged += OnCurrentEmployeeChanged;
             AddCourseCommand = new RelayCommand(AddCourse);
             AddModifyEmployeeCommand = new RelayCommand(AddModEmployee);
         }//end constructor

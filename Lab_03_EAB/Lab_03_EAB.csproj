@@ -119,6 +119,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="EmployeeModel\Course.cs" />
+    <Compile Include="EmployeeModel\TextEmployee.cs" />
     <Compile Include="EmployeeViewModel\BusinessRulesViewModel.cs" />
     <Compile Include="EmployeeViewModel\EmployeeViewModel.cs" />
     <Compile Include="EmployeeViews\Add_Emp_Window.xaml.cs">

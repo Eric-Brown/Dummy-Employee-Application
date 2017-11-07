@@ -13,84 +13,6 @@ using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB
 {
-    public class EmployeeStrings : INotifyPropertyChanged
-    {
-        private string id;
-        public string ID
-        {
-            get => id;
-            set
-            {
-                id = value;
-                OnPropertyChanged(nameof(ID));
-            }
-        }
-        private string firstName;
-        public string FirstName
-        {
-            get => firstName;
-            set
-            {
-                firstName = value;
-                OnPropertyChanged(nameof(FirstName));
-            }
-        }
-        private string lastName;
-        public string LastName
-        {
-            get => lastName;
-            set
-            {
-                lastName = value;
-                OnPropertyChanged(nameof(LastName));
-            }
-        }
-        private string sup1;
-        public string Suppliment1
-        {
-            get => sup1;
-            set
-            {
-                sup1 = value;
-                OnPropertyChanged(nameof(Suppliment1));
-            }
-        }
-        private string sup2;
-        public string Suppliment2
-        {
-            get => sup2;
-            set
-            {
-                sup2 = value;
-                OnPropertyChanged(nameof(Suppliment2));
-            }
-        }
-        private string sup3;
-        public string Suppliment3
-        {
-            get => sup3;
-            set
-            {
-                sup3 = value;
-                OnPropertyChanged(nameof(Suppliment3));
-            }
-        }
-        private ETYPE eTYPE;
-        public ETYPE Type
-        {
-            get => eTYPE;
-            set
-            {
-                eTYPE = value;
-                OnPropertyChanged(nameof(Type));
-            }
-        }
-       private void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
-    }
     /// <summary>
     /// Class that contains the business rules for the application
     /// </summary>
@@ -99,16 +21,6 @@ namespace Lab_03_EAB
     public sealed class BusinessRules : ICollection<Employee>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         #region Constants
-        /// <summary>
-        /// Utility regex that is used to determine if a string is comprised of only characters from a to z.
-        /// </summary>
-        [NonSerialized]
-        private static readonly Regex IsAlpha = new Regex(@"(?i)(?!.*[\d]+.*)^.*", RegexOptions.Compiled);
-        /// <summary>
-        /// Utility regex that is used to determine if a string is comprised of only digits and a possible decimal point.
-        /// </summary>
-        [NonSerialized]
-        private static readonly Regex IsNumber = new Regex(@"^\d*\.?\d*$", RegexOptions.Compiled);
         #endregion
         #region MemberData
         [DataMember]
@@ -337,6 +249,10 @@ namespace Lab_03_EAB
         {
             return employeeCollection.ContainsValue(item);
         }
+        public bool ContainsKey(uint key)
+        {
+            return EmployeeCollection.ContainsKey(key);
+        }
         /// <summary>
         /// Copies contained employees to an array starting at the specified index.
         /// </summary>
@@ -371,26 +287,26 @@ namespace Lab_03_EAB
         /// <param name="attributeArray">A string array of the attributes. MUST have the order of: ID, First, Last, Sup1, Sup2, Sup3</param>
         /// <returns>Whether or not the operation was successful</returns>
         /// <exception cref="OverflowException">Thrown if the formatting was good, but results in an overflow for the datatype.</exception>
-        public bool AddFromEmployeeStrings(EmployeeStrings employee, IEnumerable<Course> courses)
+        public bool AddFromEmployeeStrings(TextEmployee employee, IEnumerable<Course> courses)
         {
-            if (!CanAddFromEmployeeString(employee)) return false;
+            if (!CanAddTextEmployee(employee)) return false;
             try
             {
-                uint idToAdd = uint.Parse(employee.ID);
+                uint idToAdd = employee.EmpID ?? uint.MaxValue;
                 if (employeeCollection.ContainsKey(idToAdd)) employeeCollection.Remove(idToAdd);
-                switch (employee.Type)
+                switch (employee.EmpType)
                 {
                     case ETYPE.CONTRACT:
-                        employeeCollection.Add(idToAdd, new Contract(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1)));
+                        employeeCollection.Add(idToAdd, new Contract(employee));
                         break;
                     case ETYPE.HOURLY:
-                        employeeCollection.Add(idToAdd, new Hourly(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1), double.Parse(employee.Suppliment2)));
+                        employeeCollection.Add(idToAdd, new Hourly(employee));
                         break;
                     case ETYPE.SALARY:
-                        employeeCollection.Add(idToAdd, new Salary(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1)));
+                        employeeCollection.Add(idToAdd, new Salary(employee));
                         break;
                     case ETYPE.SALES:
-                        employeeCollection.Add(idToAdd, new Sales(idToAdd, employee.FirstName, employee.LastName, decimal.Parse(employee.Suppliment1), decimal.Parse(employee.Suppliment2), decimal.Parse(employee.Suppliment3)));
+                        employeeCollection.Add(idToAdd, new Sales(employee));
                         break;
                 }
                 foreach (Course toAdd in courses)
@@ -412,35 +328,28 @@ namespace Lab_03_EAB
         /// <param name="selectedItem">The type of the employee that could be added.</param>
         /// <param name="attributeArray">Array with entries that are ordered: ID, First, Last, Sup1, Sup2, Sup3</param>
         /// <returns>Whether or not AddFromStringArray will succeed.</returns>
-        public bool CanAddFromEmployeeString(EmployeeStrings employee)
+        public bool CanAddTextEmployee(TextEmployee employee)
         {
-            //All employees will have: ID, First, Last
-            try
+            if (employee == null) return false;
+            bool result = false;
+            switch(employee.EmpType)
             {
-                if (IsNumber.IsMatch(employee.ID) && IsAlpha.IsMatch(employee.FirstName) && IsAlpha.IsMatch(employee.LastName))
-                {
-                    switch (employee.Type)
-                    {
-                        //Contract has 1
-                        case ETYPE.CONTRACT:
-                            return (IsNumber.IsMatch(employee.Suppliment1));
-                        //Hourly has 2
-                        case ETYPE.HOURLY:
-                            return (IsNumber.IsMatch(employee.Suppliment1) && IsNumber.IsMatch(employee.Suppliment2));
-                        //Salary has 1
-                        case ETYPE.SALARY:
-                            return (IsNumber.IsMatch(employee.Suppliment1));
-                        //Sales has 3
-                        case ETYPE.SALES:
-                            return (IsNumber.IsMatch(employee.Suppliment1) && IsNumber.IsMatch(employee.Suppliment2) && IsNumber.IsMatch(employee.Suppliment3));
-                    }
-                }
+                case ETYPE.CONTRACT:
+                    result = Contract.IsValidTextEmployee(employee);
+                    break;
+                case ETYPE.HOURLY:
+                    result = Hourly.IsValidTextEmployee(employee);
+                    break;
+                case ETYPE.SALARY:
+                    result = Salary.IsValidTextEmployee(employee);
+                    break;
+                case ETYPE.SALES:
+                    result = Sales.IsValidTextEmployee(employee);
+                    break;
+                default:
+                    break;
             }
-            //Exceptions are silenced
-            catch (Exception)
-            {
-            }
-            return false;
+            return result;
         }
         public void CopyTo(SortedDictionary<uint, Employee> destination)
         {
