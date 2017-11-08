@@ -131,7 +131,7 @@
         </StackPanel><!--End Course Side SP Vertical-->
         <StackPanel Orientation="Vertical">
             <TextBlock Text="Current Courses" TextDecorations="Underline" HorizontalAlignment="Center"/>
-            <ListBox ItemsSource="{Binding Courses}" MinWidth="200">
+            <ListBox ItemsSource="{Binding Courses}" MinWidth="250">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Expander>

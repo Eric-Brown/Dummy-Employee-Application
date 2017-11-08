@@ -107,7 +107,7 @@ namespace Lab_03_EAB
             bool toReturn = false;
             try
             {
-                toReturn = Salary.IsValidTextEmployee(employee) && IS_POS_NUM.IsMatch(employee?.Suppliment2) && IS_POS_NUM.IsMatch(employee?.Suppliment3);
+                toReturn = Salary.IsValidTextEmployee(employee) && IS_POS_NUM.IsMatch(employee?.Suppliment2) && IS_POS_NUM.IsMatch(employee?.Suppliment3) && employee.EmpType == ETYPE.SALES;
             }
             catch(Exception)
             {

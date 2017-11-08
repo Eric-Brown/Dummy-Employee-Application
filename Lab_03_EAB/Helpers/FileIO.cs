@@ -83,7 +83,7 @@ namespace Lab_03_EAB
         /// <param name="toWrite">The object to write to file</param>
         public void WriteFileDB(string newPath)
         {
-            if (string.IsNullOrEmpty(newPath) || !Directory.Exists(newPath)) throw new FileNotFoundException();
+            if (string.IsNullOrEmpty(newPath)  /*!Directory.Exists(newPath)*/) throw new FileNotFoundException();
             if(stream?.Name != newPath)
             {
                 stream?.Close();

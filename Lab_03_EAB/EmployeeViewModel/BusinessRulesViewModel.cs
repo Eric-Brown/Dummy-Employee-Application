@@ -7,6 +7,8 @@ using System.Windows;
 using Lab_03_EAB.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
+using System.Windows.Data;
 
 namespace Lab_03_EAB.EmployeeViewModel
 {
@@ -78,7 +80,16 @@ namespace Lab_03_EAB.EmployeeViewModel
                 SelectedEmployeeDescription = selectedEmployee.ToString();
             }
         }
-
+        private string searchText;
+        public string SearchText
+        {
+            get => searchText;
+            set
+            {
+                searchText = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(SearchText)));
+            }
+        }
         private void OnPropertyChanged(PropertyChangedEventArgs propertyChangedEventArgs)
         {
             PropertyChanged?.Invoke(this, propertyChangedEventArgs);
@@ -130,7 +141,24 @@ namespace Lab_03_EAB.EmployeeViewModel
         }
         #endregion
         #region Command Properties
-
+        public void SearchBarFilter(object item, FilterEventArgs args)
+        {
+            if (string.IsNullOrEmpty(SearchText))
+            {
+                args.Accepted = true;
+                return;
+            }
+            Regex toMatch = new Regex(".*" + SearchText + ".*", RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline);
+            if (args.Item is Employee emp)
+            {
+                if (toMatch.IsMatch(emp.ToString()))
+                {
+                    args.Accepted = true;
+                    return;
+                }
+            }
+            args.Accepted = false;
+        }
         public RelayCommand RemoveEmployeeCommand
         {
             get; set;
@@ -283,10 +311,5 @@ namespace Lab_03_EAB.EmployeeViewModel
             ModifyEmployeeCommand = new RelayCommand(ModifyEmployee);
             AddEmployeeCommand = new RelayCommand(AddEmployee);
         }
-
-
-
-
-
     }//End Class BusinessRulesViewModel
 }//End Namespace

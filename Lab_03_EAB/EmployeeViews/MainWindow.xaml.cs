@@ -47,7 +47,6 @@ Created by: Eric Brown",
         public MainWindow()
         {
             InitializeComponent();
-            //DataContext = new EmployeeViewModel.BusinessRulesViewModel();
         }
 
         private void OnAddTestEmployeesCountRequest(object sender, RoutedEventArgs e)
@@ -58,6 +57,15 @@ Created by: Eric Brown",
         {
             Close();
         }
+
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            if(DataContext is BusinessRulesViewModel model)
+            {
+                model.SearchBarFilter(sender, e);
+            }
+        }
+
         public void MnuAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(HELP_MSG, ABOUT, MessageBoxButton.OK, MessageBoxImage.Information);

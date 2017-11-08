@@ -84,7 +84,7 @@ namespace Lab_03_EAB
             bool toReturn = false;
             try
             {
-                toReturn = Employee.IsValidTextEmployee(toTest) && IS_POS_NUM.IsMatch(toTest?.Suppliment1);
+                toReturn = Employee.IsValidTextEmployee(toTest) && IS_POS_NUM.IsMatch(toTest?.Suppliment1) && toTest.EmpType == ETYPE.CONTRACT;
             }
             catch (Exception)
             {

@@ -111,7 +111,7 @@ namespace Lab_03_EAB
             bool toReturn = false;
             try
             {
-                toReturn = Employee.IsValidTextEmployee(toTest) && IS_POS_NUM.IsMatch(toTest?.Suppliment1) && IS_POS_NUM.IsMatch(toTest?.Suppliment2);
+                toReturn = Employee.IsValidTextEmployee(toTest) && IS_POS_NUM.IsMatch(toTest?.Suppliment1) && IS_POS_NUM.IsMatch(toTest?.Suppliment2) && toTest.EmpType == ETYPE.HOURLY;
             }
             catch(Exception)
             {

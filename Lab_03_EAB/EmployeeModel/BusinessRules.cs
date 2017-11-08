@@ -309,8 +309,11 @@ namespace Lab_03_EAB
                         employeeCollection.Add(idToAdd, new Sales(employee));
                         break;
                 }
-                foreach (Course toAdd in courses)
-                    employeeCollection[idToAdd].CourseRoster.Add(toAdd.CourseID, toAdd);
+                if (courses != null)
+                {
+                    foreach (Course toAdd in courses)
+                        employeeCollection[idToAdd].CourseRoster.Add(toAdd.CourseID, toAdd);
+                }
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 return true;
             }
