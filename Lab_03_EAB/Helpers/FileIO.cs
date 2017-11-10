@@ -18,7 +18,7 @@ namespace Lab_03_EAB
     public class FileIO : IFileAccess, IDisposable
     {
         #region CONSTANTS
-        private const string FILTER_STR = "Database (.db)|*.db";
+        private const string FILTER_STR = "Database (.ldb)|*.ldb";
         private const string FILE_DIAG_TITLE = "Choose file location";
         private const string BAD_PATH_MESSAGE = "Provided path did not exist.";
         #endregion

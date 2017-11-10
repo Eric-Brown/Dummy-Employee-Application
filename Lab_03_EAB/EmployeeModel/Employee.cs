@@ -270,9 +270,8 @@ namespace Lab_03_EAB
             totalGrade = CourseRoster.Values.Aggregate(totalGrade, (a, b) => a + (int)b.Grade);
             int totalCredits = 0;
             totalCredits = CourseRoster.Values.Aggregate(totalCredits, (a, b) => a + b.Credits);
-            COURSE_GRADE gradeAverage = (COURSE_GRADE)System.Math.Round((totalGrade / (double)CourseRoster.Count()));
-            //The better grades will have a lower value
-            return (gradeAverage <= minGrade && totalCredits >= minCreds);
+            double gradeAverage = System.Math.Round((totalGrade / (double)CourseRoster.Count()));
+            return (gradeAverage >= (int)minGrade && totalCredits >= minCreds);
         }
         /// <summary>
         /// Gives a string representation of the class

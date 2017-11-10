@@ -15,29 +15,29 @@ namespace Lab_03_EAB.EmployeeModel
     public enum COURSE_GRADE
     {
         [EnumMember]
-        A,
+        A = 100,
         [EnumMember]
-        A_MINUS,
+        A_MINUS = 94,
         [EnumMember]
-        B_PLUS,
+        B_PLUS = 90,
         [EnumMember]
-        B,
+        B = 86,
         [EnumMember]
-        B_MINUS,
+        B_MINUS = 83,
         [EnumMember]
-        C_PLUS,
+        C_PLUS = 80,
         [EnumMember]
-        C,
+        C = 76,
         [EnumMember]
-        C_MINUS,
+        C_MINUS = 73,
         [EnumMember]
-        D_PLUS,
+        D_PLUS = 70,
         [EnumMember]
-        D,
+        D = 66,
         [EnumMember]
-        D_MINUS,
+        D_MINUS = 63,
         [EnumMember]
-        E
+        E = 60
     }
     [DataContract]
     public class Course : INotifyPropertyChanged, IDataErrorInfo

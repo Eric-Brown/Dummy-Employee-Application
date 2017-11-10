@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Lab_03_EAB"
         xmlns:viewmodels="clr-namespace:Lab_03_EAB.EmployeeViewModel"
         mc:Ignorable="d"
-        Title="Lab_03_EAB" Width="525" SizeToContent="WidthAndHeight" MinHeight="300" MaxHeight="700">
+        Title="Lab_03_EAB" Width="1095" SizeToContent="WidthAndHeight" MinHeight="300">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Width" Value="50"/>
@@ -36,13 +36,15 @@
                 <MenuItem Name="MnuAbout" Header="About" Click="MnuAbout_Click"/>
             </MenuItem>
         </Menu>
-        <StackPanel Orientation="Horizontal">
+        <DockPanel>
             <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Command="{Binding AddEmployeeCommand}"/>
             <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Command="{Binding CreateTestEmployeesCommand}" Focusable="False"/>
             <!--Button Name="BtnTestNum" Content="Test..." VerticalAlignment="Bottom" Click="OnAddTestEmployeesCountrequest"/-->
             <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Command="{Binding ModifyEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
             <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
-        </StackPanel>
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" MinWidth="150"/>
+            <Label Content="Search: " DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+        </DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
@@ -82,19 +84,71 @@
                                 <DataGridCheckBoxColumn Binding="{Binding EducationalBenefits, Mode=OneWay}" Header="Educational Benefits"/>
                             </DataGrid.Columns>
                         </DataGrid>
-
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
-            <TextBlock Name="TBxDescription" 
-                         ScrollViewer.CanContentScroll="True" 
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                         Grid.Column="1"
-                         Margin="5,5,5,5"
-                         MaxHeight="500" FontFamily="Consolas"
-                       TextWrapping="Wrap"
-                         Background="WhiteSmoke" Text="{Binding Source={StaticResource ResourceKey=ViewModelMain}, Path=SelectedEmployeeDescription, UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
-            </TextBlock>
+            <TabControl Grid.Column="1">
+                <TabItem Header="Basic Info">
+                    <TextBlock Name="TBxDescription" 
+                                    ScrollViewer.CanContentScroll="True" 
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                    Grid.Column="1"
+                                    Margin="1,1,1,1"
+                                    MaxHeight="500" FontFamily="Consolas"
+                                TextWrapping="Wrap"
+                                    Background="WhiteSmoke" Text="{Binding Source={StaticResource ResourceKey=ViewModelMain}, Path=SelectedEmployeeDescription, UpdateSourceTrigger=PropertyChanged,Mode=OneWay}">
+                    </TextBlock>
+                </TabItem>
+                <TabItem Header="Classes">
+                    <ListBox MinWidth="250" ItemsSource="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee.CourseRoster.Values, Mode=OneWay}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Expander>
+                                    <Expander.Header>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Course ID: {0}">
+                                                    <Binding Path="CourseID"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </Expander.Header>
+                                    <StackPanel>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Course Description: {0}">
+                                                    <Binding Path="CourseDescription"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Approved Date: {0}">
+                                                    <Binding Path="ApprovedDate"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Credits: {0}">
+                                                    <Binding Path="Credits"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="Grade: {0}">
+                                                    <Binding Path="Grade"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Expander>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
+            </TabControl>
         </Grid>
     </StackPanel>
 </Window>

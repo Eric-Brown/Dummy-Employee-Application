@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
+using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB.EmployeeViewModel
 {
@@ -60,15 +61,26 @@ namespace Lab_03_EAB.EmployeeViewModel
             "Cupcake","Myth","Kitchen","Limit","Mintz-Plasse","Rucker","Finch","Parakeet-Shoes",
             "D'Baggagecling", "Ron Rodgers"
         };
+        private static readonly string[] SUBJECTS =
+        {
+            "CS", "ECE", "ANTH", "GEOG", "ARTH", "BIOL", "CHEM", "HLTH", "ECON", "EDUC", "COMM", "COMP", "LNGS",
+            "HIST", "IT", "MATH","LATN", "ESL", "LANG", "MUAC", "PHIL", "PSYC", "STAT", "SOCI", "DRAM", "MUCC"
+        };
+        private static readonly string FAKE_DESCRIPTION = "Imagine a good description here.";
+        private const int COURSE_DIVISIONS = 4;
         /// <summary>
         /// Default number of random employees to create when creating test employees.
         /// </summary>
         private const int DEFAULT_NUM_TEST_EMPS = 10;
         private const string OPEN_FILE_MSG = "This file is already open.";
+        private const int DIVISION = 1000;
+        private const int SECTION = 100;
+        private const int MAX_CRED = 5;
         #endregion
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region Data Properties
+        private ICollectionView viewEmployees;
         private Employee selectedEmployee;
         public Employee SelectedEmployee
         {
@@ -88,6 +100,7 @@ namespace Lab_03_EAB.EmployeeViewModel
             {
                 searchText = value;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(SearchText)));
+                viewEmployees.Refresh();
             }
         }
         private void OnPropertyChanged(PropertyChangedEventArgs propertyChangedEventArgs)
@@ -97,8 +110,8 @@ namespace Lab_03_EAB.EmployeeViewModel
 
         public int Index {
             get;
-            set; 
-}
+            set;
+        }
         private BusinessRules employees;
         public BusinessRules Employees
         {
@@ -141,7 +154,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         }
         #endregion
         #region Command Properties
-        public void SearchBarFilter(object item, FilterEventArgs args)
+        private void SearchBarFilter(object item, FilterEventArgs args)
         {
             if (string.IsNullOrEmpty(SearchText))
             {
@@ -159,6 +172,24 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
             args.Accepted = false;
         }
+        private bool SearchBarFilterPredicate(object item)
+        {
+            Employee greg = item as Employee;
+            if (string.IsNullOrEmpty(SearchText))
+            {
+                return true;
+            }
+            Regex toMatch = new Regex(".*" + SearchText + ".*", RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline);
+            if (greg != null)
+            {
+                if (toMatch.IsMatch(greg.ToString()))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public RelayCommand RemoveEmployeeCommand
         {
             get; set;
@@ -292,16 +323,31 @@ namespace Lab_03_EAB.EmployeeViewModel
                         break;
                 }//End Switch
             }//End for loop
+            foreach(Employee emp in toAdd)
+            {
+                for(int i = 0; i < random.Next(0, COURSE_DIVISIONS + 1); i++)
+                {
+                    string courseID = $"{SUBJECTS[random.Next(0, SUBJECTS.Length - 1)]}{random.Next(0, COURSE_DIVISIONS) * DIVISION + random.Next(0, COURSE_DIVISIONS) * SECTION}";
+                    Array gradeValues = Enum.GetValues(typeof(COURSE_GRADE));
+                    Course aCourse = new Course(courseID, FAKE_DESCRIPTION, (COURSE_GRADE)gradeValues.GetValue(random.Next(0, gradeValues.Length - 1)), DateTime.Now, random.Next(1, MAX_CRED));
+                    try
+                    {
+                        emp.CourseRoster.Add(courseID, aCourse);
+                    }
+                    finally { }
+                }
+            }
             EmployeesCollections.Add(toAdd);
         }
 
         #endregion
-
         public BusinessRulesViewModel()
         {
             EmployeesCollections = new ObservableCollection<BusinessRules>();
             CreateTestEmployees(null);
             Employees = EmployeesCollections.First<BusinessRules>();
+            viewEmployees = CollectionViewSource.GetDefaultView(employees);
+            viewEmployees.Filter = SearchBarFilterPredicate;
             //Set up commands next
             CreateTestEmployeesCommand = new RelayCommand(CreateTestEmployees);
             SaveFileCommand = new RelayCommand(SaveFile);

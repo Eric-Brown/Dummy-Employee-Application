@@ -80,8 +80,6 @@ namespace Lab_03_EAB
         /// <returns>A string representing the current state of the class</returns>
         public override string ToString()
         {
-            if(EmpType == ETYPE.SALARY)
-                return base.ToString() + string.Format(SALARY_FORMAT_STRING, MonthlySalary) + "\n" + CourseListing();
             return base.ToString() + string.Format(SALARY_FORMAT_STRING, monthlySalary);
         }
         public override string this[string columnName]
