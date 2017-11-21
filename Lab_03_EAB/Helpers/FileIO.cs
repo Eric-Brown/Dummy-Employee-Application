@@ -14,8 +14,7 @@ namespace Lab_03_EAB
     /// <summary>
     /// Helper class that handles IO requests for .db files for employee dictionaries.
     /// </summary>
-    [Serializable]
-    public class FileIO : IFileAccess, IDisposable
+    sealed public class FileIO : IFileAccess, IDisposable
     {
         #region CONSTANTS
         private const string FILTER_STR = "Database (.ldb)|*.ldb";
