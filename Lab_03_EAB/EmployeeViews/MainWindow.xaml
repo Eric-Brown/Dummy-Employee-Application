@@ -9,48 +9,48 @@
         Title="Lab_03_EAB" Width="1095" SizeToContent="WidthAndHeight" MinHeight="300">
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Width" Value="50"/>
+            <Setter Property="Width" Value="50" />
         </Style>
-        <viewmodels:BusinessRulesViewModel x:Key="ViewModelMain"/>
+        <viewmodels:BusinessRulesViewModel x:Key="ViewModelMain" />
     </Window.Resources>
     <Window.DataContext>
-        <viewmodels:BusinessRulesViewModel/>
+        <viewmodels:BusinessRulesViewModel />
     </Window.DataContext>
     <StackPanel>
         <Menu Name="MnuMain">
             <MenuItem Name="MnuFile" Header="File">
-                <MenuItem Name="MnuNew" Header="New" Command="{Binding NewFileCommand}"/>
-                <MenuItem Name="MnuOpen" Header="Open" Command="{Binding OpenFileCommand}"/>
-                <MenuItem Name="MnuSave" Header="Save" Command="{Binding SaveFileCommand}"/>
+                <MenuItem Name="MnuNew" Header="New" Command="{Binding NewFileCommand}" />
+                <MenuItem Name="MnuOpen" Header="Open" Command="{Binding OpenFileCommand}" />
+                <MenuItem Name="MnuSave" Header="Save" Command="{Binding SaveFileCommand}" />
                 <!--MenuItem Name="MnuSaveAll" Header="Save All"/-->
-                <Separator/>
-                <MenuItem Name="MnuExit" Header="Exit" Click="MnuExit_Click"/>
+                <Separator />
+                <MenuItem Name="MnuExit" Header="Exit" Click="MnuExit_Click" />
             </MenuItem>
             <MenuItem Name="MnuEdit" Header="Edit">
-                <MenuItem Name="MnuAdd" Header="Add" Command="{Binding AddEmployeeCommand}"/>
+                <MenuItem Name="MnuAdd" Header="Add" Command="{Binding AddEmployeeCommand}" />
                 <MenuItem Name="MnuModify" Header="Modify" Command="{Binding ModifyEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}" />
-                <MenuItem Name="MnuDelete" Header="Delete" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
+                <MenuItem Name="MnuDelete" Header="Delete" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}" />
                 <!--MenuItem Name="MnuMove" Header="Move" Command="{Binding MoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/-->
             </MenuItem>
             <MenuItem Name="MnuHelp" Header="Help">
-                <MenuItem Name="MnuAbout" Header="About" Click="MnuAbout_Click"/>
+                <MenuItem Name="MnuAbout" Header="About" Click="MnuAbout_Click" />
             </MenuItem>
         </Menu>
         <DockPanel>
-            <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Command="{Binding AddEmployeeCommand}"/>
-            <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Command="{Binding CreateTestEmployeesCommand}" Focusable="False"/>
+            <Button x:Name="BtnAddEmp" Content="Add" VerticalAlignment="Bottom" Command="{Binding AddEmployeeCommand}" />
+            <Button x:Name="BtnTest" Content="Test" VerticalAlignment="Bottom" Command="{Binding CreateTestEmployeesCommand}" Focusable="False" />
             <!--Button Name="BtnTestNum" Content="Test..." VerticalAlignment="Bottom" Click="OnAddTestEmployeesCountrequest"/-->
-            <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Command="{Binding ModifyEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
-            <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}"/>
-            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" MinWidth="150"/>
-            <Label Content="Search: " DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            <Button x:Name="BtnMod" Content="Modify" VerticalAlignment="Bottom" Command="{Binding ModifyEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}" />
+            <Button x:Name="BtnDelete" Content="Delete" VerticalAlignment="Bottom" Command="{Binding RemoveEmployeeCommand}" CommandParameter="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}" />
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" MinWidth="150" />
+            <Label Content="Search: " DockPanel.Dock="Right" HorizontalAlignment="Right" />
         </DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <TabControl x:Name="TabCntrlDisplay" 
+            <TabControl x:Name="TabCntrlDisplay"
                         MinHeight="230"
                         Grid.Column="0"
                         Margin="3,0,0,2" Grid.ColumnSpan="1"
@@ -60,12 +60,12 @@
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <!--Apparently my context here is from fucking BusinessRules-->
-                        <Label Content="{Binding FileName}"/>
+                        <Label Content="{Binding FileName}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <DataGrid 
+                        <DataGrid
                             VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                             ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False"
@@ -74,14 +74,14 @@
                             ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabControl}}, Path=SelectedItem}"
                             SelectedItem="{Binding Source={StaticResource ViewModelMain}, Path=SelectedEmployee}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type"/>
-                                <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name"/>
-                                <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name"/>
-                                <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID"/>
-                                <DataGridCheckBoxColumn Binding="{Binding Overtime, Mode=OneWay}" Header="Gets Overtime"/>
-                                <DataGridCheckBoxColumn Binding="{Binding Benefits, Mode=OneWay}" Header="Benefits"/>
-                                <DataGridCheckBoxColumn Binding="{Binding HasCommission, Mode=OneWay}" Header="Commission"/>
-                                <DataGridCheckBoxColumn Binding="{Binding EducationalBenefits, Mode=OneWay}" Header="Educational Benefits"/>
+                                <DataGridTextColumn Binding="{Binding EmpType}" Header="Employee Type" />
+                                <DataGridTextColumn Binding="{Binding FirstName}" Header="First Name" />
+                                <DataGridTextColumn Binding="{Binding LastName}" Header="Last Name" />
+                                <DataGridTextColumn Binding="{Binding EmpID}" Header="Employee ID" />
+                                <DataGridCheckBoxColumn Binding="{Binding Overtime, Mode=OneWay}" Header="Gets Overtime" />
+                                <DataGridCheckBoxColumn Binding="{Binding Benefits, Mode=OneWay}" Header="Benefits" />
+                                <DataGridCheckBoxColumn Binding="{Binding HasCommission, Mode=OneWay}" Header="Commission" />
+                                <DataGridCheckBoxColumn Binding="{Binding EducationalBenefits, Mode=OneWay}" Header="Educational Benefits" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </DataTemplate>
@@ -89,9 +89,9 @@
             </TabControl>
             <TabControl Grid.Column="1">
                 <TabItem Header="Basic Info">
-                    <TextBlock Name="TBxDescription" 
-                                    ScrollViewer.CanContentScroll="True" 
-                                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    <TextBlock Name="TBxDescription"
+                                    ScrollViewer.CanContentScroll="True"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                                     Grid.Column="1"
                                     Margin="1,1,1,1"
                                     MaxHeight="500" FontFamily="Consolas"
@@ -108,7 +108,7 @@
                                         <TextBlock>
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="Course ID: {0}">
-                                                    <Binding Path="CourseID"/>
+                                                    <Binding Path="CourseID" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -117,28 +117,28 @@
                                         <TextBlock>
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="Course Description: {0}">
-                                                    <Binding Path="CourseDescription"/>
+                                                    <Binding Path="CourseDescription" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
                                         <TextBlock>
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="Approved Date: {0}">
-                                                    <Binding Path="ApprovedDate"/>
+                                                    <Binding Path="ApprovedDate" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
                                         <TextBlock>
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="Credits: {0}">
-                                                    <Binding Path="Credits"/>
+                                                    <Binding Path="Credits" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
                                         <TextBlock>
                                             <TextBlock.Text>
                                                 <MultiBinding StringFormat="Grade: {0}">
-                                                    <Binding Path="Grade"/>
+                                                    <Binding Path="Grade" />
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>

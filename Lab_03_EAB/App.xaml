@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:Lab_03_EAB"
              StartupUri="EmployeeViews/MainWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>

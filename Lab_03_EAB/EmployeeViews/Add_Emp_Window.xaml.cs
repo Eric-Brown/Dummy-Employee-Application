@@ -1,17 +1,6 @@
 ﻿using Lab_03_EAB.EmployeeModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Lab_03_EAB
 {
@@ -34,6 +23,7 @@ namespace Lab_03_EAB
         {
             Close();
         }
+
         /// <summary>
         /// Constructor that keeps a connection to businessrules
         /// </summary>
@@ -44,6 +34,5 @@ namespace Lab_03_EAB
             CmbBoxGrade.ItemsSource = Enum.GetValues(typeof(COURSE_GRADE));
             DataContext = new EmployeeViewModel.EmployeeViewModel(new BusinessRules());
         }
-
     }
 }

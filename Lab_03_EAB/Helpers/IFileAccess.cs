@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Lab_03_EAB
 {
     public interface IFileAccess
     {
         void WriteFileDB();
+
         void ReadFileDB();
+
         void OpenFileDB();
+
         void CloseFileDB();
+
         SortedDictionary<uint, Employee> EmployeeDB { get; set; }
     }
 }

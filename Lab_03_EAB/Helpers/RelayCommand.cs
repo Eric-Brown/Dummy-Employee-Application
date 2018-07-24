@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Lab_03_EAB.Helpers
 {
-    class RelayCommand : ICommand
+    internal class RelayCommand : ICommand
     {
-        readonly Action<object> _execute;
-        readonly Predicate<object> _canExecute;
+        private readonly Action<object> _execute;
+        private readonly Predicate<object> _canExecute;
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
@@ -18,9 +15,10 @@ namespace Lab_03_EAB.Helpers
         }
 
         public RelayCommand(Action<object> action)
-            :this(action, null)
+            : this(action, null)
         {
         }
+
         public RelayCommand(Action<object> action, Predicate<object> predicate)
         {
             if (action == null) throw new ArgumentNullException(nameof(action));

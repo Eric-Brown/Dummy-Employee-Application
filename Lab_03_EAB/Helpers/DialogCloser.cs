@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Lab_03_EAB.Helpers
 {
@@ -20,10 +15,10 @@ namespace Lab_03_EAB.Helpers
         DependencyObject d,
         DependencyPropertyChangedEventArgs e)
         {
-            var window = d as Window;
-            if (window != null)
+            if (d is Window window)
                 window.Close();
         }
+
         public static void SetDialogResult(Window target, bool? value)
         {
             target.SetValue(DialogResultProperty, value);

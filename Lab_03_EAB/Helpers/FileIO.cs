@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Lab_03_EAB
 {
@@ -17,22 +14,30 @@ namespace Lab_03_EAB
     sealed public class FileIO : IFileAccess, IDisposable
     {
         #region CONSTANTS
+
         private const string FILTER_STR = "Database (.ldb)|*.ldb";
         private const string FILE_DIAG_TITLE = "Choose file location";
         private const string BAD_PATH_MESSAGE = "Provided path did not exist.";
-        #endregion
+
+        #endregion CONSTANTS
+
         #region MemberFields and Properties
-        private static readonly DataContractSerializer serializer = new DataContractSerializer(typeof(SortedDictionary<uint,Employee>));
+
+        private static readonly DataContractSerializer serializer = new DataContractSerializer(typeof(SortedDictionary<uint, Employee>));
         private FileStream stream;
         private BusinessRules myBusinessRules;
         private SortedDictionary<uint, Employee> employeeDB = new SortedDictionary<uint, Employee>();
+
         public SortedDictionary<uint, Employee> EmployeeDB
         {
             get => employeeDB;
             set => employeeDB = value;
         }
-        #endregion
+
+        #endregion MemberFields and Properties
+
         #region Constructors
+
         /// <summary>
         /// Creates an instance of FileIO that has already copied the BusinessRules data
         /// Instances created this way do not need to have an object specified during its method calls.
@@ -42,18 +47,22 @@ namespace Lab_03_EAB
         {
             myBusinessRules = businessRules;
             businessRules?.CopyTo(employeeDB);
-            if(File.Exists(businessRules?.FilePath))
+            if (File.Exists(businessRules?.FilePath))
             {
                 stream = File.Open(businessRules.FilePath, FileMode.Open, FileAccess.ReadWrite);
             }
         }
-        #endregion
+
+        #endregion Constructors
+
         #region Saving and Writing
+
         public void OpenSaveFileDB()
         {
             SaveFileDialog saveFileDialog = GetSaveDialog();
             if (saveFileDialog == null) return;
         }
+
         /// <summary>
         /// Attempts to write to stream
         /// If the FileIO instance was instantiated with a BusinessRules object, that will be saved.
@@ -74,6 +83,7 @@ namespace Lab_03_EAB
             myBusinessRules.EmployeeCollection = employeeDB;
             myBusinessRules.FilePath = stream.Name;
         }
+
         /// <summary>
         /// Attempts to write the given object to stream.
         /// <preconditions>Stream was opened for modification.
@@ -83,15 +93,18 @@ namespace Lab_03_EAB
         public void WriteFileDB(string newPath)
         {
             if (string.IsNullOrEmpty(newPath)  /*!Directory.Exists(newPath)*/) throw new FileNotFoundException();
-            if(stream?.Name != newPath)
+            if (stream?.Name != newPath)
             {
                 stream?.Close();
                 stream = File.Open(newPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             }
             WriteFileDB();
         }
-        #endregion
+
+        #endregion Saving and Writing
+
         #region Reading and Opening
+
         /// <summary>
         /// Attempts to open a file
         /// </summary>
@@ -100,6 +113,7 @@ namespace Lab_03_EAB
             OpenFileDialog openFileDialog = GetOpenFileDialog();
             if (openFileDialog == null) return;
         }
+
         /// <summary>
         /// Attempts to open a file
         /// </summary>
@@ -123,12 +137,13 @@ namespace Lab_03_EAB
             {
                 throw new ArgumentException(BAD_PATH_MESSAGE);
             }
-            if(stream?.Name != newPath)
+            if (stream?.Name != newPath)
             {
                 stream?.Close();
                 stream = File.Open(newPath, FileMode.Open, FileAccess.ReadWrite);
             }
         }
+
         /// <summary>
         /// Reads a file that the stream is currently pointing at
         /// </summary>
@@ -140,13 +155,14 @@ namespace Lab_03_EAB
                 return;
             }
             using (GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress, true))
-                using(var binReader = XmlDictionaryReader.CreateBinaryReader(gzip, new XmlDictionaryReaderQuotas()))
+            using (var binReader = XmlDictionaryReader.CreateBinaryReader(gzip, new XmlDictionaryReaderQuotas()))
             {
                 employeeDB = (SortedDictionary<uint, Employee>)serializer.ReadObject(binReader);
             }
             myBusinessRules.EmployeeCollection = employeeDB;
             myBusinessRules.FilePath = stream.Name;
         }
+
         /// <summary>
         /// Attempts to point the stream to the path provided and reads a file from it.
         /// </summary>
@@ -158,15 +174,18 @@ namespace Lab_03_EAB
             {
                 throw new FileNotFoundException();
             }
-            if(stream?.Name != newPath)
+            if (stream?.Name != newPath)
             {
                 stream?.Close();
                 stream = File.Open(newPath, FileMode.Open, FileAccess.ReadWrite);
             }
             ReadFileDB();
         }
-        #endregion
+
+        #endregion Reading and Opening
+
         #region Methods
+
         /// <summary>
         /// Closes a file handle if there is one.
         /// </summary>
@@ -179,6 +198,7 @@ namespace Lab_03_EAB
         {
             ((IDisposable)stream)?.Dispose();
         }
+
         private SaveFileDialog GetSaveDialog()
         {
             SaveFileDialog dialog = new SaveFileDialog()
@@ -195,6 +215,7 @@ namespace Lab_03_EAB
             }
             else return null;
         }
+
         private OpenFileDialog GetOpenFileDialog()
         {
             OpenFileDialog toReturn = new OpenFileDialog()
@@ -212,6 +233,7 @@ namespace Lab_03_EAB
             }
             return null;
         }
-        #endregion
+
+        #endregion Methods
     }//End FileIO
 }//End Namespace

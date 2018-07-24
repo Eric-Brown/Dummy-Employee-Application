@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Lab_03_EAB.EmployeeModel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.Specialized;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.IO;
-using System.Runtime.Serialization;
 using System.ComponentModel;
-using Lab_03_EAB.EmployeeModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Lab_03_EAB
 {
@@ -20,18 +17,16 @@ namespace Lab_03_EAB
     [Serializable]
     public sealed class BusinessRules : ICollection<Employee>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        #region Constants
-        #endregion
-        #region MemberData
+
         [DataMember]
         private SortedDictionary<uint, Employee> employeeCollection = new SortedDictionary<uint, Employee>();
+
         [DataMember]
         private string myFileName = "New...";
+
         [DataMember]
         private string myPath;
 
-        #endregion
-        #region Properties
         /// <summary>
         /// Indexer that gets or sets an employee object.
         /// Order is not preserved for objects as they are added. Employees are automatically sorted by ID as they are added.
@@ -56,7 +51,7 @@ namespace Lab_03_EAB
                 {
                     return;
                 }
-                if(value == null)
+                if (value == null)
                 {
                     employeeCollection.Remove(employeeCollection.ElementAt(i).Key);
                 }
@@ -76,8 +71,6 @@ namespace Lab_03_EAB
             }
         }
 
-
-
         /// <summary>
         /// Indexer that gets or sets an Employee based on lookup though ID
         /// <preconditions>When attempting an assignment, the value's key (if it is not null)
@@ -96,10 +89,10 @@ namespace Lab_03_EAB
             }
             set
             {
-                if (!employeeCollection.ContainsKey(empID) || (value != null && empID != value.EmpID) || Object.Equals(value,employeeCollection[empID]))
+                if (!employeeCollection.ContainsKey(empID) || (value != null && empID != value.EmpID) || Object.Equals(value, employeeCollection[empID]))
                     return;
                 employeeCollection.Remove(empID);
-                if(value != null)
+                if (value != null)
                 {
                     employeeCollection.Add(empID, value);
                     value.EmpIDChanged += EmpIDChangeHandler;
@@ -107,8 +100,9 @@ namespace Lab_03_EAB
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
+
         /// <summary>
-        /// Property for the sorted dictionary. 
+        /// Property for the sorted dictionary.
         /// When assigning a new dictionary, the setter will ensure that the business class is registered with all employees.
         /// <todo>Make this private.</todo>
         /// </summary>
@@ -126,7 +120,9 @@ namespace Lab_03_EAB
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
+
         public string FileName => myFileName;
+
         public string FilePath
         {
             get => myPath;
@@ -138,15 +134,16 @@ namespace Lab_03_EAB
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(FileName)));
             }
         }
-        #endregion
-        #region EventsAndHandlers
+
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
+
         /// <summary>
         /// Implementation of INotifyCollectionChanged.
         /// Invokes the handler. This function is called whenever the data has changed.
@@ -157,6 +154,7 @@ namespace Lab_03_EAB
             CollectionChanged?.Invoke(this, e);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EmployeeCollection)));
         }
+
         /// <summary>
         /// Event Handler for when an employees id has changed
         /// </summary>
@@ -169,30 +167,31 @@ namespace Lab_03_EAB
             employeeCollection.Remove(args.oldValue);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
-        #endregion
-        #region Constructors
+
         public BusinessRules()
         {
         }
+
         public BusinessRules(SortedDictionary<uint, Employee> dictionary, string path = null)
         {
             EmployeeCollection = dictionary;
-            if(!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path))
             {
                 myPath = path;
                 myFileName = Path.GetFileName(path);
             }
         }
-        #endregion
-        #region ICollection Implementation
+
         /// <summary>
         /// Returns the number of currently contained employees.
         /// </summary>
         int ICollection<Employee>.Count => employeeCollection.Count;
+
         /// <summary>
         /// Expresses whether or not the collection is non-modifiable.
         /// </summary>
         public bool IsReadOnly => false;
+
         /// <summary>
         /// Exposes the datastructures clear method. Might remove later for enforcing encapsulation.
         /// </summary>
@@ -201,6 +200,7 @@ namespace Lab_03_EAB
             employeeCollection.Clear();
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
+
         /// <summary>
         /// Returns an enumerator for employee objects that are contained in the collection.
         /// </summary>
@@ -212,6 +212,7 @@ namespace Lab_03_EAB
                 yield return pair.Value;
             }
         }
+
         /// <summary>
         /// Returns an enumerator that iterates through employee objects.
         /// </summary>
@@ -223,6 +224,7 @@ namespace Lab_03_EAB
                 yield return pair.Value;
             }
         }
+
         /// <summary>
         /// Adds an employee to the collection.
         /// If an employee already has the same ID, the old value will be removed.
@@ -240,6 +242,7 @@ namespace Lab_03_EAB
             item.EmpIDChanged += EmpIDChangeHandler;
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
+
         /// <summary>
         /// Determines whether a given item is contained in the collection
         /// </summary>
@@ -249,10 +252,12 @@ namespace Lab_03_EAB
         {
             return employeeCollection.ContainsValue(item);
         }
+
         public bool ContainsKey(uint key)
         {
             return EmployeeCollection.ContainsKey(key);
         }
+
         /// <summary>
         /// Copies contained employees to an array starting at the specified index.
         /// </summary>
@@ -262,6 +267,7 @@ namespace Lab_03_EAB
         {
             employeeCollection.Values.CopyTo(array, arrayIndex);
         }
+
         /// <summary>
         /// Removes the specified value if it is contained in the collection.
         /// </summary>
@@ -278,8 +284,7 @@ namespace Lab_03_EAB
             else
                 return false;
         }
-        #endregion
-        #region Methods
+
         /// <summary>
         /// Attempts to add an employee of the specified type through a string array.
         /// </summary>
@@ -299,12 +304,15 @@ namespace Lab_03_EAB
                     case ETYPE.CONTRACT:
                         employeeCollection.Add(idToAdd, new Contract(employee));
                         break;
+
                     case ETYPE.HOURLY:
                         employeeCollection.Add(idToAdd, new Hourly(employee));
                         break;
+
                     case ETYPE.SALARY:
                         employeeCollection.Add(idToAdd, new Salary(employee));
                         break;
+
                     case ETYPE.SALES:
                         employeeCollection.Add(idToAdd, new Sales(employee));
                         break;
@@ -325,6 +333,7 @@ namespace Lab_03_EAB
                     throw;
             }
         }
+
         /// <summary>
         /// Determines whether or not a call to AddFromStringArray will succeed.
         /// </summary>
@@ -335,49 +344,56 @@ namespace Lab_03_EAB
         {
             if (employee == null) return false;
             bool result = false;
-            switch(employee.EmpType)
+            switch (employee.EmpType)
             {
                 case ETYPE.CONTRACT:
                     result = Contract.IsValidTextEmployee(employee);
                     break;
+
                 case ETYPE.HOURLY:
                     result = Hourly.IsValidTextEmployee(employee);
                     break;
+
                 case ETYPE.SALARY:
                     result = Salary.IsValidTextEmployee(employee);
                     break;
+
                 case ETYPE.SALES:
                     result = Sales.IsValidTextEmployee(employee);
                     break;
+
                 default:
                     break;
             }
             return result;
         }
+
         public void CopyTo(SortedDictionary<uint, Employee> destination)
         {
             foreach (var pair in employeeCollection)
                 destination.Add(pair.Key, pair.Value);
         }
+
         [OnDeserialized]
         private void ReRegister(StreamingContext context)
         {
-            foreach(var pair in employeeCollection)
+            foreach (var pair in employeeCollection)
             {
                 employeeCollection[pair.Key].EmpIDChanged += EmpIDChangeHandler;
             }
         }
+
         public bool Equals(BusinessRules obj)
         {
             bool toReturn = true;
             toReturn = toReturn && myFileName == obj.myFileName;
             toReturn = toReturn && myPath == obj.myPath;
-            foreach(var pair in employeeCollection)
+            foreach (var pair in employeeCollection)
             {
                 toReturn = toReturn && (obj.employeeCollection[pair.Key] != null);
             }
             return toReturn;
         }
-        #endregion
+
     }//End Class BusinessRules Definition
 }// End Lab_03_EAB Namespace scope

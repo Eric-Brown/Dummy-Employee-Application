@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Lab_03_EAB.EmployeeModel;
 using Lab_03_EAB.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Data;
-using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB.EmployeeViewModel
 {
-    class BusinessRulesViewModel : INotifyPropertyChanged
+    internal class BusinessRulesViewModel : INotifyPropertyChanged
     {
         #region Constants
+
         private const string
             ERROR_CAPTION = "Error",
             NEW_EMP_LINE = "-------New Employee-------\n",
             INVALID_EMP_TYPE_ERROR = "Invalid Employee Type",
             ALL_EMP_LINE = "\n------All Employees-----";
+
         /// <summary>
         /// Used to create random first names for employees.
         /// </summary>
@@ -40,6 +39,7 @@ namespace Lab_03_EAB.EmployeeViewModel
             "Faux", "Fozzy", "Myriad", "Busters", "Turdine", "Rerutweeds", "Ishmaa'ily", "Takittothu'",
             "Snarf", "Frostee", "Splendiferous", "Triple", "Logjammer"
         };
+
         /// <summary>
         /// Used to create random last names for employees.
         /// </summary>
@@ -61,27 +61,35 @@ namespace Lab_03_EAB.EmployeeViewModel
             "Cupcake","Myth","Kitchen","Limit","Mintz-Plasse","Rucker","Finch","Parakeet-Shoes",
             "D'Baggagecling", "Ron Rodgers"
         };
+
         private static readonly string[] SUBJECTS =
         {
             "CS", "ECE", "ANTH", "GEOG", "ARTH", "BIOL", "CHEM", "HLTH", "ECON", "EDUC", "COMM", "COMP", "LNGS",
             "HIST", "IT", "MATH","LATN", "ESL", "LANG", "MUAC", "PHIL", "PSYC", "STAT", "SOCI", "DRAM", "MUCC"
         };
+
         private static readonly string FAKE_DESCRIPTION = "Imagine a good description here.";
         private const int COURSE_DIVISIONS = 4;
+
         /// <summary>
         /// Default number of random employees to create when creating test employees.
         /// </summary>
         private const int DEFAULT_NUM_TEST_EMPS = 10;
+
         private const string OPEN_FILE_MSG = "This file is already open.";
         private const int DIVISION = 1000;
         private const int SECTION = 100;
         private const int MAX_CRED = 5;
-        #endregion
+
+        #endregion Constants
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region Data Properties
+
         private ICollectionView viewEmployees;
         private Employee selectedEmployee;
+
         public Employee SelectedEmployee
         {
             get => selectedEmployee;
@@ -92,7 +100,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 SelectedEmployeeDescription = selectedEmployee.ToString();
             }
         }
+
         private string searchText;
+
         public string SearchText
         {
             get => searchText;
@@ -103,16 +113,20 @@ namespace Lab_03_EAB.EmployeeViewModel
                 viewEmployees.Refresh();
             }
         }
+
         private void OnPropertyChanged(PropertyChangedEventArgs propertyChangedEventArgs)
         {
             PropertyChanged?.Invoke(this, propertyChangedEventArgs);
         }
 
-        public int Index {
+        public int Index
+        {
             get;
             set;
         }
+
         private BusinessRules employees;
+
         public BusinessRules Employees
         {
             get => employees;
@@ -122,7 +136,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(Employees)));
             }
         }
+
         private bool? closeWindowFlag;
+
         public bool? CloseWindowFlag
         {
             get => closeWindowFlag;
@@ -132,7 +148,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(CloseWindowFlag)));
             }
         }
+
         private ObservableCollection<BusinessRules> employeesCollections;
+
         public ObservableCollection<BusinessRules> EmployeesCollections
         {
             get => employeesCollections;
@@ -142,7 +160,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(EmployeesCollections)));
             }
         }
+
         private string selectedEmployeeDescr;
+
         public string SelectedEmployeeDescription
         {
             get => selectedEmployeeDescr;
@@ -152,8 +172,11 @@ namespace Lab_03_EAB.EmployeeViewModel
                 PropertyChanged?.Invoke(this, (new PropertyChangedEventArgs(nameof(SelectedEmployeeDescription))));
             }
         }
-        #endregion
+
+        #endregion Data Properties
+
         #region Command Properties
+
         private void SearchBarFilter(object item, FilterEventArgs args)
         {
             if (string.IsNullOrEmpty(SearchText))
@@ -172,6 +195,7 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
             args.Accepted = false;
         }
+
         private bool SearchBarFilterPredicate(object item)
         {
             Employee greg = item as Employee;
@@ -194,6 +218,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+
         private void RemoveEmployee(object employee)
         {
             employees.Remove(employee as Employee);
@@ -203,10 +228,12 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+
         public RelayCommand AddEmployeeCommand
         {
-            get;set;
+            get; set;
         }
+
         private void AddEmployee(object parameter)
         {
             Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
@@ -216,8 +243,9 @@ namespace Lab_03_EAB.EmployeeViewModel
 
         public RelayCommand ModifyEmployeeCommand
         {
-            get;set;
+            get; set;
         }
+
         private void ModifyEmployee(object employee)
         {
             Add_Emp_Window add_Emp_Window = new Add_Emp_Window();
@@ -230,6 +258,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+
         private void SaveFile(object parameter)
         {
             try
@@ -250,6 +279,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+
         private void OpenFile(object parameter)
         {
             BusinessRules toAdd;
@@ -274,6 +304,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+
         private void NewFile(object parameter)
         {
             EmployeesCollections.Add(new BusinessRules());
@@ -283,6 +314,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         {
             get; set;
         }
+
         private void CreateTestEmployees(object parameter)
         {
             Random random = new Random();
@@ -300,6 +332,7 @@ namespace Lab_03_EAB.EmployeeViewModel
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
+
                     case ETYPE.HOURLY:
                         toAdd.Add(new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
@@ -307,12 +340,14 @@ namespace Lab_03_EAB.EmployeeViewModel
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
+
                     case ETYPE.SALARY:
                         toAdd.Add(new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
+
                     case ETYPE.SALES:
                         toAdd.Add(new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
@@ -323,9 +358,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                         break;
                 }//End Switch
             }//End for loop
-            foreach(Employee emp in toAdd)
+            foreach (Employee emp in toAdd)
             {
-                for(int i = 0; i < random.Next(0, COURSE_DIVISIONS + 1); i++)
+                for (int i = 0; i < random.Next(0, COURSE_DIVISIONS + 1); i++)
                 {
                     string courseID = $"{SUBJECTS[random.Next(0, SUBJECTS.Length - 1)]}{random.Next(0, COURSE_DIVISIONS) * DIVISION + random.Next(0, COURSE_DIVISIONS) * SECTION}";
                     Array gradeValues = Enum.GetValues(typeof(COURSE_GRADE));
@@ -340,7 +375,8 @@ namespace Lab_03_EAB.EmployeeViewModel
             EmployeesCollections.Add(toAdd);
         }
 
-        #endregion
+        #endregion Command Properties
+
         public BusinessRulesViewModel()
         {
             EmployeesCollections = new ObservableCollection<BusinessRules>();

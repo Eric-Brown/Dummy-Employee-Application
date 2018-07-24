@@ -7,27 +7,13 @@
 // Changed BusinessRules class to work with a sorted dictionary and added some commonsense restrictions
 // for the properties of the employee objects.
 // Change: Added MVVM support. Added new data to employee. Added more controls to the window.
-// I declare that the following code was written by me or provided 
+// I declare that the following code was written by me or provided
 // by the instructor for this project. I understand that copying source
 // code from any other source constitutes plagiarism, and that I will receive
 // a zero on this project if I am found in violation of this policy.
 // ---------------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Text.RegularExpressions;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Lab_03_EAB.EmployeeViewModel;
 
 namespace Lab_03_EAB
 {
@@ -51,8 +37,8 @@ Created by: Eric Brown",
 
         private void OnAddTestEmployeesCountRequest(object sender, RoutedEventArgs e)
         {
-
         }
+
         public void MnuExit_Click(object sender, EventArgs eventArgs)
         {
             Close();

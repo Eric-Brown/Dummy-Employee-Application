@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Lab_03_EAB.EmployeeModel;
+using System;
 using System.Runtime.Serialization;
-using Lab_03_EAB.Helpers;
-using System.ComponentModel;
-using Lab_03_EAB.EmployeeModel;
 
 namespace Lab_03_EAB
 {
@@ -13,6 +11,7 @@ namespace Lab_03_EAB
         [DataMember]
         private const string CONTRACT_FORMAT_STRING = "Contract Wage: {0}\n",
             BAD_WAGE_CONSTR = "Only non-negative values of wage may be used to construct a Contract employee.";
+
         private const string BAD_WAG_ERROR_MSG = "Please ensure that the Contract Wage is not empty and that it is a positive number.";
 
         /// <summary>
@@ -20,14 +19,16 @@ namespace Lab_03_EAB
         /// </summary>
         [DataMember]
         private decimal contractWage;
+
         public Decimal ContractWage
         {
             get => contractWage;
             set
             {
-                    contractWage = value;
+                contractWage = value;
             }
         }
+
         /// <summary>
         /// Constructor. Hands parameters to "Employee"'s constructor.
         /// </summary>
@@ -36,23 +37,25 @@ namespace Lab_03_EAB
         /// <param name="last">The Employees last name</param>
         /// <param name="wage">The Employees contracted wage</param>
         public Contract(uint id, string first, string last, Decimal wage)
-            :base(id, ETYPE.CONTRACT , first,last)
+            : base(id, ETYPE.CONTRACT, first, last)
         {
             if (wage < 0) throw new ArgumentException(BAD_WAGE_CONSTR);
             ContractWage = wage;
         }
+
         public Contract(TextEmployee employee)
-            :base(employee, ETYPE.CONTRACT)
+            : base(employee, ETYPE.CONTRACT)
         {
             try
             {
                 ContractWage = decimal.Parse(employee.Suppliment1);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ArgumentException(ex.Message, innerException: ex);
             }
         }
+
         /// <summary>
         /// Gives a string representation of the class
         /// </summary>
@@ -67,18 +70,20 @@ namespace Lab_03_EAB
             get
             {
                 string result = null;
-                switch(columnname)
+                switch (columnname)
                 {
                     case nameof(ContractWage):
                         if (contractWage < 0)
                             result = BAD_WAG_ERROR_MSG;
                         break;
+
                     default:
                         return base[columnname];
                 }
                 return result;
             }
         }
+
         public static new bool IsValidTextEmployee(TextEmployee toTest)
         {
             bool toReturn = false;

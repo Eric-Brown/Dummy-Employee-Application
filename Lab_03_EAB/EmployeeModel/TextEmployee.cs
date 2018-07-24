@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Lab_03_EAB.EmployeeModel
 {
@@ -69,17 +65,20 @@ namespace Lab_03_EAB.EmployeeModel
                         Sup2Visibility = false;
                         Sup3Visibility = false;
                         break;
+
                     case ETYPE.HOURLY:
                         Sup1Lable = HOUR_RATE_LABEL;
                         Sup2Lable = HOURS_WORKED_LABEL;
                         Sup2Visibility = true;
                         Sup3Visibility = false;
                         break;
+
                     case ETYPE.SALARY:
                         Sup1Lable = SALARY_LABEL;
                         Sup2Visibility = false;
                         Sup3Visibility = false;
                         break;
+
                     case ETYPE.SALES:
                         Sup1Lable = SALARY_LABEL;
                         Sup2Lable = COMMISSION_LABEL;
@@ -87,6 +86,7 @@ namespace Lab_03_EAB.EmployeeModel
                         Sup2Visibility = true;
                         Sup3Visibility = true;
                         break;
+
                     default:
                         break;
                 }
@@ -173,9 +173,8 @@ namespace Lab_03_EAB.EmployeeModel
             }
         }
         public TextEmployee()
-            :this(null)
+            : this(null)
         {
-
         }
         public TextEmployee(Employee emp)
         {
@@ -183,27 +182,31 @@ namespace Lab_03_EAB.EmployeeModel
             EmpID = emp?.EmpID;
             FirstName = emp?.FirstName;
             LastName = emp?.LastName;
-            switch(EmpType)
+            switch (EmpType)
             {
                 case ETYPE.CONTRACT:
                     Contract conEmp = emp as Contract;
                     Suppliment1 = conEmp?.ContractWage.ToString();
                     break;
+
                 case ETYPE.HOURLY:
                     Hourly hourEmp = emp as Hourly;
                     Suppliment1 = hourEmp?.HourlyRate.ToString();
                     Suppliment2 = hourEmp?.HoursWorked.ToString();
                     break;
+
                 case ETYPE.SALARY:
                     Salary salEmp = emp as Salary;
                     Suppliment1 = salEmp?.MonthlySalary.ToString();
                     break;
+
                 case ETYPE.SALES:
                     Sales sEmp = emp as Sales;
                     Suppliment1 = sEmp?.MonthlySalary.ToString();
                     Suppliment2 = sEmp?.Commission.ToString();
                     Suppliment3 = sEmp?.GrossSales.ToString();
                     break;
+
                 default:
                     break;
             }
@@ -217,26 +220,30 @@ namespace Lab_03_EAB.EmployeeModel
             get
             {
                 string result = null;
-                switch(columnName)
+                switch (columnName)
                 {
                     case nameof(EmpID):
                         if (EmpID == null)
                             result = "An ID is required to create an employee.";
                         break;
+
                     case nameof(EmpType):
                         break;
+
                     case nameof(FirstName):
                         if (string.IsNullOrEmpty(FirstName))
                             result = "A name is required to create an employee.";
                         else if (!IS_ALPHA.IsMatch(FirstName))
                             result = "Names cannot contain numbers.";
                         break;
+
                     case nameof(LastName):
                         if (string.IsNullOrEmpty(LastName))
                             result = "A last name is required to create an employee.";
                         else if (!IS_ALPHA.IsMatch(LastName))
                             result = "Names cannot contain numbers.";
                         break;
+
                     case nameof(Suppliment1):
                         if (string.IsNullOrEmpty(Suppliment1))
                             result = "A value must be entered here.";
@@ -245,11 +252,13 @@ namespace Lab_03_EAB.EmployeeModel
                         else if (!IS_POS_NUM.IsMatch(Suppliment1))
                             result = "Number must be non-negative.";
                         break;
+
                     case nameof(Suppliment2):
                         switch (EmpType)
                         {
                             case ETYPE.CONTRACT:
                                 break;
+
                             case ETYPE.HOURLY:
                                 if (string.IsNullOrEmpty(Suppliment2))
                                     result = "A value must be entered here.";
@@ -258,8 +267,10 @@ namespace Lab_03_EAB.EmployeeModel
                                 else if (!IS_POS_NUM.IsMatch(Suppliment2))
                                     result = "Number must be non-negative.";
                                 break;
+
                             case ETYPE.SALARY:
                                 break;
+
                             case ETYPE.SALES:
                                 if (string.IsNullOrEmpty(Suppliment2))
                                     result = "A value must be entered here.";
@@ -270,15 +281,19 @@ namespace Lab_03_EAB.EmployeeModel
                                 break;
                         }
                         break;
+
                     case nameof(Suppliment3):
                         switch (EmpType)
                         {
                             case ETYPE.CONTRACT:
                                 break;
+
                             case ETYPE.HOURLY:
                                 break;
+
                             case ETYPE.SALARY:
                                 break;
+
                             case ETYPE.SALES:
                                 if (string.IsNullOrEmpty(Suppliment3))
                                     result = "A value must be entered here.";
@@ -289,6 +304,7 @@ namespace Lab_03_EAB.EmployeeModel
                                 break;
                         }
                         break;
+
                     default:
                         break;
                 }

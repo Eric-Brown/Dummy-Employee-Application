@@ -1,31 +1,35 @@
 ﻿using Lab_03_EAB.EmployeeModel;
 using Lab_03_EAB.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Lab_03_EAB.EmployeeViewModel
 {
-    class EmployeeViewModel : INotifyPropertyChanged
+    internal class EmployeeViewModel : INotifyPropertyChanged
     {
         private const string COURSE_BAD_MSG = "Cannot add the course as specified.\nPlease ensure that the data entered is correct and that you have not already added a course of the same ID.";
         private const string COURSE_BAD_CAPTION = "Cannot Add Course";
         private const string EMPLOYEE_BAD_MSG = "Employee could not be added as specified.\nPlease ensure that all data entered is correct and that an employee of the same ID does not already exist.";
         private const string EMPLOYEE_BAD_CAPTION = "Could not add employee.";
+
         #region Event and Handler
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void OnPropertyChanged(string name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-        #endregion
+
+        #endregion Event and Handler
+
         #region Observable Properties
+
         private ObservableCollection<Course> courses;
+
         public ObservableCollection<Course> Courses
         {
             get => courses;
@@ -35,7 +39,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(Courses));
             }
         }
+
         private Course courseToAdd;
+
         public Course CourseToAdd
         {
             get => courseToAdd;
@@ -47,6 +53,7 @@ namespace Lab_03_EAB.EmployeeViewModel
         }
 
         private TextEmployee currentEmployee;
+
         public TextEmployee CurrentEmployee
         {
             get => currentEmployee;
@@ -56,7 +63,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(CurrentEmployee));
             }
         }
+
         private bool isNew;
+
         public bool IsNew
         {
             get => isNew;
@@ -66,7 +75,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(IsNew));
             }
         }
+
         private bool canAdd;
+
         public bool CanAdd
         {
             get => canAdd;
@@ -76,7 +87,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(CanAdd));
             }
         }
+
         private bool canAddCourse;
+
         public bool CanAddCourse
         {
             get => canAddCourse;
@@ -86,7 +99,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(CanAddCourse));
             }
         }
+
         private string buttonLable;
+
         public string AddButtonContent
         {
             get => buttonLable;
@@ -96,7 +111,9 @@ namespace Lab_03_EAB.EmployeeViewModel
                 OnPropertyChanged(nameof(AddButtonContent));
             }
         }
+
         private bool? closeWindowFlag;
+
         public bool? CloseWindowFlag
         {
             get => closeWindowFlag;
@@ -107,12 +124,15 @@ namespace Lab_03_EAB.EmployeeViewModel
             }
         }
 
-        #endregion
+        #endregion Observable Properties
+
         #region Commands
+
         public RelayCommand AddCourseCommand
         {
             get; set;
         }
+
         private void AddCourse(object parameter)
         {
             bool isGood;
@@ -128,6 +148,7 @@ namespace Lab_03_EAB.EmployeeViewModel
             Courses.Add(courseToAdd);
             CourseToAdd = new Course();
         }
+
         public RelayCommand AddModifyEmployeeCommand
         {
             get; set;
@@ -150,19 +171,22 @@ namespace Lab_03_EAB.EmployeeViewModel
             if (CurrentEmployee.Error != null) CanAdd = false;
             else CanAdd = true;
         }
+
         private void OnCourseChange(object sender, PropertyChangedEventArgs args)
         {
             if (CourseToAdd.Error != null) CanAddCourse = false;
             else CanAddCourse = true;
         }
 
-        #endregion
+        #endregion Commands
+
         private BusinessRules resultDestination;
+
         public EmployeeViewModel(BusinessRules rules)
             : this(null, rules)
         {
-
         }
+
         public EmployeeViewModel(Employee employee, BusinessRules rules)
         {
             AddButtonContent = employee == null ? "Add" : "Modify";

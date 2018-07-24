@@ -7,29 +7,22 @@
 // Purpose: To display a window allowing the client to add employees or create random employees
 // Changed BusinessRules class to work with a sorted dictionary and added some commonsense restrictions
 // for the properties of the employee objects.
-// I declare that the following code was written by me or provided 
+// I declare that the following code was written by me or provided
 // by the instructor for this project. I understand that copying source
 // code from any other source constitutes plagiarism, and that I will receive
 // a zero on this project if I am found in violation of this policy.
 // ---------------------------------------------------------------------------
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System.IO;
-using System.Windows;
 using Lab_03_EAB;
-using System.Xml;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using Lab_03_EAB.EmployeeModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace EmployeeLabUnitTests
 {
-
     /// <summary>
     /// This class contains tests which tests the functionality of Employee and it's subtypes.
     /// </summary>
@@ -38,12 +31,15 @@ namespace EmployeeLabUnitTests
     {
         private const string FIRST = "Samway", LAST = "Jackall";
         private const double setHours = 10.0;
+
         private const decimal setHourRate = 5.0M,
             setContractWage = 10.0M,
             setMonthlySalary = 20.0M,
             setCommission = 11.0M,
             setGrossSales = 12.0M;
+
         private const string EXPECTED_NAME = "Greg";
+
         [TestMethod]
         public void TestEmployeeProperties()
         {
@@ -54,6 +50,7 @@ namespace EmployeeLabUnitTests
             testSalaryEmp.LastName = expected;
             Assert.AreEqual(expected, testSalaryEmp.LastName);
         }
+
         [TestMethod]
         public void TestHourlyProperties()
         {
@@ -65,6 +62,7 @@ namespace EmployeeLabUnitTests
             testHourlyEmp.HoursWorked = expectedHours;
             Assert.AreEqual(expectedHours, testHourlyEmp.HoursWorked);
         }
+
         [TestMethod]
         public void TestContractProperties()
         {
@@ -73,6 +71,7 @@ namespace EmployeeLabUnitTests
             testContractEmp.ContractWage = expected;
             Assert.AreEqual(expected, testContractEmp.ContractWage);
         }
+
         [TestMethod]
         public void TestIsValidTextEmp()
         {
@@ -114,6 +113,7 @@ namespace EmployeeLabUnitTests
             testSalesEmp.GrossSales = expectedSales;
             Assert.AreEqual(expectedSales, testSalesEmp.GrossSales);
         }
+
         [TestMethod]
         public void TestSalaryProperties()
         {
@@ -125,6 +125,7 @@ namespace EmployeeLabUnitTests
             testSalaryEmp.MonthlySalary = unexpected;
             Assert.AreNotEqual(unexpected, testSalaryEmp.MonthlySalary);
         }
+
         [TestMethod]
         public void TestSerializing()
         {
@@ -144,6 +145,7 @@ namespace EmployeeLabUnitTests
             Sales c = new Sales(ID++, First, Last, DummyDecimal, DummyDecimal, DummyDecimal);
             ds.WriteObject(s, c);
         }
+
         [TestMethod]
         public void TestDeserializing()
         {
@@ -196,10 +198,9 @@ namespace EmployeeLabUnitTests
     && readc.LastName == c.LastName
     && readc.GrossSales == c.GrossSales
     && readc.Commission == c.Commission);
-
         }
-
     }
+
     /// <summary>
     /// Class which contains tests for the functionality of the BusinessRules class
     /// </summary>
@@ -211,6 +212,7 @@ namespace EmployeeLabUnitTests
         private const int DEFAULT_EMPS_TO_CREATE = 10;
         private const string INVALID_EMP_TYPE = "Invalid employee type attempted to be created.";
         private const string TEST_LAST_NAME = "A";
+
         /// <summary>
         /// Tests the indexer of BusinessRules using it as though it were an array
         /// </summary>
@@ -233,6 +235,7 @@ namespace EmployeeLabUnitTests
             toTest[0] = null;
             Assert.IsFalse(toTest.Contains(employee));
         }
+
         /// <summary>
         /// Tests the .Count() and .Clear() methods in BusinessRules
         /// </summary>
@@ -271,6 +274,7 @@ namespace EmployeeLabUnitTests
             Assert.AreNotEqual(toAdd.EmpID, toTest[(uint)random.Next(0, toTest.Count())].EmpID);
             Assert.AreEqual((uint)200, toTest[(uint)200].EmpID);
         }
+
         /// <summary>
         /// Tests the enumerator of BusinessClass
         /// </summary>
@@ -291,6 +295,7 @@ namespace EmployeeLabUnitTests
             }
             Assert.AreEqual(1, toTest.Count());
         }
+
         [TestMethod]
         public void TestCanAddFromArrray()
         {
@@ -313,10 +318,10 @@ namespace EmployeeLabUnitTests
             Assert.IsTrue(toTest.CanAddTextEmployee(goodArray));
             Assert.IsFalse(toTest.CanAddTextEmployee(bad));
         }
+
         [TestMethod]
         public void TestAddFromStringArray()
         {
-
             BusinessRules toTest = new BusinessRules();
             uint testID = 0;
             Random random = new Random();
@@ -340,24 +345,25 @@ namespace EmployeeLabUnitTests
             Assert.IsFalse(toTest.Count() > 1);
             //add letters to something that should only be a number
         }
-        
+
         [TestMethod]
         public void TestAddandRemove()
         {
             BusinessRules a = new BusinessRules();
             BusinessRules b = new BusinessRules();
             PopulateBusinessRules(b);
-            foreach(var emp in b)
+            foreach (var emp in b)
             {
                 a.Add(emp);
             }
             Assert.AreEqual(b.Count(), a.Count());
-            foreach(var emp in b)
+            foreach (var emp in b)
             {
                 a.Remove(emp);
             }
             Assert.AreEqual(0, a.Count());
         }
+
         [TestMethod]
         public void TestContainsAndContainsKey()
         {
@@ -369,6 +375,7 @@ namespace EmployeeLabUnitTests
             Assert.IsTrue(a.Contains(toAdd));
             Assert.IsTrue(a.ContainsKey(0));
         }
+
         [TestMethod]
         public void TestSerializing()
         {
@@ -378,6 +385,7 @@ namespace EmployeeLabUnitTests
             DataContractSerializer greg = new DataContractSerializer(typeof(BusinessRules));
             greg.WriteObject(s, a);
         }
+
         [TestMethod]
         public void TestDeserializing()
         {
@@ -391,7 +399,7 @@ namespace EmployeeLabUnitTests
             Assert.IsTrue(b.Equals(a));
         }
 
-    [TestMethod]
+        [TestMethod]
         public void TestCopyTo()
         {
             BusinessRules a = new BusinessRules();
@@ -405,6 +413,7 @@ namespace EmployeeLabUnitTests
                 index++;
             }
         }
+
         /// <summary>
         /// Populates a BusinessRules object with a specified number of random employees
         /// </summary>
@@ -425,6 +434,7 @@ namespace EmployeeLabUnitTests
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
+
                     case ETYPE.HOURLY:
                         toPopulate.Add(new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
@@ -432,12 +442,14 @@ namespace EmployeeLabUnitTests
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
+
                     case ETYPE.SALARY:
                         toPopulate.Add(new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
+
                     case ETYPE.SALES:
                         toPopulate.Add(new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
@@ -446,12 +458,12 @@ namespace EmployeeLabUnitTests
                             (decimal)(random.Next() * random.NextDouble()),
                             (decimal)(random.Next() * random.NextDouble())));
                         break;
+
                     default:
                         //If code reaches here, something is seriously wrong.
                         throw new Exception(INVALID_EMP_TYPE);
                 }//End Switch
             }//End for loop
-
         }
     }//End Test BusinessRules
 
@@ -463,6 +475,7 @@ namespace EmployeeLabUnitTests
         private const int DEFAULT_EMPS_TO_CREATE = 10;
         private const string INVALID_EMP_TYPE = "Invalid employee type attempted to be created.";
         private string testPath = Path.Combine(Directory.GetCurrentDirectory(), Path.GetTempFileName());
+
         [TestMethod]
         public void TestWriteFileDB()
         {
@@ -477,6 +490,7 @@ namespace EmployeeLabUnitTests
             Assert.IsNotNull(fileStream);
             Assert.IsTrue(fileStream.Length > 0);
         }
+
         [TestMethod]
         public void TestReadFileDB()
         {
@@ -492,6 +506,7 @@ namespace EmployeeLabUnitTests
             rules.EmployeeCollection = test.EmployeeDB;
             Assert.IsTrue(rules.EmployeeCollection.Count == businessRules.EmployeeCollection.Count);
         }
+
         [TestMethod]
         public void TestCloseDB()
         {
@@ -501,6 +516,7 @@ namespace EmployeeLabUnitTests
             fileIO.OpenFileDB();
             fileIO.CloseFileDB();
         }
+
         [TestMethod]
         public void TestOpenDB()
         {
@@ -510,6 +526,7 @@ namespace EmployeeLabUnitTests
             fileIO.OpenFileDB();
             //Assert.IsNotNull(fileIO.stream);
         }
+
         [TestMethod]
         public void TestSaveFileDB()
         {
@@ -536,6 +553,7 @@ namespace EmployeeLabUnitTests
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
+
                     case ETYPE.HOURLY:
                         toPopulate.Add(new Hourly((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
@@ -543,12 +561,14 @@ namespace EmployeeLabUnitTests
                             (decimal)(random.NextDouble() * random.Next()),
                             random.NextDouble() * random.Next()));
                         break;
+
                     case ETYPE.SALARY:
                         toPopulate.Add(new Salary((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
                             LAST_NAMES.ElementAt(random.Next(0, LAST_NAMES.Length - 1)),
                             (decimal)(random.NextDouble() * random.Next())));
                         break;
+
                     case ETYPE.SALES:
                         toPopulate.Add(new Sales((uint)i,
                             FIRST_NAMES.ElementAt(random.Next(0, FIRST_NAMES.Length - 1)),
@@ -557,13 +577,12 @@ namespace EmployeeLabUnitTests
                             (decimal)(random.Next() * random.NextDouble()),
                             (decimal)(random.Next() * random.NextDouble())));
                         break;
+
                     default:
                         //If code reaches here, something is seriously wrong.
                         throw new Exception(INVALID_EMP_TYPE);
                 }//End Switch
             }//End for loop
-
         }
-
     }//End TestFileIO Class
 }

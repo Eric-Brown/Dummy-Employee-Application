@@ -4,36 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local ="clr-namespace:Lab_03_EAB"
         xmlns:helper="clr-namespace:Lab_03_EAB.Helpers"
-        xmlns:local="clr-namespace:Lab_03_EAB"
         mc:Ignorable="d"
         Title="Add Employee" SizeToContent="WidthAndHeight" Loaded="Window_Loaded"
         helper:DialogCloser.DialogResult="{Binding CloseWindowFlag}">
     <Window.Resources>
         <Style TargetType="Label">
-            <Setter Property="Margin" Value="2,5,0,0"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="2,5,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="MinWidth" Value="100"/>
-            <Setter Property="Margin" Value="3,3,3,3"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Margin" Value="3,3,3,3" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="3,3,3,3"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Margin" Value="3,3,3,3" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="MinWidth" Value="100" />
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Margin" Value="5,5,5,5"/>
-            <Setter Property="MinWidth" Value="75"/>
+            <Setter Property="Margin" Value="5,5,5,5" />
+            <Setter Property="MinWidth" Value="75" />
         </Style>
-        <BooleanToVisibilityConverter x:Key="visibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="visibilityConverter" />
         <ControlTemplate x:Key="validationTemplate">
             <DockPanel>
                 <TextBlock Foreground="Red" FontSize="20">!</TextBlock>
-                <AdornedElementPlaceholder/>
+                <AdornedElementPlaceholder />
             </DockPanel>
         </ControlTemplate>
         <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
@@ -41,96 +41,107 @@
                 <Trigger Property="Validation.HasError" Value="true">
                     <Setter Property="ToolTip"
                         Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                        Path=(Validation.Errors)[0].ErrorContent}" />
                 </Trigger>
             </Style.Triggers>
-            <Setter Property="Margin" Value="3,3,3,3"/>
-            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Margin" Value="3,3,3,3" />
+            <Setter Property="MinWidth" Value="100" />
         </Style>
         <Style TargetType="DatePicker">
-            <Setter Property="Margin" Value="3,3,3,3"/>
+            <Setter Property="Margin" Value="3,3,3,3" />
         </Style>
     </Window.Resources>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"><!--Begin Main Stack Panel Horizontal-->
-        <DockPanel Name="DockPnlEmp"><!--Begin Employee Side SP Vertical-->
-            <TextBlock TextDecorations="Underline" Text="Employee Information" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <!--Begin Main Stack Panel Horizontal-->
+        <DockPanel Name="DockPnlEmp">
+            <!--Begin Employee Side SP Vertical-->
+            <TextBlock TextDecorations="Underline" Text="Employee Information" DockPanel.Dock="Top" HorizontalAlignment="Center" />
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
-                <Button Content="{Binding AddButtonContent}" Command="{Binding AddModifyEmployeeCommand}" IsEnabled="{Binding CanAdd}"/>
-                <Button Name="BtnCancel" Content="Cancel" HorizontalAlignment="Center" Click="BtnCancel_Click"/>
+                <Button Content="{Binding AddButtonContent}" Command="{Binding AddModifyEmployeeCommand}" IsEnabled="{Binding CanAdd}" />
+                <Button Name="BtnCancel" Content="Cancel" HorizontalAlignment="Center" Click="BtnCancel_Click" />
             </StackPanel>
-            <DockPanel><!--Begin Employee Information Dock-->
-                <StackPanel Orientation="Vertical"><!--Begin Employee Left Half-->
+            <DockPanel>
+                <!--Begin Employee Information Dock-->
+                <StackPanel Orientation="Vertical">
+                    <!--Begin Employee Left Half-->
                     <DockPanel>
-                        <Label Content="Employee Type:" HorizontalAlignment="Left"/>
-                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentEmployee.EmpType}"/>
+                        <Label Content="Employee Type:" HorizontalAlignment="Left" />
+                        <ComboBox Name="CmbBoxEmpType" SelectedItem="{Binding CurrentEmployee.EmpType}" />
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="First Name:"/>
-                        <TextBox Text="{Binding CurrentEmployee.FirstName, 
+                        <Label Content="First Name:" />
+                        <TextBox Text="{Binding CurrentEmployee.FirstName,
                             UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                  Validation.ErrorTemplate="{StaticResource validationTemplate}"
-                                 Style="{StaticResource textBoxInError}"/>
+                                 Style="{StaticResource textBoxInError}" />
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{Binding CurrentEmployee.Sup1Lable, Mode=OneWay}"/>
-                        <TextBox Text="{Binding CurrentEmployee.Suppliment1, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
+                        <Label Content="{Binding CurrentEmployee.Sup1Lable, Mode=OneWay}" />
+                        <TextBox Text="{Binding CurrentEmployee.Suppliment1, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{Binding CurrentEmployee.Sup3Lable, Mode=OneWay}" Visibility="{Binding CurrentEmployee.Sup3Visibility, Converter={StaticResource visibilityConverter}}"/>
-                        <TextBox Text="{Binding CurrentEmployee.Suppliment3, 
-                            UpdateSourceTrigger=PropertyChanged, 
-                            ValidatesOnDataErrors=True}" 
-                                 Visibility="{Binding CurrentEmployee.Sup3Visibility, 
-                            Converter={StaticResource visibilityConverter}}" 
+                        <Label Content="{Binding CurrentEmployee.Sup3Lable, Mode=OneWay}" Visibility="{Binding CurrentEmployee.Sup3Visibility, Converter={StaticResource visibilityConverter}}" />
+                        <TextBox Text="{Binding CurrentEmployee.Suppliment3,
+                            UpdateSourceTrigger=PropertyChanged,
+                            ValidatesOnDataErrors=True}"
+                                 Visibility="{Binding CurrentEmployee.Sup3Visibility,
+                            Converter={StaticResource visibilityConverter}}"
                                  Style="{StaticResource textBoxInError}"
-                                 Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
+                                 Validation.ErrorTemplate="{StaticResource validationTemplate}" />
                     </DockPanel>
-                </StackPanel><!--End Employee Left Half-->
-                <StackPanel Orientation="Vertical"><!--Begin Employee Right Half-->
+                </StackPanel>
+                <!--End Employee Left Half-->
+                <StackPanel Orientation="Vertical">
+                    <!--Begin Employee Right Half-->
                     <DockPanel>
-                        <Label Content="Employee ID#:"/>
-                        <TextBox Text="{Binding CurrentEmployee.EmpID, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" IsEnabled="{Binding IsNew}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
-                    </DockPanel>
-                    <DockPanel>
-                        <Label Content="Last Name:"/>
-                        <TextBox Text="{Binding CurrentEmployee.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
+                        <Label Content="Employee ID#:" />
+                        <TextBox Text="{Binding CurrentEmployee.EmpID, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" IsEnabled="{Binding IsNew}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
                     </DockPanel>
                     <DockPanel>
-                        <Label Content="{Binding CurrentEmployee.Sup2Lable, Mode=OneWay}" Visibility="{Binding CurrentEmployee.Sup2Visibility, Converter={StaticResource visibilityConverter}}"/>
-                        <TextBox Text="{Binding CurrentEmployee.Suppliment2, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding CurrentEmployee.Sup2Visibility, Converter={StaticResource visibilityConverter}}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
+                        <Label Content="Last Name:" />
+                        <TextBox Text="{Binding CurrentEmployee.LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
                     </DockPanel>
-                </StackPanel><!--End Employee Right Half-->
-            </DockPanel><!--End Employee Information Dock-->
-        </DockPanel><!--End Employee Side SP Vertical-->
+                    <DockPanel>
+                        <Label Content="{Binding CurrentEmployee.Sup2Lable, Mode=OneWay}" Visibility="{Binding CurrentEmployee.Sup2Visibility, Converter={StaticResource visibilityConverter}}" />
+                        <TextBox Text="{Binding CurrentEmployee.Suppliment2, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Visibility="{Binding CurrentEmployee.Sup2Visibility, Converter={StaticResource visibilityConverter}}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
+                    </DockPanel>
+                </StackPanel>
+                <!--End Employee Right Half-->
+            </DockPanel>
+            <!--End Employee Information Dock-->
+        </DockPanel>
+        <!--End Employee Side SP Vertical-->
         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-        <StackPanel Orientation="Vertical"><!--Begin Course Side SP Vertical-->
-            <TextBlock TextDecorations="Underline" Text="Course Information" HorizontalAlignment="Center"/>
-            <DockPanel>
-                <Label Content="Course ID:"/>
-                <TextBox Text="{Binding CourseToAdd.CourseID, UpdateSourceTrigger=PropertyChanged, 
-                    ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Course Description:"/>
-                <TextBox Text="{Binding CourseToAdd.CourseDescription, UpdateSourceTrigger=PropertyChanged,
-                    ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Course Grade:"/>
-                <ComboBox Name="CmbBoxGrade" SelectedItem="{Binding CourseToAdd.Grade}"/>
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Approved Date:"/>
-                <DatePicker SelectedDate="{Binding CourseToAdd.ApprovedDate, ValidatesOnDataErrors=True}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
-            </DockPanel>
-            <DockPanel>
-                <Label Content="Course Credits:"/>
-                <TextBox Text="{Binding CourseToAdd.Credits, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}"/>
-            </DockPanel>
-            <Button Content="Add Course" Command="{Binding AddCourseCommand}" IsEnabled="{Binding CanAddCourse}"/>
-        </StackPanel><!--End Course Side SP Vertical-->
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="Current Courses" TextDecorations="Underline" HorizontalAlignment="Center"/>
+            <!--Begin Course Side SP Vertical-->
+            <TextBlock TextDecorations="Underline" Text="Course Information" HorizontalAlignment="Center" />
+            <DockPanel>
+                <Label Content="Course ID:" />
+                <TextBox Text="{Binding CourseToAdd.CourseID, UpdateSourceTrigger=PropertyChanged,
+                    ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
+            </DockPanel>
+            <DockPanel>
+                <Label Content="Course Description:" />
+                <TextBox Text="{Binding CourseToAdd.CourseDescription, UpdateSourceTrigger=PropertyChanged,
+                    ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
+            </DockPanel>
+            <DockPanel>
+                <Label Content="Course Grade:" />
+                <ComboBox Name="CmbBoxGrade" SelectedItem="{Binding CourseToAdd.Grade}" />
+            </DockPanel>
+            <DockPanel>
+                <Label Content="Approved Date:" />
+                <DatePicker SelectedDate="{Binding CourseToAdd.ApprovedDate, ValidatesOnDataErrors=True}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
+            </DockPanel>
+            <DockPanel>
+                <Label Content="Course Credits:" />
+                <TextBox Text="{Binding CourseToAdd.Credits, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource textBoxInError}" Validation.ErrorTemplate="{StaticResource validationTemplate}" />
+            </DockPanel>
+            <Button Content="Add Course" Command="{Binding AddCourseCommand}" IsEnabled="{Binding CanAddCourse}" />
+        </StackPanel>
+        <!--End Course Side SP Vertical-->
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Current Courses" TextDecorations="Underline" HorizontalAlignment="Center" />
             <ListBox ItemsSource="{Binding Courses}" MinWidth="250">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -139,7 +150,7 @@
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Course ID: {0}">
-                                            <Binding Path="CourseID"/>
+                                            <Binding Path="CourseID" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
@@ -148,28 +159,28 @@
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Course Description: {0}">
-                                            <Binding Path="CourseDescription"/>
+                                            <Binding Path="CourseDescription" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Approved Date: {0}">
-                                            <Binding Path="ApprovedDate"/>
+                                            <Binding Path="ApprovedDate" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Credits: {0}">
-                                            <Binding Path="Credits"/>
+                                            <Binding Path="Credits" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="Grade: {0}">
-                                            <Binding Path="Grade"/>
+                                            <Binding Path="Grade" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
@@ -179,5 +190,6 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
-    </StackPanel><!--End Main Stack Panel Horizontal-->
+    </StackPanel>
+    <!--End Main Stack Panel Horizontal-->
 </Window>
