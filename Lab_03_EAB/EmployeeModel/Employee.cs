@@ -37,7 +37,6 @@ namespace Lab_03_EAB
     [Serializable]
     public abstract class Employee : IDataErrorInfo, INotifyPropertyChanged
     {
-        #region Constants
 
         /// <summary>
         /// Used to call string.Format without having to use several "magic" strings.
@@ -65,10 +64,6 @@ namespace Lab_03_EAB
         private const string NAME_BAD_ERR_MSG = "Please ensure that the name contains no numbers and is not empty.";
         private const string ID_BAD_ERR_MSG = "Please ensure that the Employee's ID is only a number and contains no letters.";
 
-        #endregion Constants
-
-        #region EventsAndHandlers
-
         /// <summary>
         /// Event delegate for when the employee's ID has been changed.
         /// </summary>
@@ -89,10 +84,6 @@ namespace Lab_03_EAB
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        #endregion EventsAndHandlers
-
-        #region Properties
 
         [DataMember]
         private uint empID;
@@ -219,13 +210,13 @@ namespace Lab_03_EAB
                 switch (empType)
                 {
                     case ETYPE.SALARY:
-                        return MeetsRequirements(COURSE_GRADE.B_PLUS, SALARY_MIN_CREDITS);
+                        return MeetsRequirements(Course.COURSE_GRADE.B_PLUS, SALARY_MIN_CREDITS);
 
                     case ETYPE.SALES:
-                        return MeetsRequirements(COURSE_GRADE.B, SALES_MIN_CREDITS);
+                        return MeetsRequirements(Course.COURSE_GRADE.B, SALES_MIN_CREDITS);
 
                     case ETYPE.HOURLY:
-                        return MeetsRequirements(COURSE_GRADE.C_PLUS, HOURLY_MIN_CREDITS);
+                        return MeetsRequirements(Course.COURSE_GRADE.C_PLUS, HOURLY_MIN_CREDITS);
 
                     default:
                         return false;
@@ -268,10 +259,6 @@ namespace Lab_03_EAB
             }
         }
 
-        #endregion Properties
-
-        #region Constructors
-
         /// <summary>
         /// Constructor.
         /// Is protected since only subtypes of this class should call it.
@@ -304,11 +291,7 @@ namespace Lab_03_EAB
             CourseRoster = new SortedDictionary<string, Course>();
         }
 
-        #endregion Constructors
-
-        #region Methods
-
-        private bool MeetsRequirements(COURSE_GRADE minGrade, int minCreds)
+        private bool MeetsRequirements(Course.COURSE_GRADE minGrade, int minCreds)
         {
             int totalGrade = 0;
             totalGrade = CourseRoster.Values.Aggregate(totalGrade, (a, b) => a + (int)b.Grade);
@@ -361,6 +344,5 @@ namespace Lab_03_EAB
                 roster = new SortedDictionary<string, Course>();
         }
 
-        #endregion Methods
     }//End Class Employee Definition
 }//End Namespace Lab_03_EAB Scope

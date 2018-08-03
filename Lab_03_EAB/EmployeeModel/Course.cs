@@ -5,51 +5,52 @@ using System.Text;
 
 namespace Lab_03_EAB.EmployeeModel
 {
-    [DataContract]
-    [Serializable]
-    ///Represents the possible recieved grades in a course.
-    public enum COURSE_GRADE
-    {
-        [EnumMember]
-        A = 100,
 
-        [EnumMember]
-        A_MINUS = 94,
-
-        [EnumMember]
-        B_PLUS = 90,
-
-        [EnumMember]
-        B = 86,
-
-        [EnumMember]
-        B_MINUS = 83,
-
-        [EnumMember]
-        C_PLUS = 80,
-
-        [EnumMember]
-        C = 76,
-
-        [EnumMember]
-        C_MINUS = 73,
-
-        [EnumMember]
-        D_PLUS = 70,
-
-        [EnumMember]
-        D = 66,
-
-        [EnumMember]
-        D_MINUS = 63,
-
-        [EnumMember]
-        E = 60
-    }
 
     [DataContract]
     public class Course : INotifyPropertyChanged, IDataErrorInfo
     {
+        [DataContract]
+        [Serializable]
+        ///Represents the possible recieved grades in a course.
+        public enum COURSE_GRADE
+        {
+            [EnumMember]
+            A = 100,
+
+            [EnumMember]
+            A_MINUS = 94,
+
+            [EnumMember]
+            B_PLUS = 90,
+
+            [EnumMember]
+            B = 86,
+
+            [EnumMember]
+            B_MINUS = 83,
+
+            [EnumMember]
+            C_PLUS = 80,
+
+            [EnumMember]
+            C = 76,
+
+            [EnumMember]
+            C_MINUS = 73,
+
+            [EnumMember]
+            D_PLUS = 70,
+
+            [EnumMember]
+            D = 66,
+
+            [EnumMember]
+            D_MINUS = 63,
+
+            [EnumMember]
+            E = 60
+        }
         [DataMember]
         private const string FORMAT_STRING = "\tCourse ID: {0}\n\tCourse Description: {1}\n\tCourse Grade: {2}\n\tCourse Credits: {3}\n\tApproved Date: {4:d}";
 

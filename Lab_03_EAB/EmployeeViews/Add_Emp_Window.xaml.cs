@@ -31,7 +31,7 @@ namespace Lab_03_EAB
         {
             InitializeComponent();
             CmbBoxEmpType.ItemsSource = Enum.GetValues(typeof(ETYPE));
-            CmbBoxGrade.ItemsSource = Enum.GetValues(typeof(COURSE_GRADE));
+            CmbBoxGrade.ItemsSource = Enum.GetValues(typeof(Course.COURSE_GRADE));
             DataContext = new EmployeeViewModel.EmployeeViewModel(new BusinessRules());
         }
     }

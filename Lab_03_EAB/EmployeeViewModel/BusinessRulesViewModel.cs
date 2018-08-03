@@ -363,8 +363,8 @@ namespace Lab_03_EAB.EmployeeViewModel
                 for (int i = 0; i < random.Next(0, COURSE_DIVISIONS + 1); i++)
                 {
                     string courseID = $"{SUBJECTS[random.Next(0, SUBJECTS.Length - 1)]}{random.Next(0, COURSE_DIVISIONS) * DIVISION + random.Next(0, COURSE_DIVISIONS) * SECTION}";
-                    Array gradeValues = Enum.GetValues(typeof(COURSE_GRADE));
-                    Course aCourse = new Course(courseID, FAKE_DESCRIPTION, (COURSE_GRADE)gradeValues.GetValue(random.Next(0, gradeValues.Length - 1)), DateTime.Now, random.Next(1, MAX_CRED));
+                    Array gradeValues = Enum.GetValues(typeof(Course.COURSE_GRADE));
+                    Course aCourse = new Course(courseID, FAKE_DESCRIPTION, (Course.COURSE_GRADE)gradeValues.GetValue(random.Next(0, gradeValues.Length - 1)), DateTime.Now, random.Next(1, MAX_CRED));
                     try
                     {
                         emp.CourseRoster.Add(courseID, aCourse);
